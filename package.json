@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base www",
+    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base www --host 0.0.0.0",
     "build": "webpack"
   },
   "author": "https://github.com/asimon91, https://github.com/gisce",
