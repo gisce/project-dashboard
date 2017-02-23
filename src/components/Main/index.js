@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
+import MenuItem from 'material-ui/MenuItem';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 const styles = {
@@ -16,6 +21,23 @@ const styles = {
         left: 0
     }
 };
+
+const AppBarMenu = (props) => (
+    <IconMenu
+        {...props}
+        iconButtonElement={
+            <IconButton><MoreVertIcon /></IconButton>
+        }
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+    >
+        <MenuItem primaryText="Configuració" />
+        <MenuItem primaryText="Ajuda" />
+        <MenuItem primaryText="Sortir" />
+    </IconMenu>
+);
+
+AppBarMenu.muiName = 'IconMenu';
 
 
 function GetProjects() {
@@ -68,7 +90,6 @@ function Project(props) {
 }
 
 export class Main extends Component {
-
     render() {
         let bundle = []
         let pr = GetProjects();
@@ -89,7 +110,11 @@ export class Main extends Component {
         }
         return (
             <div>
-                <AppBar title = "Projectes" iconClassNameRight="muidocs-icon-navigation-expand-more" style={styles.appbar}/>
+                <AppBar
+                    title = "Projectes"
+                    iconClassNameRight="muidocs-icon-navigation-expand-more"
+                    iconElementRight={<AppBarMenu/>}
+                    style={styles.appbar}/>
                 <div style={styles.container}>
                     {bundle}
                     {bundle}
