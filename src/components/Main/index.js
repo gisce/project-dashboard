@@ -5,6 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import PowERP from '../../api/PowERP.js'
 
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
@@ -39,29 +40,21 @@ const AppBarMenu = (props) => (
 
 AppBarMenu.muiName = 'IconMenu';
 
-
 function GetProjects() {
-    /* In the future, this function will fetch
-    * projects from ERP server and will return
-    * a dictionary with a list of projects*/
+    /**
+     * This function fetches all projects from PowERP server
+     * using PowERP api.
+     * */
+    var api = new PowERP();
+    let projects = [];
+    let project_ids = api.search("project.project", []);
+    for(let i = 0; i < project_ids.length; i++){
+        let project = api.read("project.project", project_ids[i], ['id', 'title', 'subtitle', 'avatar', 'description']);
+        projects.push(project);
+    }
     return {
-        projects: [{
-            "title": "/dev/null (No Dev tasks)",
-            "subtitle": "Eduard Carreras i Nadal",
-            "avatar": "https://avatars2.githubusercontent.com/u/294235?v=3&s=460",
-            "description": "Casos en els que no hi ha cap desenvolupament de codi."
-        }, {
-            "title": "Casos ERP v4",
-            "subtitle": "Axel Simón González",
-            "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&s=460",
-            "description": "Projecte per el seguiment dels casos de l'ERP versió 4."
-        }, {
-            "title": "Desenvolupaments reports .mako",
-            "subtitle": "Guillem Julià",
-            "avatar": "https://avatars3.githubusercontent.com/u/4963636?v=3&s=460",
-            "description": "Projecte per historitzar les hores dels desenvolupaments de reports .mako"
-        }]
-    };
+        "projects": projects
+    }
 }
 
 function Project(props) {
@@ -79,8 +72,7 @@ function Project(props) {
                 showExpandableButton={true}
             />
             <CardActions>
-                <FlatButton label="Action1"/>
-                <FlatButton label="Action2"/>
+                <FlatButton label="Tasques" />
             </CardActions>
             <CardText expandable={true}>
                 {props.description}
@@ -90,12 +82,17 @@ function Project(props) {
 }
 
 export class Main extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            bundle: []
+        };
+    }
     render() {
-        let bundle = []
         let pr = GetProjects();
         let projects = pr.projects;
         for (let i = 0; i < pr.projects.length; i++){
-            bundle.push(
+            this.state.bundle.push(
                 <div key={i} style={styles.project}>
                     <Project
                         key={i}
@@ -112,16 +109,12 @@ export class Main extends Component {
             <div>
                 <AppBar
                     title = "Projectes"
-                    iconClassNameRight="muidocs-icon-navigation-expand-more"
                     iconElementRight={<AppBarMenu/>}
                     style={styles.appbar}/>
                 <div style={styles.container}>
-                    {bundle}
-                    {bundle}
-                    {bundle}
-                    {bundle}
-                    {bundle}
-                    {bundle}
+                    {this.state.bundle}
+                    {this.state.bundle}
+                    {this.state.bundle}
                 </div>
             </div>
         );
