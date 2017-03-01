@@ -113,8 +113,6 @@ export class Main extends Component {
                     style={styles.appbar}/>
                 <div style={styles.container}>
                     {this.state.bundle}
-                    {this.state.bundle}
-                    {this.state.bundle}
                 </div>
             </div>
         );
