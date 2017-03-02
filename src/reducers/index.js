@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux'
-import project from './Project'
-import window from './CurrentWindow.js'
+import project from './project'
 
-const todoApp = combineReducers({
-    project,
-    window
+const appReducer = combineReducers({
+    project
 });
 
-export default todoApp
+const rootReducer = (state, action) => {
+    return appReducer(state, action);
+};
+
+export default rootReducer;
