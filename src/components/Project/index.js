@@ -7,7 +7,7 @@ const style = {margin: 5};
 export default class Project extends Component {
     render(){
         return(
-            <TableRow>
+            <TableRow key={this.props.key}>
                 <TableRowColumn>
                     <Avatar
                         src={this.props.avatar}
