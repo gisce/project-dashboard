@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import AppBar from 'material-ui/AppBar';
-import Menu from '../Menu'
 
 export class Header extends Component {
     render(){
@@ -9,9 +8,6 @@ export class Header extends Component {
                 <AppBar
                     title="Project-Dashboard"
                 />
-                <div>
-                    <Menu/>
-                </div>
             </header>
         )
     }
