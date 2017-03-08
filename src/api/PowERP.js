@@ -14,9 +14,9 @@ class PowERP {
                 result = {
                     "id": 1,
                     "title": "/dev/null (No Dev tasks)",
-                    "subtitle": "Eduard Carreras i Nadal",
+                    "partner": "Eduard Carreras i Nadal",
                     "avatar": "https://avatars2.githubusercontent.com/u/294235?v=3&s=460",
-                    "description": "Casos en els que no hi ha cap desenvolupament de codi.",
+                    "state": "En progrés",
                     "tasks": [1,2,3,4]
                 };
                 break;
@@ -24,18 +24,18 @@ class PowERP {
                 result = {
                 "id": 2,
                     "title": "Casos ERP v4",
-                    "subtitle": "Axel Simón González",
+                    "partner": "Axel Simón González",
                     "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&s=460",
-                    "description": "Projecte per el seguiment dels casos de l'ERP versió 4."
+                    "state": "En progrés"
                 };
                 break;
             case "/project.project/3":
                 result = {
                     "id": 3,
                     "title": "Desenvolupaments reports .mako",
-                    "subtitle": "Guillem Julià",
+                    "partner": "Guillem Julià",
                     "avatar": "https://avatars3.githubusercontent.com/u/4963636?v=3&s=460",
-                    "description": "Projecte per historitzar les hores dels desenvolupaments de reports .mako"
+                    "state": "En progrés"
                 };
                 break;
         }
