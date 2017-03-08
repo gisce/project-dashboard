@@ -1,4 +1,4 @@
-import PowERP from '../../api/PowERP.js'
+import PowERP from '../api/PowERP.js'
 
 export function getProjects() {
     /**
@@ -9,7 +9,7 @@ export function getProjects() {
     let projects = [];
     let project_ids = api.search("project.project", []);
     for(let i = 0; i < project_ids.length; i++){
-        let project = api.read("project.project", project_ids[i], ['id', 'title', 'subtitle', 'avatar', 'description']);
+        let project = api.read("project.project", project_ids[i], ['id', 'title', 'partner', 'avatar', 'state']);
         projects.push(project);
     }
     return {
