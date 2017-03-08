@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
 import project from './project'
+import projects from './projects'
 
 const appReducer = combineReducers({
-    project
+    project,
+    projects
 });
 
 const rootReducer = (state, action) => {
