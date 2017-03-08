@@ -1,6 +1,7 @@
 import {FETCH_PROJECT_REQUEST, RECEIVE_PROJECT} from '../constants'
 import {getProjects} from '../utils/http_functions'
 import {parseJSON} from '../utils/misc'
+import { fetchProjects } from './projects'
 
 /******************
   ###############
