@@ -5,19 +5,21 @@ import Avatar from 'material-ui/Avatar'
 const style = {margin: 5};
 
 export default class Project extends Component {
+
     render(){
+        const {avatar, title, partner, state, ...otherProps} = this.props;
         return(
-            <TableRow key={this.props.key}>
+            <TableRow {...otherProps}>
                 <TableRowColumn>
                     <Avatar
-                        src={this.props.avatar}
+                        src={avatar}
                         size={30}
                         style={style}
                     />
                 </TableRowColumn>
-                <TableRowColumn>{this.props.title}</TableRowColumn>
-                <TableRowColumn>{this.props.partner}</TableRowColumn>
-                <TableRowColumn>{this.props.state}</TableRowColumn>
+                <TableRowColumn>{title}</TableRowColumn>
+                <TableRowColumn>{partner}</TableRowColumn>
+                <TableRowColumn>{state}</TableRowColumn>
             </TableRow>
         )
     }
