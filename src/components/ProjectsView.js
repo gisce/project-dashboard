@@ -56,21 +56,6 @@ export default class ProjectsView extends Component {
     }
 
     render() {
-        let bundle = [];
-        if (this.props.loaded) {
-            let projectes = this.props.data.data;
-            for (let i = 0; i < projectes.length; i++){
-                bundle.push(
-                    <Project
-                        id={i}
-                        title={projectes[i].title}
-                        partner={projectes[i].partner}
-                        avatar={projectes[i].avatar}
-                        state={projectes[i].state}
-                    />
-                )
-            }
-        }
         return(
             <div style={style.viewStyle}>
                 <div>
