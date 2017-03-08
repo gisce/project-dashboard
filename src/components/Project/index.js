@@ -16,8 +16,8 @@ export default class Project extends Component {
                     />
                 </TableRowColumn>
                 <TableRowColumn>{this.props.title}</TableRowColumn>
-                <TableRowColumn>{this.props.subtitle}</TableRowColumn>
-                <TableRowColumn>{this.props.description}</TableRowColumn>
+                <TableRowColumn>{this.props.partner}</TableRowColumn>
+                <TableRowColumn>{this.props.state}</TableRowColumn>
             </TableRow>
         )
     }
