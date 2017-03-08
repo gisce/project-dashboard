@@ -22,7 +22,7 @@ class PowERP {
                 break;
             case "/project.project/2":
                 result = {
-                "id": 2,
+                    "id": 2,
                     "title": "Casos ERP v4",
                     "partner": "Axel Simón González",
                     "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&s=460",
