@@ -1,8 +1,10 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
     entry: [
         './src/index.js',
+        'webpack-hot-middleware/client'
     ],
     output: {
         path: path.join(__dirname, '/www/dist'),
@@ -17,5 +19,13 @@ module.exports = {
                 exclude: /node_modules/
             }
         ],
-    }
+    },
+    devServer: {
+        historyApiFallback: true,
+        contentBase: 'www',
+        hot: true
+    },
+    plugins: [
+        new webpack.HotModuleReplacementPlugin()
+    ]
 };
