@@ -8,7 +8,7 @@ class PowERP {
     }
 
     request(path, options){
-        let result = {}
+        let result = {};
         switch(path){
             case "/project.project/1":
                 result = {
@@ -17,7 +17,7 @@ class PowERP {
                     "partner": "Eduard Carreras i Nadal",
                     "avatar": "https://avatars2.githubusercontent.com/u/294235?v=3&s=460",
                     "state": "En progrés",
-                    "tasks": [1,2,3,4]
+                    "tasks": [1,2]
                 };
                 break;
             case "/project.project/2":
@@ -26,7 +26,8 @@ class PowERP {
                     "title": "Casos ERP v4",
                     "partner": "Axel Simón González",
                     "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&s=460",
-                    "state": "En progrés"
+                    "state": "En progrés",
+                    "tasks": [3]
                 };
                 break;
             case "/project.project/3":
@@ -35,6 +36,59 @@ class PowERP {
                     "title": "Desenvolupaments reports .mako",
                     "partner": "Guillem Julià",
                     "avatar": "https://avatars3.githubusercontent.com/u/4963636?v=3&s=460",
+                    "state": "En progrés",
+                    "tasks": [4]
+                };
+                break;
+            case "/project.task/1":
+                result = {
+                    "id": 1,
+                    "description": "No development tasks",
+                    "project": "/dev/null (No Dev tasks)",
+                    "partner": "Eduard Carreras i Nadal",
+                    "avatar": "https://avatars2.githubusercontent.com/u/294235?v=3&s=460",
+                    "estimated_hours": "0:00",
+                    "dedicated_hours": "11:11",
+                    "priority": "Mitjana",
+                    "state": "En progrés"
+                };
+                break;
+            case "/project.task/2":
+                result = {
+                    "id": 2,
+                    "description": "Documentation for project-dashboard",
+                    "project": "/dev/null (No Dev tasks)",
+                    "partner": "Eduard Carreras i Nadal",
+                    "avatar": "https://avatars2.githubusercontent.com/u/294235?v=3&s=460",
+                    "estimated_hours": "0:00",
+                    "dedicated_hours": "11:11",
+                    "priority": "Mitjana",
+                    "state": "En progrés"
+                };
+                break;
+            case "/project.task/3":
+                result = {
+                    "id": 3,
+                    "description": "Suport project dashboard",
+                    "project": "Casos ERP v4",
+                    "partner": "Axel Simón González",
+                    "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&s=460",
+                    "estimated_hours": "0:00",
+                    "dedicated_hours": "11:11",
+                    "priority": "Mitjana",
+                    "state": "En progrés"
+                };
+                break;
+            case "/project.task/4":
+                result = {
+                    "id": 4,
+                    "description": "Report project dashboard",
+                    "project": "Desenvolupaments reports .mako",
+                    "partner": "Guillem Julià",
+                    "avatar": "https://avatars3.githubusercontent.com/u/4963636?v=3&s=460",
+                    "estimated_hours": "0:00",
+                    "dedicated_hours": "11:11",
+                    "priority": "Mitjana",
                     "state": "En progrés"
                 };
                 break;

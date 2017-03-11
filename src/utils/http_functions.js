@@ -1,4 +1,6 @@
 import PowERP from '../api/PowERP.js'
+import { browserHistory } from 'react-router'
+
 
 export function getProjects() {
     /**
@@ -15,4 +17,28 @@ export function getProjects() {
     return {
         "data": projects
     }
+}
+
+export function getTasks(tasks_ids) {
+    /**
+     * This function fetches tasks with the same IDS of
+     * param *tasks* using PowERP api.
+     */
+    var api = new PowERP();
+    let tasks = [];
+    for (let i = 0; i < tasks_ids.length; i++){
+        let task = api.read("project.task", tasks_ids[i], [
+            'id', 'description', 'project', 'partner', 'avatar', 'estimated_hours', 'dedicated_hours', 'priority', 'state'
+        ]);
+        tasks.push(task);
+    }
+    return {
+        "data": tasks
+    }
+}
+
+export function redirectToRoute(route) {
+    return () => {
+        browserHistory.push(route);
+    };
 }

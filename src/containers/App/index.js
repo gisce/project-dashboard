@@ -37,10 +37,7 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
             <MuiThemeProvider muiTheme={orangeWedge}>
                 <section>
                     <Header />
-                    <div
-                        className="container"
-                        style={{ marginTop: 10, paddingBottom: 250 }}
-                    >
+                    <div className="container">
                         {this.props.children}
                     </div>
                 </section>

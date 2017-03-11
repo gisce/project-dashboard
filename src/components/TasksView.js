@@ -4,22 +4,21 @@ import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/projects';
 import MainPaper from './MainPaper'
 import MainMenu from './MainMenu'
-import ProjectList from './ProjectList'
+import TaskList from './TaskList'
 
 function mapStateToProps(state) {
     return {
-        data: state.projects,
+        data: state.tasks,
         token: null,
-        loaded: state.projects.loaded,
-        isFetching: state.projects.isFetching,
-        message_text: state.projects.message_text,
+        loaded: state.tasks.loaded,
+        isFetching: state.tasks.isFetching,
+        message_text: state.tasks.message_text,
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(actionCreators, dispatch);
 }
-
 
 const style = {
     menuSection: {
@@ -37,22 +36,12 @@ const style = {
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class ProjectsView extends Component {
+export default class TasksView extends Component {
     constructor(props){
         super(props);
         this.state = {
             message_text: null
         };
-    }
-
-    componentDidMount() {
-        this.fetchData();
-    }
-
-    fetchData(initial = true) {
-        const token = "FOO";
-        // must replace by real token
-        this.props.fetchProjects(token, initial);
     }
 
     render() {
@@ -65,14 +54,14 @@ export default class ProjectsView extends Component {
                     <MainPaper>
                         <div>
                             <div style={style.titol}>
-                                Projectes
+                                Tasques
                             </div>
                             {
                                 this.props.loaded ?
-                                    <ProjectList projects={this.props.data.data} />
+                                    <TaskList projects={this.props.data.data} />
                                     :
                                     <div>
-                                        No hi ha projectes per mostrar.
+                                        No hi ha tasques per mostrar.
                                     </div>
                             }
                         </div>

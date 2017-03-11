@@ -3,22 +3,19 @@ import Paper from 'material-ui/Paper';
 
 const style = {
     MainPaper: {
-        height: '100%',
-        width: '100%',
+        width: '78%',
+        float: 'left',
+        marginLeft: 30,
+        marginTop: 30
     },
-    MainPaperContainer: {
-        width: '100%'
-    }
 };
 
 export default class MainPaper extends Component {
     render(){
         return (
-            <div style={style.MainPaperContainer}>
-                <Paper style={style.MainPaper} zDepth={2}>
-                    {this.props.children}
-                </Paper>
-            </div>
+            <Paper style={style.MainPaper} zDepth={1}>
+                {this.props.children}
+            </Paper>
         )
     }
 }
