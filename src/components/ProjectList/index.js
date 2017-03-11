@@ -2,12 +2,10 @@ import React, { Component } from 'react'
 import {Table, TableBody, TableHeader, TableRow, TableHeaderColumn, TableFooter } from 'material-ui/Table'
 import Project from '../Project'
 
-const style = {margin: 5};
-
 export default class ProjectList extends Component {
     render(){
         return(
-            <Table height={'92%'}>
+            <Table>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
                         <TableHeaderColumn>Avatar</TableHeaderColumn>
@@ -24,6 +22,7 @@ export default class ProjectList extends Component {
                             partner={project.partner}
                             state={project.state}
                             avatar={project.avatar}
+                            tasks={project.tasks}
                         />
                     )}
                 </TableBody>
