@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/projects';
-import Project from './Project'
 import MainPaper from './MainPaper'
 import MainMenu from './MainMenu'
 import ProjectList from './ProjectList'
@@ -23,16 +22,17 @@ function mapDispatchToProps(dispatch) {
 
 
 const style = {
-    paperStyle: {
-        marginLeft: 180,
-        marginRight: 0,
-        width: '85%'
+    menuSection: {
+        display: 'block',
+        float: 'left'
     },
-    viewStyle: {
-        height: '85%'
+    paperSection: {
+        width: '100%'
     },
-    tableStyle: {
-        height: '85%'
+    titol: {
+        padding: 20,
+        marginBottom: 50,
+        fontSize: 26
     }
 };
 
@@ -50,27 +50,32 @@ export default class ProjectsView extends Component {
     }
 
     fetchData(initial = true) {
-        const token = "FOO"
+        const token = "FOO";
         // must replace by real token
         this.props.fetchProjects(token, initial);
     }
 
     render() {
         return(
-            <div style={style.viewStyle}>
-                <div>
+            <div>
+                <div style={style.menuSection}>
                     <MainMenu/>
                 </div>
-                <div style={style.paperStyle}>
+                <div style={style.paperSection}>
                     <MainPaper>
-                        {
-                            this.props.loaded ?
-                            <ProjectList projects={this.props.data.data} />
-                        :
-                            <div>
-                                No hi ha projectes per mostrar.
+                        <div>
+                            <div style={style.titol}>
+                                Projectes
                             </div>
-                        }
+                            {
+                                this.props.loaded ?
+                                    <ProjectList projects={this.props.data.data} />
+                                    :
+                                    <div>
+                                        No hi ha projectes per mostrar.
+                                    </div>
+                            }
+                        </div>
                     </MainPaper>
                 </div>
             </div>
