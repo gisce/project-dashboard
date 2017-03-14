@@ -5,6 +5,7 @@ import * as actionCreators from '../actions/projects';
 import MainPaper from './MainPaper'
 import MainMenu from './MainMenu'
 import TaskList from './TaskList'
+import SearchBox from './SearchBox';
 
 function mapStateToProps(state) {
     return {
@@ -23,15 +24,24 @@ function mapDispatchToProps(dispatch) {
 const style = {
     menuSection: {
         display: 'block',
-        float: 'left'
+        float: 'left',
+        width: "14%"
     },
     paperSection: {
-        width: '100%'
+        display: 'block',
+        width:  '75%',
+        float: 'right',
+        padding: 30
     },
     titol: {
         padding: 20,
         marginBottom: 50,
         fontSize: 26
+    },
+    search: {
+        float: 'right',
+        padding: 0,
+        margin: 0
     }
 };
 
@@ -55,15 +65,18 @@ export default class TasksView extends Component {
                         <div>
                             <div style={style.titol}>
                                 Tasques
+                                <SearchBox model="tasks"/>
                             </div>
+                            <div>
                             {
                                 this.props.loaded ?
                                     <TaskList projects={this.props.data.data} />
                                     :
-                                    <div>
+                                    <div style={{padding: 30}}>
                                         No hi ha tasques per mostrar.
                                     </div>
                             }
+                            </div>
                         </div>
                     </MainPaper>
                 </div>
