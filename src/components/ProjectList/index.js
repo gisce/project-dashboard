@@ -14,13 +14,13 @@ export default class ProjectList extends Component {
                         <TableHeaderColumn>Estat</TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
-                <TableBody showRowHover={true} displayRowCheckbox={false}>
+                <TableBody showRowHover={true} displayRowCheckbox={false} stripedRows={true}>
                     {this.props.projects.map(project =>
                         <Project
                             key={project.id}
                             title={project.title}
                             partner={project.partner}
-                            state={project.state}
+                            status={project.status}
                             avatar={project.avatar}
                             tasks={project.tasks}
                         />
