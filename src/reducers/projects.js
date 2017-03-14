@@ -1,4 +1,4 @@
-import { RECEIVE_PROJECTS, FETCH_PROJECTS_REQUEST } from '../constants';
+import { RECEIVE_PROJECTS, FETCH_PROJECTS_REQUEST, SEARCH_PROJECT_REQUEST } from '../constants';
 import { createReducer } from '../utils/misc';
 
 const initialState = {
@@ -20,4 +20,9 @@ export default createReducer(initialState, {
             isFetching: true,
             message_text: payload.message,
         }),
+    [SEARCH_PROJECT_REQUEST]: (state, payload) =>
+        Object.assign({}, state, {
+            isFetching: true,
+            message_text: payload.message,
+        })
 });

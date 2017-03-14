@@ -19,6 +19,15 @@ export function getProjects() {
     }
 }
 
+function delay(ms) {
+    /**
+     * Per simular crides asíncrones
+     * @type {number} milliseconds
+     */
+    ms += new Date().getTime();
+    while (new Date() < ms){}
+}
+
 export function getTasks(tasks_ids) {
     /**
      * This function fetches tasks with the same IDS of
@@ -39,6 +48,7 @@ export function getTasks(tasks_ids) {
 
 export function redirectToRoute(route) {
     return () => {
+        console.log("Redirecting to " + route + "...");
         browserHistory.push(route);
     };
 }

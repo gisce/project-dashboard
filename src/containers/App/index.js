@@ -16,14 +16,16 @@ import {
     orange400,
     amber400,
     amber200,
+    lightGreen700,
+    limeA700
 
 } from 'material-ui/styles/colors';
 
 const orangeWedge = getMuiTheme({
     palette: {
-        primary1Color: orange400,
-        primary2Color: orange400,
-        primary3Color: amber200,
+        primary1Color: lightGreen700,
+        primary2Color: lightGreen700,
+        primary3Color: lightGreen700,
     },
 });
 

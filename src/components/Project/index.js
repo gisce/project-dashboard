@@ -30,7 +30,11 @@ export default class Project extends Component {
     }
 
     render(){
-        const {avatar, title, partner, state, tasks, ...otherProps} = this.props;
+        const {avatar, title, partner, status,
+            tasks, token, loaded, isFetching,
+            message_text, fetchTasksRequest,
+            receiveTasks, fetchTasks,
+            ...otherProps} = this.props;
         return(
             <TableRow {...otherProps} onCellClick={this.onClick}>
                 <TableRowColumn>
@@ -42,7 +46,7 @@ export default class Project extends Component {
                 </TableRowColumn>
                 <TableRowColumn>{title}</TableRowColumn>
                 <TableRowColumn>{partner}</TableRowColumn>
-                <TableRowColumn>{state}</TableRowColumn>
+                <TableRowColumn>{status}</TableRowColumn>
             </TableRow>
         )
     }
