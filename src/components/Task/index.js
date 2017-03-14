@@ -11,7 +11,16 @@ export default class Task extends Component {
     }
 
     render(){
-        const {avatar, description, project, partner, estimated_hours, dedicated_hours, priority, state, ...otherProps} = this.props;
+        const {
+            avatar,
+            description,
+            project,
+            partner,
+            estimated_hours,
+            dedicated_hours,
+            priority,
+            status,
+            ...otherProps} = this.props;
         return(
             <TableRow {...otherProps} onCellClick={this.onClick}>
                 <TableRowColumn>
@@ -25,7 +34,7 @@ export default class Task extends Component {
                 <TableRowColumn>{project}</TableRowColumn>
                 <TableRowColumn>{partner}</TableRowColumn>
                 <TableRowColumn>{priority}</TableRowColumn>
-                <TableRowColumn>{state}</TableRowColumn>
+                <TableRowColumn>{status}</TableRowColumn>
             </TableRow>
         )
     }
