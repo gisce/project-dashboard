@@ -5,6 +5,7 @@ import * as actionCreators from '../actions/projects';
 import MainPaper from './MainPaper'
 import MainMenu from './MainMenu'
 import ProjectList from './ProjectList'
+import SearchBox from './SearchBox';
 
 function mapStateToProps(state) {
     return {
@@ -24,10 +25,14 @@ function mapDispatchToProps(dispatch) {
 const style = {
     menuSection: {
         display: 'block',
-        float: 'left'
+        float: 'left',
+        width: "14%"
     },
     paperSection: {
-        width: '100%'
+        display: 'block',
+        width:  '75%',
+        float: 'right',
+        padding: 30
     },
     titol: {
         padding: 20,
@@ -66,7 +71,9 @@ export default class ProjectsView extends Component {
                         <div>
                             <div style={style.titol}>
                                 Projectes
+                                <SearchBox model="projects"/>
                             </div>
+                            <div>
                             {
                                 this.props.loaded ?
                                     <ProjectList projects={this.props.data.data} />
@@ -75,6 +82,7 @@ export default class ProjectsView extends Component {
                                         No hi ha projectes per mostrar.
                                     </div>
                             }
+                            </div>
                         </div>
                     </MainPaper>
                 </div>
