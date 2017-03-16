@@ -52,7 +52,9 @@ export function searchHelper(model, value){
         return getProjects();
     }
     else if(!value && model == "project.task"){
-        return getTasks([]);
+        return {
+            "data": null
+        }
     }
     return {
         "data": []
