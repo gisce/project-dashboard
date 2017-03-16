@@ -55,6 +55,10 @@ export default class TasksView extends Component {
     }
 
     render() {
+        let tasks_ids = [];
+        if(this.props.data.data){
+            tasks_ids = this.props.data.data.original_ids;
+        }
         return(
             <div>
                 <div style={style.menuSection}>
@@ -65,12 +69,12 @@ export default class TasksView extends Component {
                         <div>
                             <div style={style.titol}>
                                 Tasques
-                                <SearchBox model="tasks"/>
+                                <SearchBox original_ids={tasks_ids} model="tasks"/>
                             </div>
                             <div>
                             {
-                                this.props.loaded ?
-                                    <TaskList projects={this.props.data.data} />
+                                 this.props.loaded ?
+                                    <TaskList tasks={this.props.data.data.tasks} />
                                     :
                                     <div style={{padding: 30}}>
                                         No hi ha tasques per mostrar.
