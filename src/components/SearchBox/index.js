@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import TextField from 'material-ui/TextField';
-import * as actionCreators from '../../actions/tasks';
+import * as actionCreators from '../../actions/search';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 function mapStateToProps(state) {
-    // if(this.props.model == "project.project") {
+//     // if(this.props.model == "project.project") {
         return {
             data: state.projects,
             token: null,
@@ -60,6 +60,12 @@ export default class SearchBox extends Component {
 
     searchRequest(e) {
         let token = "FOO";
-        this.props.searchProjects(token, e.target.value, false);
+        if(this.props.model == "projects") {
+            this.props.searchProjects(token, e.target.value, false);
+        }
+        else if(this.props.model == "tasks"){
+            console.log("TASQUES ", this.props.original_ids);
+            this.props.searchTasks(token, e.target.value, this.props.original_ids, false);
+        }
     }
 }
