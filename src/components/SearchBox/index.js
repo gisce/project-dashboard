@@ -64,7 +64,6 @@ export default class SearchBox extends Component {
             this.props.searchProjects(token, e.target.value, false);
         }
         else if(this.props.model == "tasks"){
-            console.log("TASQUES ", this.props.original_ids);
             this.props.searchTasks(token, e.target.value, this.props.original_ids, false);
         }
     }
