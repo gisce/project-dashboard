@@ -57,7 +57,7 @@ export default class ProjectsView extends Component {
     fetchData(initial = true) {
         const token = "FOO";
         // must replace by real token
-        this.props.fetchProjects(token, initial);
+        this.props.fetchProjects(token, "", initial);
     }
 
     render() {
@@ -71,14 +71,14 @@ export default class ProjectsView extends Component {
                         <div>
                             <div style={style.titol}>
                                 Projectes
-                                <SearchBox model="projects"/>
+                                <SearchBox original_ids={[]} model="projects" />
                             </div>
                             <div>
                             {
                                 this.props.loaded ?
                                     <ProjectList projects={this.props.data.data} />
                                     :
-                                    <div>
+                                    <div style={{padding: 30}}>
                                         No hi ha projectes per mostrar.
                                     </div>
                             }
