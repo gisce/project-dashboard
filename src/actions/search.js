@@ -1,5 +1,5 @@
 import {SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST} from '../constants'
-import {searchHelper} from '../utils/http_functions'
+import {searchHelper, getTasks} from '../utils/http_functions'
 import {parseJSON} from '../utils/misc'
 import {receiveProjects} from './projects'
 import {receiveTasks} from './tasks'
@@ -40,11 +40,20 @@ export function searchTasks(token, valueToSearch, original_tasks, initial = fals
         dispatch(searchTasksRequest(initial));
         let response = searchHelper("project.task", valueToSearch);
         let tasks = parseJSON(response);
-        if(tasks.length == 0) {
-            console.log("VAL ZERPP");
-            dispatch(receiveTasks(original_tasks, original_tasks, initial));
+        if(valueToSearch == "") {
+            /*
+            * If search filter is empty, it must reload
+            * the tasks of the selected project (original tasks).
+            * */
+            response = getTasks(original_tasks);
+            tasks = parseJSON(response);
+            dispatch(receiveTasks(tasks, original_tasks, initial));
         }
         else{
+            /*
+            * If search returns any task, it must be received and
+            * rendered.
+            * */
             dispatch(receiveTasks(tasks, original_tasks, initial));
         }
     }
