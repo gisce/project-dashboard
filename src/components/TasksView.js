@@ -34,16 +34,21 @@ const style = {
         padding: 30
     },
     titol: {
-        padding: 20,
-        marginBottom: 50,
-        fontSize: 26
+        paddingLeft: 20,
+        fontSize: 26,
+        width: '100%'
     },
-    search: {
-        float: 'right',
-        padding: 0,
-        margin: 0
+    subtitol: {
+        paddingLeft: 20,
+        fontSize: 14
+    },
+    mainTable: {
+        width: '100%',
+        marginBottom: '20px'
     }
 };
+
+let project = "";
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class TasksView extends Component {
@@ -55,6 +60,13 @@ export default class TasksView extends Component {
     }
 
     render() {
+        let tasks_ids = [];
+        if(this.props.data.data){
+            tasks_ids = this.props.data.data.original_ids;
+            if(this.props.data.data.tasks.length > 0){
+                project = this.props.data.data.tasks[0].project;
+            }
+        }
         return(
             <div>
                 <div style={style.menuSection}>
@@ -62,22 +74,36 @@ export default class TasksView extends Component {
                 </div>
                 <div style={style.paperSection}>
                     <MainPaper>
-                        <div>
-                            <div style={style.titol}>
-                                Tasques
-                                <SearchBox model="tasks"/>
-                            </div>
-                            <div>
-                            {
-                                this.props.loaded ?
-                                    <TaskList projects={this.props.data.data} />
-                                    :
-                                    <div style={{padding: 30}}>
-                                        No hi ha tasques per mostrar.
-                                    </div>
-                            }
-                            </div>
-                        </div>
+                        <table style={style.mainTable}>
+                            <tbody>
+                                <tr>
+                                    <td style={style.titol}>
+                                        Tasques
+                                    </td>
+                                    <td>
+                                        <SearchBox original_ids={tasks_ids} model="tasks"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style={style.subtitol}>
+                                        {
+                                            project != "" ?
+                                                <div>Projecte: {project}</div>
+                                            :
+                                                <div></div>
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        {
+                             this.props.loaded ?
+                                <TaskList tasks={this.props.data.data.tasks} />
+                                :
+                                <div style={{padding: 30}}>
+                                    No hi ha tasques per mostrar.
+                                </div>
+                        }
                     </MainPaper>
                 </div>
             </div>

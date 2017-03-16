@@ -11,18 +11,16 @@ export default class TaskList extends Component {
                     <TableRow>
                         <TableHeaderColumn>Avatar</TableHeaderColumn>
                         <TableHeaderColumn>Descripció</TableHeaderColumn>
-                        <TableHeaderColumn>Projecte</TableHeaderColumn>
                         <TableHeaderColumn>Responsable</TableHeaderColumn>
                         <TableHeaderColumn>Prioritat</TableHeaderColumn>
                         <TableHeaderColumn>Estat</TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
                 <TableBody showRowHover={true} displayRowCheckbox={false} stripedRows={true}>
-                    {this.props.projects.map(task =>
+                    {this.props.tasks.map(task =>
                         <Task
                             key={task.id}
                             description={task.description}
-                            project={task.project}
                             partner={task.partner}
                             status={task.status}
                             avatar={task.avatar}

@@ -1,4 +1,4 @@
-import { RECEIVE_TASKS, FETCH_TASKS_REQUEST } from '../constants';
+import { SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST } from '../constants';
 import { createReducer } from '../utils/misc';
 
 const initialState = {
@@ -8,16 +8,14 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    [RECEIVE_TASKS]: (state, payload) =>
-        Object.assign({}, state, {
-            data: payload,
-            isFetching: false,
-            loaded: true,
-            message_text: payload.message,
-        }),
-    [FETCH_TASKS_REQUEST]: (state, payload) =>
+    [SEARCH_PROJECTS_REQUEST]: (state, payload) =>
         Object.assign({}, state, {
             isFetching: true,
             message_text: payload.message,
         }),
+    [SEARCH_TASKS_REQUEST]: (state, payload) =>
+        Object.assign({}, state, {
+            isFetching: true,
+            message_text: payload.message,
+        })
 });

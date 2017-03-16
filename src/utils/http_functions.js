@@ -46,6 +46,21 @@ export function getTasks(tasks_ids) {
     }
 }
 
+export function searchHelper(model, value){
+    var api = new PowERP();
+    if(!value && model == "project.project"){
+        return getProjects();
+    }
+    else if(!value && model == "project.task"){
+        return {
+            "data": null
+        }
+    }
+    return {
+        "data": []
+    }
+}
+
 export function redirectToRoute(route) {
     return () => {
         console.log("Redirecting to " + route + "...");

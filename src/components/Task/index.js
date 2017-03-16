@@ -31,7 +31,6 @@ export default class Task extends Component {
                     />
                 </TableRowColumn>
                 <TableRowColumn>{description}</TableRowColumn>
-                <TableRowColumn>{project}</TableRowColumn>
                 <TableRowColumn>{partner}</TableRowColumn>
                 <TableRowColumn>{priority}</TableRowColumn>
                 <TableRowColumn>{status}</TableRowColumn>

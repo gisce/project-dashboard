@@ -19,7 +19,7 @@ export default class MainMenu extends React.Component {
         return (
             <div>
                 <Paper style={style.paper} zDepth={2}>
-                    <Menu>
+                    <Menu disableAutoFocus={true}>
                         <MenuItem primaryText="Timer" leftIcon={<FontIcon className="material-icons">watch_later</FontIcon>} />
                         <MenuItem primaryText="Dashboard" leftIcon={<FontIcon className="material-icons">dashboard</FontIcon>} />
                         <MenuItem primaryText="Projectes" onTouchTap={redirectToRoute("/projects")} leftIcon={<FontIcon className="material-icons">folder</FontIcon>} />

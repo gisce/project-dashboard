@@ -13,12 +13,13 @@ export function fetchTasksRequest(initial) {
     };
 }
 
-export function receiveTasks(data, initial) {
+export function receiveTasks(tasks, original_ids, initial) {
     const message = (initial)?null:"Tasks list updated";
     return {
         type: RECEIVE_TASKS,
         payload: {
-            data,
+            tasks,
+            original_ids,
             message,
         },
     };
@@ -33,7 +34,7 @@ export function fetchTasks(token, tasques, initial = false) {
         let tasks_ids = JSON.parse(tasques);
         let response = getTasks(tasks_ids);
         let tasks = parseJSON(response);
-        dispatch(receiveTasks(tasks, initial));
+        dispatch(receiveTasks(tasks, tasks_ids, initial));
         dispatch(redirectToRoute("/tasks"));
     }
 }
