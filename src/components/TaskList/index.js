@@ -18,7 +18,7 @@ export default class TaskList extends Component {
                     </TableRow>
                 </TableHeader>
                 <TableBody showRowHover={true} displayRowCheckbox={false} stripedRows={true}>
-                    {this.props.projects.map(task =>
+                    {this.props.tasks.map(task =>
                         <Task
                             key={task.id}
                             description={task.description}
