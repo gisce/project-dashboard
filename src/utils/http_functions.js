@@ -46,11 +46,22 @@ export function getTasks(tasks_ids) {
     }
 }
 
-export function getTaskWork(task_id) {
+export function getTaskWorks(taskWorks_id) {
     /**
-     * This function fetches a single task with the same ID
-     * of param *task_id* using PowERP api.
+     * This function fetches task works with the same ID
+     * of param *taskWorks_id* using PowERP api.
      */
+    var api = new PowERP();
+    let taskWorks = [];
+    for (let i = 0; i < taskWorks_id.length; i++){
+        let taskWork = api.read("project.task.work", taskWorks_id[i], [
+            "hours", "user_id", "work_summary", "task_id", "date", "project_id"
+        ]);
+        taskWorks.push(taskWork);
+    }
+    return {
+        "data": taskWorks
+    }
 }
 
 export function searchHelper(model, value){
