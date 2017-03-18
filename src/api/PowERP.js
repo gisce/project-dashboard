@@ -50,7 +50,8 @@ class PowERP {
                     "estimated_hours": "0:00",
                     "dedicated_hours": "11:11",
                     "priority": "Mitjana",
-                    "status": "En progrés"
+                    "status": "En progrés",
+                    "work_ids": [1]
                 };
                 break;
             case "/project.task/2":
@@ -63,7 +64,8 @@ class PowERP {
                     "estimated_hours": "0:00",
                     "dedicated_hours": "11:11",
                     "priority": "Mitjana",
-                    "status": "En progrés"
+                    "status": "En progrés",
+                    "work_ids": [2]
                 };
                 break;
             case "/project.task/3":
@@ -76,20 +78,62 @@ class PowERP {
                     "estimated_hours": "0:00",
                     "dedicated_hours": "11:11",
                     "priority": "Mitjana",
-                    "status": "En progrés"
+                    "status": "En progrés",
+                    "work_ids": [3]
                 };
                 break;
             case "/project.task/4":
                 result = {
                     "id": 4,
-                    "description": "Report project dashboard",
+                    "description": "Reports ERP",
                     "project": "Desenvolupaments reports .mako",
                     "partner": "Guillem Julià",
                     "avatar": "https://avatars3.githubusercontent.com/u/4963636?v=3&s=460",
                     "estimated_hours": "0:00",
                     "dedicated_hours": "11:11",
                     "priority": "Mitjana",
-                    "status": "En progrés"
+                    "status": "En progrés",
+                    "work_ids": [4]
+                };
+                break;
+            case "/project.task.work/1":
+                result = {
+                    "hours": 2,
+                    "user_id": 1,
+                    "work_summary": "Assistència telefònica",
+                    "task_id": 1,
+                    "date": "16/06/2016",
+                    "project_id": 1
+                };
+                break;
+            case "/project.task.work/2":
+                result = {
+                    "hours": 2,
+                    "user_id": 1,
+                    "work_summary": "Cas [3442342]: manteniment servidor",
+                    "task_id": 2,
+                    "date": "16/06/2016",
+                    "project_id": 1
+                };
+                break;
+            case "/project.task.work/3":
+                result = {
+                    "hours": 2,
+                    "user_id": 1,
+                    "work_summary": "Formació dashboard",
+                    "task_id": 3,
+                    "date": "16/06/2016",
+                    "project_id": 2
+                };
+                break;
+            case "/project.task.work/4":
+                result = {
+                    "hours": 6,
+                    "user_id": 1,
+                    "work_summary": "Desenvolupament report factura",
+                    "task_id": 4,
+                    "date": "16/06/2016",
+                    "project_id": 3
                 };
                 break;
         }
