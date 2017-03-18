@@ -12,6 +12,7 @@ export default class Task extends Component {
 
     render(){
         const {
+            task_id,
             avatar,
             description,
             project,
@@ -39,6 +40,6 @@ export default class Task extends Component {
     }
 
     onClick() {
-        console.log("Tasca clicada");
+        console.log(this.props.task_id);
     }
 }
