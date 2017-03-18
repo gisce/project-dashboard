@@ -1,5 +1,5 @@
 import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK} from '../constants'
-import {redirectToRoute, getTaskWork} from '../utils/http_functions'
+import {redirectToRoute, getTaskWorks} from '../utils/http_functions'
 import {parseJSON} from '../utils/misc'
 import {fetchTasks, fetchTasksRequest} from './tasks'
 
@@ -25,14 +25,14 @@ export function receiveTaskWork(data, initial) {
     };
 }
 
-export function fetchTaskWork(token, tasca, initial = false) {
+export function fetchTaskWorks(token, tasques, initial = false) {
     return (dispatch) => {
         dispatch(fetchTaskWorkRequest(initial));
         // Can't use .then yet because getTasks is
         // a harcoded method, no real API calls stuff, so not
         // real Promise (async) objects
         let task_id = JSON.parse(tasca);
-        let response = getTaskWork(task_id);
+        let response = getTaskWorks(task_id);
         let taskWorks = parseJSON(response);
         dispatch(receiveTaskWork(taskWorks, initial));
     }
