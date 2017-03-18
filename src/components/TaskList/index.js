@@ -20,6 +20,7 @@ export default class TaskList extends Component {
                     {this.props.tasks.map(task =>
                         <Task
                             key={task.id}
+                            task_id={task.id}
                             description={task.description}
                             partner={task.partner}
                             status={task.status}
