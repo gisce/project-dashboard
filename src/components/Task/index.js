@@ -12,34 +12,26 @@ export default class Task extends Component {
 
     render(){
         const {
-            task_id,
-            avatar,
-            description,
-            project,
-            partner,
-            estimated_hours,
-            dedicated_hours,
-            priority,
-            status,
+            task,
             ...otherProps} = this.props;
         return(
             <TableRow {...otherProps} onCellClick={this.onClick}>
                 <TableRowColumn>
                     <Avatar
-                        src={avatar}
+                        src={task.avatar}
                         size={30}
                         style={style}
                     />
                 </TableRowColumn>
-                <TableRowColumn>{description}</TableRowColumn>
-                <TableRowColumn>{partner}</TableRowColumn>
-                <TableRowColumn>{priority}</TableRowColumn>
-                <TableRowColumn>{status}</TableRowColumn>
+                <TableRowColumn>{task.description}</TableRowColumn>
+                <TableRowColumn>{task.partner}</TableRowColumn>
+                <TableRowColumn>{task.priority}</TableRowColumn>
+                <TableRowColumn>{task.status}</TableRowColumn>
             </TableRow>
         )
     }
 
     onClick() {
-        console.log(this.props.task_id);
+        console.log(JSON.stringify(this.props.task));
     }
 }
