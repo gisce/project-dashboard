@@ -46,6 +46,13 @@ export function getTasks(tasks_ids) {
     }
 }
 
+export function getTaskWork(task_id) {
+    /**
+     * This function fetches a single task with the same ID
+     * of param *task_id* using PowERP api.
+     */
+}
+
 export function searchHelper(model, value){
     var api = new PowERP();
     if(!value && model == "project.project"){
