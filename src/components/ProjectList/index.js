@@ -18,11 +18,7 @@ export default class ProjectList extends Component {
                     {this.props.projects.map(project =>
                         <Project
                             key={project.id}
-                            title={project.title}
-                            partner={project.partner}
-                            status={project.status}
-                            avatar={project.avatar}
-                            tasks={project.tasks}
+                            project={project}
                         />
                     )}
                 </TableBody>
