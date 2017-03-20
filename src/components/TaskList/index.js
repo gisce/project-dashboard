@@ -6,7 +6,6 @@ export default class TaskList extends Component {
     render(){
         return(
             <Table>
-                /*'id', 'description', 'project', 'user', 'estimated_hours', 'dedicated_hours', 'priority', 'state'*/
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
                         <TableHeaderColumn>Avatar</TableHeaderColumn>
