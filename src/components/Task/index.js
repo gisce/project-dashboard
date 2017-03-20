@@ -28,6 +28,8 @@ export default class Task extends Component {
     render(){
         const {
             task,
+            fetchTaskWorkRequest, receiveTaskWork, fetchTaskWorks, dispatch,
+            setActiveTask, fetchTasksRequest, receiveTasks, fetchTasks,
             ...otherProps} = this.props;
         return(
             <TableRow {...otherProps} onCellClick={this.onClick}>
@@ -47,6 +49,9 @@ export default class Task extends Component {
     }
 
     onClick() {
-        console.log(JSON.stringify(this.props.task));
+        let token = "FOO";
+        let task_work_ids = JSON.stringify(this.props.task.work_ids);
+        this.props.setActiveTask(this.props.task.id);
+        this.props.fetchTaskWorks(token, task_work_ids, false);
     }
 }
