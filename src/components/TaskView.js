@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
+import FlatButton from 'material-ui/FlatButton';
+import FontIcon from 'material-ui/FontIcon';
+import TextField from 'material-ui/TextField';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/projects';
 import MainPaper from './MainPaper'
 import MainMenu from './MainMenu'
+import TaskWorkList from './TaskWorkList'
 
 function mapStateToProps(state) {
     let task = null;
@@ -16,12 +20,12 @@ function mapStateToProps(state) {
         }
     }
     return {
-        taskWork: state.taskWork,
+        taskWorks: state.taskWorks,
         task: task,
         token: null,
-        loaded: state.taskWork.loaded,
-        isFetching: state.taskWork.isFetching,
-        message_text: state.taskWork.message_text,
+        loaded: state.taskWorks.loaded,
+        isFetching: state.taskWorks.isFetching,
+        message_text: state.taskWorks.message_text,
     };
 }
 
@@ -45,11 +49,21 @@ const style = {
         paddingTop: 20,
         paddingLeft: 20,
         fontSize: 26,
-        width: '100%'
+        width: '70%'
     },
     mainTable: {
         width: '100%',
         marginBottom: '20px'
+    },
+    subtitol: {
+        paddingLeft: 20,
+        paddingTop: 20,
+        fontSize: 14
+    },
+    botoNou: {
+        float: 'right',
+        position: 'relative',
+        right: 5
     }
 };
 
@@ -80,9 +94,45 @@ export default class TasksView extends Component {
                                             :
                                             <div>Tasca</div>
                                     }
-
+                                </td>
+                                <td>
+                                    <div style={style.botoNou}>
+                                        <FlatButton
+                                            label="Nou workdone"
+                                            primary={true}
+                                            icon={<FontIcon className="material-icons">note_add</FontIcon>}
+                                        />
+                                    </div>
                                 </td>
                             </tr>
+                            {
+                                this.props.task ?
+                                    <div>
+                                        <tr>
+                                            <td colSpan="2" style={style.subtitol}>
+                                                <div>Projecte: {this.props.task.project}</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colSpan="2" style={style.subtitol}>
+                                                <TextField
+                                                    disabled={true}
+                                                    defaultValue={this.props.task.estimated_hours}
+                                                    floatingLabelText="Hores estimades"
+                                                />
+                                            </td>
+                                            <td colSpan="2" style={style.subtitol}>
+                                                <TextField
+                                                    disabled={true}
+                                                    defaultValue={this.props.task.dedicated_hours}
+                                                    floatingLabelText="Hores dedicades"
+                                                />
+                                            </td>
+                                        </tr>
+                                    </div>
+                                    :
+                                    <div></div>
+                            }
                             </tbody>
                         </table>
                         {
@@ -91,7 +141,7 @@ export default class TasksView extends Component {
                                     No s'ha seleccionat cap tasca.
                                 </div>
                                 :
-                                <div></div>
+                                <TaskWorkList taskWorks={this.props.taskWorks.data.taskWorks} />
                         }
                     </MainPaper>
                 </div>
