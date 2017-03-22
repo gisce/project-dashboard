@@ -30,6 +30,7 @@ export default class Task extends Component {
             task,
             fetchTaskWorkRequest, receiveTaskWork, fetchTaskWorks, dispatch,
             setActiveTask, fetchTasksRequest, receiveTasks, fetchTasks,
+            openTaskWorkDialogRequest, closeTaskWorkDialogRequest, openTaskWorkDialog, closeTaskWorkDialog,
             ...otherProps} = this.props;
         return(
             <TableRow {...otherProps} onCellClick={this.onClick}>
