@@ -2,7 +2,6 @@ import React from 'react';
 import Menu from 'material-ui/Menu';
 import Paper from 'material-ui/Paper';
 import MenuItem from 'material-ui/MenuItem';
-import RemoveRedEye from 'material-ui/svg-icons/image/remove-red-eye';
 import FontIcon from 'material-ui/FontIcon';
 import { redirectToRoute } from '../../utils/http_functions'
 
