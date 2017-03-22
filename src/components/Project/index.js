@@ -32,7 +32,7 @@ export default class Project extends Component {
     render(){
         const {project, token, loaded, isFetching,
             message_text, fetchTasksRequest,
-            receiveTasks, fetchTasks,
+            receiveTasks, fetchTasks, setActiveTask,
             ...otherProps} = this.props;
         return(
             <TableRow {...otherProps} onCellClick={this.onClick}>
