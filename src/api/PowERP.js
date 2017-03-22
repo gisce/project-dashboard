@@ -98,6 +98,7 @@ class PowERP {
                 break;
             case "/project.task.work/1":
                 result = {
+                    "id": 1,
                     "hours": 2,
                     "user_id": 1,
                     "work_summary": "Assistència telefònica",
@@ -108,6 +109,7 @@ class PowERP {
                 break;
             case "/project.task.work/2":
                 result = {
+                    "id": 2,
                     "hours": 2,
                     "user_id": 1,
                     "work_summary": "Cas [3442342]: manteniment servidor",
@@ -118,6 +120,7 @@ class PowERP {
                 break;
             case "/project.task.work/3":
                 result = {
+                    "id": 3,
                     "hours": 2,
                     "user_id": 1,
                     "work_summary": "Formació dashboard",
@@ -128,6 +131,7 @@ class PowERP {
                 break;
             case "/project.task.work/4":
                 result = {
+                    "id": 4,
                     "hours": 6,
                     "user_id": 1,
                     "work_summary": "Desenvolupament report factura",
