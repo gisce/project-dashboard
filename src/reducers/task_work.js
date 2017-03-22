@@ -1,10 +1,11 @@
-import { RECEIVE_TASK_WORK, FETCH_TASK_WORK_REQUEST } from '../constants';
+import { RECEIVE_TASK_WORK, FETCH_TASK_WORK_REQUEST, UI_OPEN_TASK_WORK_DIALOG, UI_CLOSE_TASK_WORK_DIALOG } from '../constants';
 import { createReducer } from '../utils/misc';
 
 const initialState = {
     data: null,
     isFetching: false,
     loaded: false,
+    dialog_open: false
 };
 
 export default createReducer(initialState, {
@@ -19,5 +20,17 @@ export default createReducer(initialState, {
         Object.assign({}, state, {
             isFetching: true,
             message_text: payload.message,
+        }),
+    [UI_OPEN_TASK_WORK_DIALOG]: (state, payload) =>
+        Object.assign({}, state, {
+            isFetching: true,
+            message_text: payload.message,
+            dialog_open: payload.dialog_open
+        }),
+    [UI_CLOSE_TASK_WORK_DIALOG]: (state, payload) =>
+        Object.assign({}, state, {
+            isFetching: true,
+            message_text: payload.message,
+            dialog_open: payload.dialog_open
         }),
 });
