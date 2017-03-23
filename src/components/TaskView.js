@@ -101,6 +101,7 @@ export default class TasksView extends Component {
                                             label="Nou workdone"
                                             primary={true}
                                             icon={<FontIcon className="material-icons">note_add</FontIcon>}
+                                            onTouchTap={this.newTaskWork}
                                         />
                                     </div>
                                 </td>
@@ -147,5 +148,9 @@ export default class TasksView extends Component {
                 </div>
             </div>
         )
+    }
+
+    newTaskWork() {
+        console.log("New workdone called");
     }
 }
