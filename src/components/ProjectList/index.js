@@ -5,7 +5,7 @@ import Project from '../Project'
 export default class ProjectList extends Component {
     render(){
         return(
-            <Table>
+            <Table style={{ tableLayout: 'auto' }} fixedHeader={false}>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
                         <TableHeaderColumn>Avatar</TableHeaderColumn>
