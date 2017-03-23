@@ -1,4 +1,4 @@
-import {FETCH_TASKS_REQUEST, RECEIVE_TASKS} from '../constants'
+import {FETCH_TASKS_REQUEST, RECEIVE_TASKS, SET_ACTIVE_TASK} from '../constants'
 import {redirectToRoute, getTasks} from '../utils/http_functions'
 import {parseJSON} from '../utils/misc'
 
@@ -23,6 +23,15 @@ export function receiveTasks(tasks, original_ids, initial) {
             message,
         },
     };
+}
+
+export function setActiveTask(active_task_id, initial) {
+    return {
+        type: SET_ACTIVE_TASK,
+        payload: {
+            active_task_id
+        }
+    }
 }
 
 export function fetchTasks(token, tasques, initial = false) {

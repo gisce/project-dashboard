@@ -30,30 +30,29 @@ export default class Project extends Component {
     }
 
     render(){
-        const {avatar, title, partner, status,
-            tasks, token, loaded, isFetching,
+        const {project, token, loaded, isFetching,
             message_text, fetchTasksRequest,
-            receiveTasks, fetchTasks,
+            receiveTasks, fetchTasks, setActiveTask,
             ...otherProps} = this.props;
         return(
             <TableRow {...otherProps} onCellClick={this.onClick}>
                 <TableRowColumn>
                     <Avatar
-                        src={avatar}
+                        src={project.avatar}
                         size={30}
                         style={style}
                     />
                 </TableRowColumn>
-                <TableRowColumn>{title}</TableRowColumn>
-                <TableRowColumn>{partner}</TableRowColumn>
-                <TableRowColumn>{status}</TableRowColumn>
+                <TableRowColumn>{project.title}</TableRowColumn>
+                <TableRowColumn>{project.partner}</TableRowColumn>
+                <TableRowColumn>{project.status}</TableRowColumn>
             </TableRow>
         )
     }
 
     onClick() {
         let token = "FOO";
-        let tasks = JSON.stringify(this.props.tasks);
+        let tasks = JSON.stringify(this.props.project.tasks);
         this.props.fetchTasks(token, tasks, false);
     }
 }

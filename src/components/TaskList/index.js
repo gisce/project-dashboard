@@ -5,8 +5,7 @@ import Task from '../Task'
 export default class TaskList extends Component {
     render(){
         return(
-            <Table>
-                /*'id', 'description', 'project', 'user', 'estimated_hours', 'dedicated_hours', 'priority', 'state'*/
+            <Table style={{ tableLayout: 'auto' }} fixedHeader={false}>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
                         <TableHeaderColumn>Avatar</TableHeaderColumn>
@@ -20,11 +19,7 @@ export default class TaskList extends Component {
                     {this.props.tasks.map(task =>
                         <Task
                             key={task.id}
-                            description={task.description}
-                            partner={task.partner}
-                            status={task.status}
-                            avatar={task.avatar}
-                            priority = {task.priority}
+                            task={task}
                         />
                     )}
                 </TableBody>
