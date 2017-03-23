@@ -24,12 +24,13 @@ export default class TaskWork extends Component {
         super(props);
         this.onClick = this.onClick.bind(this);
         this.deleteTaskWork = this.deleteTaskWork.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
     }
 
     render(){
         const {
             taskWork,
-            fetchTaskWorkRequest, receiveTaskWork, fetchTaskWorks, dispatch, handleOpen,
+            fetchTaskWorkRequest, receiveTaskWork, fetchTaskWorks, dispatch, handleOpen, handleEdit,
             openTaskWorkDialogRequest, closeTaskWorkDialogRequest, openTaskWorkDialog, closeTaskWorkDialog,
             ...otherProps} = this.props;
         return(
@@ -37,11 +38,14 @@ export default class TaskWork extends Component {
                 <TableRowColumn>{taskWork.date}</TableRowColumn>
                 <TableRowColumn>{taskWork.user_id}</TableRowColumn>
                 <TableRowColumn>{taskWork.hours}</TableRowColumn>
-                <TableRowColumn>{taskWork.work_summary}</TableRowColumn>
+                <TableRowColumn style={{width: '80%'}}>{taskWork.work_summary}</TableRowColumn>
                 <TableRowColumn>
-                    <div style={{float: 'right'}}>
+                    <div style={{float: 'right'}} onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }}>
                         <IconButton>
-                            <FontIcon className="material-icons">mode_edit</FontIcon>
+                            <FontIcon onTouchTap={this.handleEdit} className="material-icons">mode_edit</FontIcon>
                         </IconButton>
                         <IconButton>
                             <FontIcon onTouchTap={this.deleteTaskWork} className="material-icons">delete</FontIcon>
@@ -58,5 +62,9 @@ export default class TaskWork extends Component {
 
     deleteTaskWork() {
         this.props.handleOpen();
+    }
+
+    handleEdit() {
+        this.props.handleEdit();
     }
 }
