@@ -5,7 +5,7 @@ import Task from '../Task'
 export default class TaskList extends Component {
     render(){
         return(
-            <Table>
+            <Table style={{ tableLayout: 'auto' }} fixedHeader={false}>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                     <TableRow>
                         <TableHeaderColumn>Avatar</TableHeaderColumn>
