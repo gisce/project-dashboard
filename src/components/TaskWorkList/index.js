@@ -24,6 +24,8 @@ export default class TaskWorkList extends Component {
         super(props);
         this.handleOpen = this.handleOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.deleteTaskWork = this.deleteTaskWork.bind(this);
+        this.editTaskWork = this.editTaskWork.bind(this);
     }
 
     render(){
@@ -36,7 +38,7 @@ export default class TaskWorkList extends Component {
             <FlatButton
                 label="D'acord"
                 primary={true}
-                onTouchTap={this.handleClose}
+                onTouchTap={this.deleteTaskWork}
             />,
         ];
         const {
@@ -45,7 +47,7 @@ export default class TaskWorkList extends Component {
             ...otherProps} = this.props;
         return(
             <span>
-                <Table {...otherProps}>
+                <Table style={{ tableLayout: 'auto' }} fixedHeader={false} {...otherProps}>
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn>Data</TableHeaderColumn>
@@ -61,6 +63,7 @@ export default class TaskWorkList extends Component {
                                 key={taskWork.id}
                                 taskWork={taskWork}
                                 handleOpen={this.handleOpen}
+                                handleEdit={this.editTaskWork}
                             />
                         )}
                     </TableBody>
@@ -85,5 +88,14 @@ export default class TaskWorkList extends Component {
 
     handleClose() {
         this.props.closeTaskWorkDialog();
+    }
+
+    editTaskWork() {
+        console.log("Edit workdone called");
+    }
+
+    deleteTaskWork() {
+        console.log("Delete workdone called");
+        this.handleClose();
     }
 }
