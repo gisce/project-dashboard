@@ -8,7 +8,7 @@ import { redirectToRoute } from '../../utils/http_functions'
 const style = {
     paper: {
         display: 'inline-block',
-        height: '93.1%',
+        height: '100.7%',
         width: '224px'
     }
 };
