@@ -155,32 +155,6 @@ class PowERP {
         let uri = "/" + model + "/" + id;
         return this.request(uri)
     }
-
-    // getToken(user,password){
-    //     var clientId = "admin";
-    //     var clientSecret = "admin";
-    //
-    //     // Temporal hadcode, base64 is admin:admin
-    //     var authorizationBasic = 'YWRtaW46YWRtaW4=';
-    //
-    //     var request = new XMLHttpRequest();
-    //     request.open('POST', 'http://localhost:5000', true);
-    //     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-    //     console.log("1234");
-    //     request.setRequestHeader('Authorization', 'Basic ' + authorizationBasic);
-    //     console.log("5678");
-    //     request.setRequestHeader('Accept', 'application/json');
-    //     console.log("91011");
-    //     console.log(request.responseText);
-    //     request.send("username=John&password=Smith&grant_type=password");
-    //     request.onreadystatechange = function () {
-    //         if (request.readyState === 4) {
-    //             return request.responseText;
-    //         }
-    //         else return "";
-    //     };
-    // }
-
 }
 
 export default PowERP;

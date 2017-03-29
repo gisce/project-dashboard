@@ -33,17 +33,17 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators(actionCreators, dispatch);
 }
 
-const style = {
-    menuSection: {
-        display: 'block',
-        float: 'left',
-        width: "14%"
+const estils = {
+    menuContainer: {
+        padding: 0,
+        margin: 0
     },
-    paperSection: {
-        display: 'block',
-        width:  '75%',
-        float: 'right',
-        padding: 30
+    paperContainer: {
+        width: '100%',
+        paddingLeft: 33,
+        paddingRight: 30,
+        paddingTop: 80,
+        margin: 0
     },
     titol: {
         paddingTop: 20,
@@ -51,14 +51,24 @@ const style = {
         fontSize: 26,
         width: '70%'
     },
-    mainTable: {
-        width: '100%',
-        marginBottom: '20px'
-    },
     subtitol: {
         paddingLeft: 20,
         paddingTop: 20,
         fontSize: 14
+    },
+    mainTable: {
+        width: "100%",
+        marginBottom: '20px'
+    },
+    paperSectionStyle: {
+        height: "100%"
+    },
+    containerTable: {
+        height: "93.1%",
+        width: "100%",
+        position: "relative",
+        top: "-3",
+        left: "-3"
     },
     botoNou: {
         float: 'right',
@@ -78,75 +88,81 @@ export default class TasksView extends Component {
 
     render() {
         return(
-            <div>
-                <div style={style.menuSection}>
-                    <MainMenu/>
-                </div>
-                <div style={style.paperSection}>
-                    <MainPaper>
-                        <table style={style.mainTable}>
-                            <tbody>
-                            <tr>
-                                <td style={style.titol}>
+            <table style={estils.containerTable}>
+                <tr>
+                    <td style={estils.menuContainer}>
+                        <div style={{height: "100%", width: '100%', float: 'left'}}>
+                            <MainMenu/>
+                        </div>
+                    </td>
+                    <td className="paperSection" style={estils.paperContainer}>
+                        <div style={estils.paperSectionStyle}>
+                            <MainPaper>
+                                <table style={estils.mainTable}>
+                                    <tbody>
+                                    <tr>
+                                        <td style={estils.titol}>
+                                            {
+                                                this.props.task ?
+                                                    <div>{this.props.task.description}</div>
+                                                    :
+                                                    <div>Tasca</div>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div style={estils.botoNou}>
+                                                <FlatButton
+                                                    label="Nou workdone"
+                                                    primary={true}
+                                                    icon={<FontIcon className="material-icons">note_add</FontIcon>}
+                                                    onTouchTap={this.newTaskWork}
+                                                />
+                                            </div>
+                                        </td>
+                                    </tr>
                                     {
                                         this.props.task ?
-                                            <div>{this.props.task.description}</div>
+                                            <div>
+                                                <tr>
+                                                    <td colSpan="2" style={estils.subtitol}>
+                                                        <div>Projecte: {this.props.task.project}</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan="2" style={estils.subtitol}>
+                                                        <TextField
+                                                            disabled={true}
+                                                            defaultValue={this.props.task.estimated_hours}
+                                                            floatingLabelText="Hores estimades"
+                                                        />
+                                                    </td>
+                                                    <td colSpan="2" style={estils.subtitol}>
+                                                        <TextField
+                                                            disabled={true}
+                                                            defaultValue={this.props.task.dedicated_hours}
+                                                            floatingLabelText="Hores dedicades"
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            </div>
                                             :
-                                            <div>Tasca</div>
+                                            <div></div>
                                     }
-                                </td>
-                                <td>
-                                    <div style={style.botoNou}>
-                                        <FlatButton
-                                            label="Nou workdone"
-                                            primary={true}
-                                            icon={<FontIcon className="material-icons">note_add</FontIcon>}
-                                            onTouchTap={this.newTaskWork}
-                                        />
-                                    </div>
-                                </td>
-                            </tr>
-                            {
-                                this.props.task ?
-                                    <div>
-                                        <tr>
-                                            <td colSpan="2" style={style.subtitol}>
-                                                <div>Projecte: {this.props.task.project}</div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colSpan="2" style={style.subtitol}>
-                                                <TextField
-                                                    disabled={true}
-                                                    defaultValue={this.props.task.estimated_hours}
-                                                    floatingLabelText="Hores estimades"
-                                                />
-                                            </td>
-                                            <td colSpan="2" style={style.subtitol}>
-                                                <TextField
-                                                    disabled={true}
-                                                    defaultValue={this.props.task.dedicated_hours}
-                                                    floatingLabelText="Hores dedicades"
-                                                />
-                                            </td>
-                                        </tr>
-                                    </div>
-                                    :
-                                    <div></div>
-                            }
-                            </tbody>
-                        </table>
-                        {
-                            !this.props.task ?
-                                <div style={{padding: 30}}>
-                                    No s'ha seleccionat cap tasca.
-                                </div>
-                                :
-                                <TaskWorkList taskWorks={this.props.taskWorks.data.taskWorks} />
-                        }
-                    </MainPaper>
-                </div>
-            </div>
+                                    </tbody>
+                                </table>
+                                {
+                                    !this.props.task ?
+                                        <div style={{padding: 30}}>
+                                            No s'ha seleccionat cap tasca.
+                                        </div>
+                                        :
+                                        <TaskWorkList taskWorks={this.props.taskWorks.data.taskWorks} />
+                                }
+                            </MainPaper>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         )
     }
 
