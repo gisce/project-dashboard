@@ -5,6 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import * as taskWorkCreators from '../../actions/task_work';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import {prova} from '../../utils/http_functions'
 
 function mapStateToProps(state) {
     return {
@@ -57,7 +58,7 @@ export default class TaskWork extends Component {
     }
 
     onClick() {
-        console.log("Workdone clicat: ", this.props.taskWork.id);
+        console.log("Prova: ", prova());
     }
 
     deleteTaskWork() {
