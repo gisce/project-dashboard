@@ -22,17 +22,17 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-const style = {
-    menuSection: {
-        display: 'block',
-        float: 'left',
-        width: "14%"
+const estils = {
+    menuContainer: {
+        padding: 0,
+        margin: 0
     },
-    paperSection: {
-        display: 'block',
-        width:  '75%',
-        float: 'right',
-        padding: 30
+    paperContainer: {
+        width: '100%',
+        paddingLeft: 33,
+        paddingRight: 30,
+        paddingTop: 80,
+        margin: 0
     },
     titol: {
         paddingLeft: 20,
@@ -44,8 +44,17 @@ const style = {
         fontSize: 14
     },
     mainTable: {
-        width: '100%',
         marginBottom: '20px'
+    },
+    paperSectionStyle: {
+        height: "100%"
+    },
+    containerTable: {
+        height: "93.1%",
+        width: "100%",
+        position: "relative",
+        top: "-3",
+        left: "-3"
     }
 };
 
@@ -70,35 +79,41 @@ export default class ProjectsView extends Component {
 
     render() {
         return(
-            <div>
-                <div style={style.menuSection}>
-                    <MainMenu/>
-                </div>
-                <div style={style.paperSection}>
-                    <MainPaper>
-                        <table style={style.mainTable}>
-                            <tbody>
-                                <tr>
-                                    <td style={style.titol}>
-                                        Projectes
-                                    </td>
-                                    <td>
-                                        <SearchBox original_ids={[]} model="projects"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        {
-                            this.props.loaded ?
-                                <ProjectList projects={this.props.data.data} />
-                                :
-                                <div style={{padding: 30}}>
-                                    No hi ha projectes per mostrar.
-                                </div>
-                        }
-                    </MainPaper>
-                </div>
-            </div>
+            <table style={estils.containerTable}>
+                <tr>
+                    <td style={estils.menuContainer}>
+                        <div style={{height: "100%", width: '100%', float: 'left'}}>
+                            <MainMenu/>
+                        </div>
+                    </td>
+                    <td className="paperSection" style={estils.paperContainer}>
+                        <div style={estils.paperSectionStyle}>
+                            <MainPaper>
+                                <table style={estils.mainTable}>
+                                    <tbody>
+                                        <tr>
+                                            <td style={estils.titol}>
+                                                Projectes
+                                            </td>
+                                            <td>
+                                                <SearchBox original_ids={[]} model="projects"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                {
+                                    this.props.loaded ?
+                                        <ProjectList projects={this.props.data.data} />
+                                        :
+                                        <div style={{padding: 30}}>
+                                            No hi ha projectes per mostrar.
+                                        </div>
+                                }
+                            </MainPaper>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         )
     }
 }
