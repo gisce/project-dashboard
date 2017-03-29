@@ -5,6 +5,9 @@ export const DEBUG = (debug)?debug:false;
 
 export const VERSION = "0.0.0";
 
+export const UI_OPEN_MENU = 'UI_OPEN_MENU';
+export const UI_CLOSE_MENU = 'UI_CLOSE_MENU';
+
 export const RECEIVE_PROJECT = 'RECEIVE_PROJECT';
 export const FETCH_PROJECT_REQUEST = 'FETCH_PROJECT_REQUEST';
 
