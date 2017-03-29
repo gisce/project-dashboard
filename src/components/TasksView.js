@@ -48,8 +48,8 @@ const estils = {
         height: "93.1%",
         width: "100%",
         position: "relative",
-        top: "-3",
-        left: "-3"
+        top: -3,
+        left: -3
     },
     subtitol: {
         paddingLeft: 20,
