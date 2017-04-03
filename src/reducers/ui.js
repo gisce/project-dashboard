@@ -2,7 +2,7 @@ import { UI_OPEN_MENU, UI_CLOSE_MENU } from '../constants';
 import { createReducer } from '../utils/misc';
 
 const initialState = {
-    menu_open: true
+    menu_open: false
 };
 
 export default createReducer(initialState, {

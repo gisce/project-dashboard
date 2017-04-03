@@ -32,15 +32,6 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators(actionCreators, dispatch);
 }
 
-
-const style = {
-    search: {
-        float: 'right',
-        padding: 0,
-        margin: 0
-    }
-};
-
 @connect(mapStateToProps, mapDispatchToProps)
 export default class SearchBox extends Component {
     constructor(props) {
@@ -51,7 +42,6 @@ export default class SearchBox extends Component {
     render(){
         return(
             <TextField
-                style={style.search}
                 floatingLabelText="Cerca"
                 onChange={this.searchRequest}
             />
