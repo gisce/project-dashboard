@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/projects';
 import MainPaper from './MainPaper'
-import MainMenu from './MainMenu'
 import ProjectList from './ProjectList'
 import SearchBox from './SearchBox';
 
@@ -23,38 +22,28 @@ function mapDispatchToProps(dispatch) {
 
 
 const estils = {
-    menuContainer: {
-        padding: 0,
-        margin: 0
-    },
-    paperContainer: {
-        width: '100%',
-        paddingLeft: 33,
-        paddingRight: 30,
-        paddingTop: 80,
-        margin: 0
+    container: {
+        width: "70%",
+        paddingLeft: "15%",
+        paddingRight: "15%",
+        paddingTop: 120
     },
     titol: {
-        paddingLeft: 20,
-        fontSize: 26,
-        width: '100%'
-    },
-    subtitol: {
-        paddingLeft: 20,
-        fontSize: 14
-    },
-    mainTable: {
-        marginBottom: '20px'
-    },
-    paperSectionStyle: {
-        height: "100%"
-    },
-    containerTable: {
-        height: "93.1%",
-        width: "100%",
         position: "relative",
-        top: -3,
-        left: -3
+        float: "left",
+        paddingTop: 20,
+        paddingLeft: 20,
+        fontSize: 26
+    },
+    search_box: {
+        position: "relative",
+        float: "right",
+        fontSize: 26
+    },
+    continguts: {
+        clear: "both",
+        width: '100%',
+        paddingTop: 30
     }
 };
 
@@ -79,41 +68,26 @@ export default class ProjectsView extends Component {
 
     render() {
         return(
-            <table style={estils.containerTable}>
-                <tr>
-                    <td style={estils.menuContainer}>
-                        <div style={{height: "100%", width: '100%', float: 'left'}}>
-                            <MainMenu/>
-                        </div>
-                    </td>
-                    <td className="paperSection" style={estils.paperContainer}>
-                        <div style={estils.paperSectionStyle}>
-                            <MainPaper>
-                                <table style={estils.mainTable}>
-                                    <tbody>
-                                        <tr>
-                                            <td style={estils.titol}>
-                                                Projectes
-                                            </td>
-                                            <td>
-                                                <SearchBox original_ids={[]} model="projects"/>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                {
-                                    this.props.loaded ?
-                                        <ProjectList projects={this.props.data.data} />
-                                        :
-                                        <div style={{padding: 30}}>
-                                            No hi ha projectes per mostrar.
-                                        </div>
-                                }
-                            </MainPaper>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+            <div style={estils.container}>
+                <MainPaper>
+                    <div style={estils.titol}>
+                        Projectes
+                    </div>
+                    <div style={estils.search_box}>
+                        <SearchBox original_ids={[]} model="projects"/>
+                    </div>
+                    <div style={estils.continguts}>
+                        {
+                            this.props.loaded ?
+                                <ProjectList projects={this.props.data.data} />
+                                :
+                                <div style={{padding: 30}}>
+                                    No hi ha projectes per mostrar.
+                                </div>
+                        }
+                    </div>
+                </MainPaper>
+            </div>
         )
     }
 }
