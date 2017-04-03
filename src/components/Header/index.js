@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
+import { redirectToRoute } from '../../utils/http_functions'
 import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import FontIcon from 'material-ui/FontIcon';
+import LogoutIcon from 'material-ui/svg-icons/navigation/close';
+import IconButton from 'material-ui/IconButton';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../../actions/ui';
@@ -26,20 +32,39 @@ const style = {
 export class Header extends Component {
     constructor(props) {
         super(props);
-        this.onClick = this.onClick.bind(this);
+        this.handleSwipe = this.handleSwipe.bind(this);
     }
 
     render(){
         return(
             <header>
-                <AppBar onLeftIconButtonTouchTap={this.onClick} style={style.appBar}
+                <Drawer
+                    open={this.props.menu_open}
+                    docked={false}
+                    disableSwipeToOpen={false}
+                    swipeAreaWidth={30}
+                    onRequestChange={this.handleSwipe}
+                >
+                    <AppBar
+                        title=""
+                        onClick={this.handleSwipe}
+                        iconElementLeft={<IconButton><LogoutIcon /></IconButton>}
+                    />
+                    <MenuItem primaryText="Timer" leftIcon={<FontIcon className="material-icons">watch_later</FontIcon>} />
+                    <MenuItem primaryText="Dashboard" leftIcon={<FontIcon className="material-icons">dashboard</FontIcon>} />
+                    <MenuItem primaryText="Projectes" onTouchTap={redirectToRoute("/projects")} leftIcon={<FontIcon className="material-icons">folder</FontIcon>} />
+                    <MenuItem primaryText="Usuaris" leftIcon={<FontIcon className="material-icons">account_circle</FontIcon>} />
+                    <MenuItem primaryText="Empreses" leftIcon={<FontIcon className="material-icons">business_center</FontIcon>} />
+                    <MenuItem primaryText="Configuració" leftIcon={<FontIcon className="material-icons">settings</FontIcon>}/>
+                </Drawer>
+                <AppBar onLeftIconButtonTouchTap={this.handleSwipe} style={style.appBar}
                     title="Project-Dashboard"
                 />
             </header>
         )
     }
 
-    onClick() {
+    handleSwipe() {
         if(this.props.menu_open){
             this.props.closeMenu();
         }
