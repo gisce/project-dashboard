@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/projects';
-import MainPaper from './MainPaper'
-import TaskList from './TaskList'
-import SearchBox from './SearchBox';
+import MainView from './MainView'
+import List from './List'
+import Task from './Task'
 
 function mapStateToProps(state) {
     return {
@@ -19,26 +19,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(actionCreators, dispatch);
 }
-
-const estils = {
-    titol: {
-        paddingLeft: 20,
-        fontSize: 26,
-        width: '100%'
-    },
-    mainTable: {
-        marginBottom: '20px'
-    },
-    subtitol: {
-        paddingLeft: 20,
-        fontSize: 14
-    },
-    container: {
-        paddingLeft: "15%",
-        paddingRight: "15%",
-        paddingTop: 120
-    },
-};
 
 let project = "";
 
@@ -59,41 +39,30 @@ export default class TasksView extends Component {
                 project = this.props.data.data.tasks[0].project;
             }
         }
+        let tableContents = "No hi ha tasques per mostrar.";
+        let cols = [
+            "Avatar",
+            "Descripció",
+            "Responsable",
+            "Prioritat",
+            "Estat"
+        ];
+        if(this.props.loaded){
+            let tasks = this.props.data.data.tasks;
+            tableContents = tasks.map(task =>
+                <Task
+                    key={task.id}
+                    task={task}
+                />)
+        }
         return(
-            <div style={estils.container}>
-                <MainPaper>
-                    <table style={estils.mainTable}>
-                        <tbody>
-                        <tr>
-                            <td style={estils.titol}>
-                                Tasques
-                            </td>
-                            <td>
-                                <SearchBox original_ids={tasks_ids} model="tasks"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={estils.subtitol}>
-                                {
-                                    project != "" ?
-                                        <div>Projecte: {project}</div>
-                                        :
-                                        <div></div>
-                                }
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    {
-                        this.props.loaded ?
-                            <TaskList tasks={this.props.data.data.tasks} />
-                            :
-                            <div style={{padding: 30}}>
-                                No hi ha tasques per mostrar.
-                            </div>
-                    }
-                </MainPaper>
-            </div>
+            <MainView
+                original_ids={tasks_ids}
+                model="tasks"
+                title="Tasques"
+                breadcrumb={project}
+                table={<List columns={cols} tableBody={tableContents}/>}
+            />
         )
     }
 }
