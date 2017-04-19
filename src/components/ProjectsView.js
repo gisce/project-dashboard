@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/projects';
@@ -34,9 +35,7 @@ export default class ProjectsView extends Component {
     }
 
     fetchData(initial = true) {
-        const token = "FOO";
-        // must replace by real token
-        this.props.fetchProjects(token, "", initial);
+        this.props.fetchProjects(TOKEN, initial);
     }
 
     render() {
