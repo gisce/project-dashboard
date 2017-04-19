@@ -1,6 +1,7 @@
 import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK, UI_OPEN_TASK_WORK_DIALOG, UI_CLOSE_TASK_WORK_DIALOG} from '../constants'
 import {redirectToRoute, getTaskWorks} from '../utils/http_functions'
-import {parseJSON} from '../utils/misc'
+import {parseJSON, parseWorkdones} from '../utils/misc'
+import axios  from 'axios'
 
 export function fetchTaskWorkRequest(initial) {
     const message = (initial)?null:"Refreshing task work list";
@@ -51,14 +52,16 @@ export function receiveTaskWork(taskWorks, initial) {
 export function fetchTaskWorks(token, taskWorks, initial = false) {
     return (dispatch) => {
         dispatch(fetchTaskWorkRequest(initial));
-        // Can't use .then yet because getTasks is
-        // a harcoded method, no real API calls stuff, so not
-        // real Promise (async) objects
         let taskWorks_ids = JSON.parse(taskWorks);
-        let response = getTaskWorks(taskWorks_ids);
-        let taskWorksArray = parseJSON(response);
-        dispatch(receiveTaskWork(taskWorksArray, initial));
-        dispatch(redirectToRoute("/task"));
+        axios.get("http://172.26.0.216:5000/project.task.work?schema=name,hours,user_id.name,task_id.name,date,project_id.name&filter=[('id','in',"+JSON.stringify(taskWorks_ids).replace(/"/g, '')+")]")
+            .then(parseJSON)
+            .then(response => {
+                dispatch(receiveTaskWork(parseWorkdones(response), initial));
+                dispatch(redirectToRoute("/task"));
+            })
+            .catch(error => {
+                console.log("API ERROR", error);
+            });
     }
 }
 
