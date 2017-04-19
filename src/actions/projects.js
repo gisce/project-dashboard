@@ -1,6 +1,7 @@
 import {FETCH_PROJECTS_REQUEST, RECEIVE_PROJECTS} from '../constants'
-import {getProjects} from '../utils/http_functions'
-import {parseJSON} from '../utils/misc'
+import {parseJSON, parseProjects} from '../utils/misc'
+import {define_token} from '../utils/http_functions'
+import axios  from 'axios'
 
 export function fetchProjectsRequest(initial) {
     const message = (initial)?null:"Refreshing projects list";
@@ -27,17 +28,14 @@ export function receiveProjects(data, initial) {
 export function fetchProjects(token, initial = false) {
     return (dispatch) => {
         dispatch(fetchProjectsRequest(initial));
-        // Can't use .then yet because getProject is
-        // a harcoded method, no real API calls stuff, so not
-        // real Promise (async) objects
-        // console.log("FETCHED!" + getProjects());
-        // getProjects()
-        //     .then(parseJSON)
-        //     .then(response => {
-        //         dispatch(receiveProjects(response.result, initial));
-        //     })
-        let response = getProjects();
-        let projects = parseJSON(response);
-        dispatch(receiveProjects(projects, initial));
+        define_token(token);
+        axios.get("http://172.26.0.216:5000/project.project?schema=name,tasks,manager.name,state")
+            .then(parseJSON)
+            .then(response => {
+                dispatch(receiveProjects(parseProjects(response), initial));
+            })
+            .catch(error => {
+                console.log("API ERROR", error);
+            });
     }
 }
