@@ -81,24 +81,6 @@ export function redirectToRoute(route) {
 
 export function define_token(token) {
     localStorage.setItem('token', token);
-    axios.defaults.headers.common['Authorization'] = token;
+    axios.defaults.headers.common['Authorization'] = "token " + token;
     axios.defaults.headers.post['Content-Type'] = 'text/plain';
-}
-
-export function prova() {
-    const token = "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFkbWluIiwicGFzc3dvcmQiOiJhZG1pbiJ9.woh6RaTFrT4ANXK6e_BgUayaP3RFE2bmndBSJLEGQrI";
-    define_token(token);
-    axios.get("http://127.0.0.1:5000/project.project",)
-        .then(parseJSON)
-        .then(response => {
-            if (response.result.status == "ok") {
-                console.log("OK!")
-            }
-            else{
-                console.log("ERROR!");
-            }
-        })
-        .catch(error => {
-            console.log("Error catched! ", error);
-        })
 }
