@@ -5,7 +5,6 @@ import IconButton from 'material-ui/IconButton';
 import * as taskWorkCreators from '../../actions/task_work';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {prova} from '../../utils/http_functions'
 
 function mapStateToProps(state) {
     return {
@@ -37,7 +36,7 @@ export default class TaskWork extends Component {
         return(
             <TableRow {...otherProps} onCellClick={this.onClick}>
                 <TableRowColumn>{taskWork.date}</TableRowColumn>
-                <TableRowColumn>{taskWork.user_id}</TableRowColumn>
+                <TableRowColumn>{taskWork.user}</TableRowColumn>
                 <TableRowColumn>{taskWork.hours}</TableRowColumn>
                 <TableRowColumn style={{width: '80%'}}>{taskWork.work_summary}</TableRowColumn>
                 <TableRowColumn>
@@ -58,7 +57,7 @@ export default class TaskWork extends Component {
     }
 
     onClick() {
-        console.log("Prova: ", prova());
+        console.log("Workdone clicat");
     }
 
     deleteTaskWork() {
