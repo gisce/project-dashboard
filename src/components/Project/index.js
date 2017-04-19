@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { TOKEN } from '../../constants'
 import {TableRow, TableRowColumn} from 'material-ui/Table';
 import Avatar from 'material-ui/Avatar'
 import * as actionCreators from '../../actions/tasks';
@@ -51,8 +52,7 @@ export default class Project extends Component {
     }
 
     onClick() {
-        let token = "FOO";
         let tasks = JSON.stringify(this.props.project.tasks);
-        this.props.fetchTasks(token, tasks, false);
+        this.props.fetchTasks(TOKEN, tasks, false);
     }
 }
