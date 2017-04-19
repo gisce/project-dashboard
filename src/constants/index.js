@@ -3,6 +3,8 @@ import React from 'react';
 import {debug} from './debug';
 export const DEBUG = (debug)?debug:false;
 
+export const TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFkbWluIiwicGFzc3dvcmQiOiJhZG1pbiJ9.woh6RaTFrT4ANXK6e_BgUayaP3RFE2bmndBSJLEGQrI";
+
 export const VERSION = "0.0.0";
 
 export const UI_OPEN_MENU = 'UI_OPEN_MENU';
