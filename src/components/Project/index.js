@@ -53,6 +53,6 @@ export default class Project extends Component {
 
     onClick() {
         let tasks = JSON.stringify(this.props.project.tasks);
-        this.props.fetchTasks(TOKEN, tasks, false);
+        this.props.fetchTasks(TOKEN, tasks, true);
     }
 }
