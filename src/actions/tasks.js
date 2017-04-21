@@ -39,11 +39,13 @@ export function fetchTasks(token, tasques, initial = false) {
     return (dispatch) => {
         dispatch(fetchTasksRequest(initial));
         let tasks_ids = JSON.parse(tasques);
-        axios.get("http://172.26.0.216:5000/project.task?schema=name,project_id.name,user_id.name,total_hours,remaining_hours,planned_hours,effective_hours,priority,state,work_ids,delay_hours&filter=[('id','in',"+JSON.stringify(tasques).replace(/"/g, '')+")]")
+        axios.get("http://localhost:5000/project.task?schema=name,project_id.name,user_id.name,total_hours,remaining_hours,planned_hours,effective_hours,priority,state,work_ids,delay_hours&filter=[('id','in',"+JSON.stringify(tasques).replace(/"/g, '')+")]")
             .then(parseJSON)
             .then(response => {
                 dispatch(receiveTasks(parseTasks(response), tasks_ids, initial));
-                dispatch(redirectToRoute("/tasks"));
+                if(initial){
+                    dispatch(redirectToRoute("/tasks"));
+                }
             })
             .catch(error => {
                 console.log("API ERROR", error);
