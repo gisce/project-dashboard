@@ -29,7 +29,7 @@ export function fetchProjects(token, initial = false) {
     return (dispatch) => {
         dispatch(fetchProjectsRequest(initial));
         define_token(token);
-        axios.get("http://172.26.0.216:5000/project.project?schema=name,tasks,manager.name,state")
+        axios.get("http://localhost:5000/project.project?schema=name,tasks,manager.name,state")
             .then(parseJSON)
             .then(response => {
                 dispatch(receiveProjects(parseProjects(response), initial));
