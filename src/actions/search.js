@@ -1,8 +1,9 @@
 import {SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST} from '../constants'
-import {searchHelper, getTasks} from '../utils/http_functions'
-import {parseJSON} from '../utils/misc'
+import {searchHelper} from '../utils/http_functions'
+import {parseJSON, parseTasks} from '../utils/misc'
 import {receiveProjects} from './projects'
-import {receiveTasks} from './tasks'
+import {receiveTasks, fetchTasks} from './tasks'
+import axios from 'axios';
 
 export function searchProjectsRequest(initial) {
     const message = (initial)?null:"Projects search requested";
@@ -37,24 +38,33 @@ export function searchProjects(token, valueToSearch, initial = false){
 
 export function searchTasks(token, valueToSearch, original_tasks, initial = false){
     return(dispatch) => {
-        dispatch(searchTasksRequest(initial));
-        let response = searchHelper("project.task", valueToSearch);
-        let tasks = parseJSON(response);
+        // let response = searchHelper("project.task", valueToSearch);
+        // let tasks = parseJSON(response);
         if(valueToSearch == "") {
             /*
             * If search filter is empty, it must reload
             * the tasks of the selected project (original tasks).
             * */
-            response = getTasks(original_tasks);
-            tasks = parseJSON(response);
-            dispatch(receiveTasks(tasks, original_tasks, initial));
+            dispatch(fetchTasks(token, JSON.stringify(original_tasks), false));
         }
         else{
             /*
-            * If search returns any task, it must be received and
-            * rendered.
+            * If search filter is not empty, it must search for a task with a name like
+            * the value to search.
             * */
-            dispatch(receiveTasks(tasks, original_tasks, initial));
+            dispatch(searchTasksRequest(initial));
+            axios.get("http://localhost:5000/project.task?schema=name,project_id.name,user_id.name,total_hours,remaining_hours,planned_hours,effective_hours,priority,state,work_ids,delay_hours&filter=[('name','like','" + valueToSearch + "'),('id','in',"+JSON.stringify(original_tasks).replace(/"/g, '')+")]")
+                .then(parseJSON)
+                .then(response => {
+                    if(response.n_items > 0){
+                        dispatch(receiveTasks(parseTasks(response), original_tasks, initial));
+                    }else{
+                        dispatch(receiveTasks([], original_tasks, initial));
+                    }
+                })
+                .catch(error => {
+                    console.log("API ERROR", error);
+                });
         }
     }
 }
