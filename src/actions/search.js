@@ -1,6 +1,6 @@
 import {SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST} from '../constants'
 import {searchHelper} from '../utils/http_functions'
-import {parseJSON, parseTasks} from '../utils/misc'
+import {parseJSON, parseTasks, parseProjects} from '../utils/misc'
 import {receiveProjects} from './projects'
 import {receiveTasks, fetchTasks} from './tasks'
 import axios from 'axios';
@@ -30,9 +30,19 @@ export function searchTasksRequest(initial) {
 export function searchProjects(token, valueToSearch, initial = false){
     return(dispatch) => {
         dispatch(searchProjectsRequest(initial));
-        let response = searchHelper("project.project", valueToSearch);
-        let projects = parseJSON(response);
-        dispatch(receiveProjects(projects, initial));
+        axios.get("http://localhost:5000/project.project?schema=name,tasks,manager.name,state&filter=[('name','like','" + valueToSearch + "')]")
+            .then(parseJSON)
+            .then(response => {
+                    if (response.n_items > 0) {
+                        dispatch(receiveProjects(parseProjects(response), initial));
+                    } else {
+                        dispatch(receiveProjects([], initial));
+                    }
+                }
+            )
+            .catch(error => {
+                console.log("API ERROR", error);
+            });
     }
 }
 
