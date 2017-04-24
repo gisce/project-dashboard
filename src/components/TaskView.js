@@ -65,16 +65,30 @@ export default class TasksView extends Component {
             );
             continguts.push(
                 <div>
-                    <TextField
-                        disabled={true}
-                        defaultValue={this.props.task.estimated_hours}
-                        floatingLabelText="Hores estimades"
-                    />
-                    <TextField style={{paddingLeft: 10}}
-                        disabled={true}
-                        defaultValue={this.props.task.dedicated_hours}
-                        floatingLabelText="Hores dedicades"
-                    />
+                    <div>
+                        <TextField
+                            disabled={true}
+                            defaultValue={this.props.task.estimated_hours}
+                            floatingLabelText="Hores estimades"
+                        />
+                        <TextField style={{paddingLeft: 10}}
+                                   disabled={true}
+                                   defaultValue={this.props.task.delay_hours}
+                                   floatingLabelText="Retràs hores"
+                        />
+                    </div>
+                    <div>
+                        <TextField
+                                   disabled={true}
+                                   defaultValue={this.props.task.remaining_hours}
+                                   floatingLabelText="Hores restants"
+                        />
+                        <TextField style={{paddingLeft: 10}}
+                            disabled={true}
+                            defaultValue={this.props.task.dedicated_hours}
+                            floatingLabelText="Hores dedicades"
+                        />
+                    </div>
                 </div>
             );
         }

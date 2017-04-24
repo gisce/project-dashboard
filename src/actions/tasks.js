@@ -1,6 +1,7 @@
 import {FETCH_TASKS_REQUEST, RECEIVE_TASKS, SET_ACTIVE_TASK} from '../constants'
 import {redirectToRoute, getTasks} from '../utils/http_functions'
-import {parseJSON} from '../utils/misc'
+import {parseJSON, parseTasks} from '../utils/misc'
+import axios  from 'axios'
 
 export function fetchTasksRequest(initial) {
     const message = (initial)?null:"Refreshing tasks list";
@@ -37,13 +38,17 @@ export function setActiveTask(active_task_id, initial) {
 export function fetchTasks(token, tasques, initial = false) {
     return (dispatch) => {
         dispatch(fetchTasksRequest(initial));
-        // Can't use .then yet because getTasks is
-        // a harcoded method, no real API calls stuff, so not
-        // real Promise (async) objects
         let tasks_ids = JSON.parse(tasques);
-        let response = getTasks(tasks_ids);
-        let tasks = parseJSON(response);
-        dispatch(receiveTasks(tasks, tasks_ids, initial));
-        dispatch(redirectToRoute("/tasks"));
+        axios.get("http://localhost:5000/project.task?schema=name,project_id.name,user_id.name,total_hours,remaining_hours,planned_hours,effective_hours,priority,state,work_ids,delay_hours&filter=[('id','in',"+JSON.stringify(tasques).replace(/"/g, '')+")]")
+            .then(parseJSON)
+            .then(response => {
+                dispatch(receiveTasks(parseTasks(response), tasks_ids, initial));
+                if(initial){
+                    dispatch(redirectToRoute("/tasks"));
+                }
+            })
+            .catch(error => {
+                console.log("API ERROR", error);
+            });
     }
 }
