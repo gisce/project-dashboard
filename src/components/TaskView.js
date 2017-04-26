@@ -17,8 +17,12 @@ function mapStateToProps(state) {
             }
         }
     }
+    let taskWorks = null;
+    if(state.taskWorks.data){
+        taskWorks = state.taskWorks.data.taskWorks
+    }
     return {
-        taskWorks: state.taskWorks,
+        taskWorks: taskWorks,
         task: task,
         token: null,
         loaded: state.taskWorks.loaded,
@@ -51,10 +55,10 @@ export default class TasksView extends Component {
             ""
         ];
         let tableContents = "No s'ha seleccionat cap tasca.";
-        if(this.props.task) {
+        if(this.props.task && this.props.taskWorks) {
             project = this.props.task.project;
             title = this.props.task.description;
-            let workdones = this.props.taskWorks.data.taskWorks;
+            let workdones = this.props.taskWorks;
             tableContents = workdones.map(task =>
                 <TaskWork
                     key={task.id}
@@ -97,6 +101,7 @@ export default class TasksView extends Component {
                 title={title}
                 breadcrumb={project}
                 contents={continguts}
+                fetching={this.props.isFetching}
                 table={<List columns={cols} tableBody={tableContents}/>}
             />
         )
