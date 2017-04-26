@@ -53,6 +53,7 @@ export class Header extends Component {
                     <MenuItem primaryText="Timer" leftIcon={<FontIcon className="material-icons">watch_later</FontIcon>} />
                     <MenuItem primaryText="Dashboard" leftIcon={<FontIcon className="material-icons">dashboard</FontIcon>} />
                     <MenuItem primaryText="Projectes" onTouchTap={redirectToRoute("/projects")} leftIcon={<FontIcon className="material-icons">folder</FontIcon>} />
+                    <MenuItem primaryText="Tasques" onTouchTap={redirectToRoute("/tasks")} leftIcon={<FontIcon className="material-icons">view_list</FontIcon>} />
                     <MenuItem primaryText="Usuaris" leftIcon={<FontIcon className="material-icons">account_circle</FontIcon>} />
                     <MenuItem primaryText="Empreses" leftIcon={<FontIcon className="material-icons">business_center</FontIcon>} />
                     <MenuItem primaryText="Configuració" leftIcon={<FontIcon className="material-icons">settings</FontIcon>}/>
