@@ -4,6 +4,7 @@ import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon'
 import MainPaper from './MainPaper'
 import SearchBox from './SearchBox';
+import CircularProgress from 'material-ui/CircularProgress'
 
 function mapStateToProps(state) {
     return {
@@ -20,7 +21,8 @@ const estils = {
         width: "70%",
         paddingLeft: "15%",
         paddingRight: "15%",
-        paddingTop: 120
+        paddingTop: 120,
+        paddingBottom: 30
     },
     contenidorSuperiorEsquerra: {
         position: "relative",
@@ -62,6 +64,12 @@ const estils = {
     taula: {
         clear: "both",
         width: '100%'
+    },
+    loading: {
+        width: "100%",
+        textAlign: "center",
+        paddingBottom: 50,
+        paddingTop: 50
     }
 };
 
@@ -102,7 +110,7 @@ export default class MainView extends Component {
                             />
                         </div>
                         <div style={estils.search_box}>
-                            {this.props.model && this.props.original_ids ?
+                            {this.props.model && !this.props.fetching ?
                                 <SearchBox original_ids={this.props.original_ids} model={this.props.model}/>
                                 :
                                 <div></div>
@@ -116,7 +124,14 @@ export default class MainView extends Component {
                         {this.props.filters}
                     </div>
                     <div style={estils.taula}>
-                        {this.props.table}
+                        {
+                            this.props.fetching ?
+                                <div style={estils.loading}>
+                                    <CircularProgress size={100} thickness={4}/>
+                                </div>
+                            :
+                            this.props.table
+                        }
                     </div>
                 </MainPaper>
             </div>
