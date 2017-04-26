@@ -53,11 +53,11 @@ export function fetchTaskWorks(token, taskWorks, initial = false) {
     return (dispatch) => {
         dispatch(fetchTaskWorkRequest(initial));
         let taskWorks_ids = JSON.parse(taskWorks);
+        dispatch(redirectToRoute("/task"));
         axios.get("http://localhost:5000/project.task.work?schema=name,hours,user_id.name,task_id.name,date,project_id.name&filter=[('id','in',"+JSON.stringify(taskWorks_ids).replace(/"/g, '')+")]")
             .then(parseJSON)
             .then(response => {
                 dispatch(receiveTaskWork(parseWorkdones(response), initial));
-                dispatch(redirectToRoute("/task"));
             })
             .catch(error => {
                 console.log("API ERROR", error);
