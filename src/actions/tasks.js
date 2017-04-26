@@ -1,5 +1,5 @@
 import {FETCH_TASKS_REQUEST, RECEIVE_TASKS, SET_ACTIVE_TASK} from '../constants'
-import {redirectToRoute, getTasks} from '../utils/http_functions'
+import {redirectToRoute, define_token} from '../utils/http_functions'
 import {parseJSON, parseTasks} from '../utils/misc'
 import axios  from 'axios'
 
@@ -39,13 +39,23 @@ export function fetchTasks(token, tasques, initial = false) {
     return (dispatch) => {
         dispatch(fetchTasksRequest(initial));
         let tasks_ids = JSON.parse(tasques);
-        axios.get("http://localhost:5000/project.task?schema=name,project_id.name,user_id.name,total_hours,remaining_hours,planned_hours,effective_hours,priority,state,work_ids,delay_hours&filter=[('id','in',"+JSON.stringify(tasques).replace(/"/g, '')+")]")
+        if(initial){
+            dispatch(redirectToRoute("/tasks"));
+        }
+        let filter = '';
+        if(tasques) {
+            filter = "&filter=[('id','in'," + JSON.stringify(tasques).replace(/"/g, '') + ")]";
+        }
+        let uri = "http://localhost:5000/project.task?" +
+            "schema=name,project_id.name,user_id.name,total_hours,remaining_hours,planned_hours," +
+            "effective_hours,priority,state,work_ids,delay_hours" + filter;
+        if(!axios.defaults.headers.common['Authorization']){
+            define_token(token);
+        }
+        axios.get(uri)
             .then(parseJSON)
             .then(response => {
                 dispatch(receiveTasks(parseTasks(response), tasks_ids, initial));
-                if(initial){
-                    dispatch(redirectToRoute("/tasks"));
-                }
             })
             .catch(error => {
                 console.log("API ERROR", error);
