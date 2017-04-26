@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/projects';
+import * as actionCreators from '../actions/tasks';
 import MainView from './MainView'
 import List from './List'
 import Task from './Task'
@@ -9,6 +10,7 @@ import Task from './Task'
 function mapStateToProps(state) {
     return {
         data: state.tasks,
+        projects: state.projects.data,
         token: null,
         loaded: state.tasks.loaded,
         isFetching: state.tasks.isFetching,
@@ -21,7 +23,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 let project = "";
-
 @connect(mapStateToProps, mapDispatchToProps)
 export default class TasksView extends Component {
     constructor(props){
@@ -31,11 +32,17 @@ export default class TasksView extends Component {
         };
     }
 
+    componentDidMount() {
+        if(!this.props.isFetching) {
+            this.props.fetchTasks(TOKEN, null, true);
+        }
+    }
+
     render() {
         let tasks_ids = [];
         if(this.props.data.data){
             tasks_ids = this.props.data.data.original_ids;
-            if(this.props.data.data.tasks.length > 0){
+            if(this.props.data.data.tasks.length > 0 && this.props.projects){
                 project = this.props.data.data.tasks[0].project;
             }
         }
@@ -60,6 +67,7 @@ export default class TasksView extends Component {
                 original_ids={tasks_ids}
                 model="tasks"
                 title="Tasques"
+                fetching={this.props.isFetching}
                 breadcrumb={project}
                 table={<List columns={cols} tableBody={tableContents}/>}
             />
