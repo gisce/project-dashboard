@@ -45,14 +45,14 @@ export default class Task extends Component {
                 <TableRowColumn>{task.partner}</TableRowColumn>
                 <TableRowColumn>{task.priority}</TableRowColumn>
                 <TableRowColumn>{task.status}</TableRowColumn>
+                <TableRowColumn>{task.work_ids.length}</TableRowColumn>
             </TableRow>
         )
     }
 
     onClick() {
-        let token = "FOO";
         let task_work_ids = JSON.stringify(this.props.task.work_ids);
         this.props.setActiveTask(this.props.task.id);
-        this.props.fetchTaskWorks(token, task_work_ids, false);
+        this.props.fetchTaskWorks("", this.props.task.id, false);
     }
 }

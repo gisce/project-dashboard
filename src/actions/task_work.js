@@ -49,15 +49,14 @@ export function receiveTaskWork(taskWorks, initial) {
     };
 }
 
-export function fetchTaskWorks(token, taskWorks, initial = false) {
+export function fetchTaskWorks(token, task_id, initial = false) {
     return (dispatch) => {
         dispatch(fetchTaskWorkRequest(initial));
-        let taskWorks_ids = JSON.parse(taskWorks);
-        axios.get("http://localhost:5000/project.task.work?schema=name,hours,user_id.name,task_id.name,date,project_id.name&filter=[('id','in',"+JSON.stringify(taskWorks_ids).replace(/"/g, '')+")]")
+        dispatch(redirectToRoute("/task"));
+        axios.get("http://localhost:5000/project.task.work?schema=name,hours,user_id.name,task_id.name,date,project_id.name&filter=[('task_id','=',"+ task_id +")]")
             .then(parseJSON)
             .then(response => {
                 dispatch(receiveTaskWork(parseWorkdones(response), initial));
-                dispatch(redirectToRoute("/task"));
             })
             .catch(error => {
                 console.log("API ERROR", error);

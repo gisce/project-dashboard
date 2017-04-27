@@ -4,6 +4,7 @@ import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon'
 import MainPaper from './MainPaper'
 import SearchBox from './SearchBox';
+import CircularProgress from 'material-ui/CircularProgress'
 
 function mapStateToProps(state) {
     return {
@@ -20,7 +21,8 @@ const estils = {
         width: "70%",
         paddingLeft: "15%",
         paddingRight: "15%",
-        paddingTop: 120
+        paddingTop: 120,
+        paddingBottom: 30
     },
     contenidorSuperiorEsquerra: {
         position: "relative",
@@ -62,6 +64,12 @@ const estils = {
     taula: {
         clear: "both",
         width: '100%'
+    },
+    loading: {
+        width: "100%",
+        textAlign: "center",
+        paddingBottom: 50,
+        paddingTop: 50
     }
 };
 
@@ -80,29 +88,34 @@ export default class MainView extends Component {
                         </div>
                     </div>
                     <div style={estils.contenidorSuperiorDreta}>
-                        <div style={estils.botonsSuperiors}>
-                            {this.props.buttons}
-                            <FlatButton
-                                label="Filtres"
-                                primary={true}
-                                icon={<FontIcon className="material-icons">filter_list</FontIcon>}
-                                onTouchTap={this.addFilter}
-                            />
-                            <FlatButton
-                                label="Nou"
-                                primary={true}
-                                icon={<FontIcon className="material-icons">note_add</FontIcon>}
-                                onTouchTap={this.newItem}
-                            />
-                            <FlatButton
-                                label="Refrescar"
-                                primary={true}
-                                icon={<FontIcon className="material-icons">refresh</FontIcon>}
-                                onTouchTap={this.refresh}
-                            />
-                        </div>
+                        {
+                            this.props.fetching ?
+                                <div></div>
+                            :
+                            <div style={estils.botonsSuperiors}>
+                                {this.props.buttons}
+                                <FlatButton
+                                    label="Filtres"
+                                    primary={true}
+                                    icon={<FontIcon className="material-icons">filter_list</FontIcon>}
+                                    onTouchTap={this.addFilter}
+                                />
+                                <FlatButton
+                                    label="Nou"
+                                    primary={true}
+                                    icon={<FontIcon className="material-icons">note_add</FontIcon>}
+                                    onTouchTap={this.newItem}
+                                />
+                                <FlatButton
+                                    label="Refrescar"
+                                    primary={true}
+                                    icon={<FontIcon className="material-icons">refresh</FontIcon>}
+                                    onTouchTap={this.props.refresh}
+                                />
+                            </div>
+                        }
                         <div style={estils.search_box}>
-                            {this.props.model && this.props.original_ids ?
+                            {this.props.model && !this.props.fetching ?
                                 <SearchBox original_ids={this.props.original_ids} model={this.props.model}/>
                                 :
                                 <div></div>
@@ -110,21 +123,40 @@ export default class MainView extends Component {
                         </div>
                     </div>
                     <div style={estils.continguts}>
-                        {this.props.contents}
+                        {
+                            this.props.fetching ?
+                                <div></div>
+                                :
+                                this.props.contents
+                        }
                     </div>
                     <div style={estils.filtres}>
-                        {this.props.filters}
+                        {
+                            this.props.fetching ?
+                                <div></div>
+                                :
+                                this.props.filters
+                        }
                     </div>
                     <div style={estils.taula}>
-                        {this.props.table}
+                        {
+                            this.props.fetching ?
+                                this.circularProgress()
+                            :
+                            this.props.table
+                        }
                     </div>
                 </MainPaper>
             </div>
         )
     }
 
-    refresh(){
-        console.log("Refresh button pressed")
+    circularProgress(){
+        return (
+            <div style={estils.loading}>
+                <CircularProgress size={100} thickness={4}/>
+            </div>
+        );
     }
 
     newItem(){

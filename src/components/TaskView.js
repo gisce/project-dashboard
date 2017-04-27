@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { TOKEN } from '../constants/index';
 import TextField from 'material-ui/TextField';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/task_work';
+import * as taskWorkCreators from '../actions/task_work';
+import * as tasksCreators from '../actions/tasks';
 import MainView from './MainView'
 import List from './List'
 import TaskWork from './TaskWork'
@@ -17,9 +19,14 @@ function mapStateToProps(state) {
             }
         }
     }
+    let taskWorks = null;
+    if(state.taskWorks.data){
+        taskWorks = state.taskWorks.data.taskWorks
+    }
     return {
-        taskWorks: state.taskWorks,
+        taskWorks: taskWorks,
         task: task,
+        active_task_id: state.tasks.active_task_id,
         token: null,
         loaded: state.taskWorks.loaded,
         isFetching: state.taskWorks.isFetching,
@@ -28,7 +35,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(actionCreators, dispatch);
+    return bindActionCreators(Object.assign({}, tasksCreators, taskWorkCreators), dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -51,10 +58,10 @@ export default class TasksView extends Component {
             ""
         ];
         let tableContents = "No s'ha seleccionat cap tasca.";
-        if(this.props.task) {
+        if(this.props.task && this.props.taskWorks) {
             project = this.props.task.project;
             title = this.props.task.description;
-            let workdones = this.props.taskWorks.data.taskWorks;
+            let workdones = this.props.taskWorks;
             tableContents = workdones.map(task =>
                 <TaskWork
                     key={task.id}
@@ -97,6 +104,12 @@ export default class TasksView extends Component {
                 title={title}
                 breadcrumb={project}
                 contents={continguts}
+                fetching={this.props.isFetching}
+                refresh={() => {
+                    this.props.fetchTasks(TOKEN, JSON.stringify([this.props.active_task_id]), false);
+                    this.props.fetchTaskWorks(TOKEN, this.props.active_task_id, false);
+                    }
+                }
                 table={<List columns={cols} tableBody={tableContents}/>}
             />
         )

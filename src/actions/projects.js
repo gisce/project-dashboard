@@ -1,4 +1,4 @@
-import {FETCH_PROJECTS_REQUEST, RECEIVE_PROJECTS} from '../constants'
+import {FETCH_PROJECTS_REQUEST, RECEIVE_PROJECTS, SET_ACTIVE_PROJECT} from '../constants'
 import {parseJSON, parseProjects} from '../utils/misc'
 import {define_token} from '../utils/http_functions'
 import axios  from 'axios'
@@ -25,6 +25,15 @@ export function receiveProjects(data, initial) {
     };
 }
 
+export function setActiveProject(active_project) {
+    return {
+        type: SET_ACTIVE_PROJECT,
+        payload: {
+            active_project
+        }
+    }
+}
+
 export function fetchProjects(token, initial = false) {
     return (dispatch) => {
         dispatch(fetchProjectsRequest(initial));
@@ -37,5 +46,6 @@ export function fetchProjects(token, initial = false) {
             .catch(error => {
                 console.log("API ERROR", error);
             });
+        dispatch(setActiveProject(null));
     }
 }

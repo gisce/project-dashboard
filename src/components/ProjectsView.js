@@ -59,6 +59,8 @@ export default class ProjectsView extends Component {
                 original_ids={[]}
                 model="projects"
                 title="Projectes"
+                fetching={this.props.isFetching}
+                refresh={() => this.fetchData(false)}
                 table={<List columns={cols} tableBody={tableContents}/>}
             />
         )
