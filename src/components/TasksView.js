@@ -11,6 +11,7 @@ function mapStateToProps(state) {
     return {
         data: state.tasks,
         projects: state.projects.data,
+        active_project: state.projects.active_project,
         token: null,
         loaded: state.tasks.loaded,
         isFetching: state.tasks.isFetching,
@@ -22,7 +23,6 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators(actionCreators, dispatch);
 }
 
-let project = "";
 @connect(mapStateToProps, mapDispatchToProps)
 export default class TasksView extends Component {
     constructor(props){
@@ -40,11 +40,12 @@ export default class TasksView extends Component {
 
     render() {
         let tasks_ids = [];
+        let project = "";
         if(this.props.data.data){
             tasks_ids = this.props.data.data.original_ids;
-            if(this.props.data.data.tasks.length > 0 && this.props.projects){
-                project = this.props.data.data.tasks[0].project;
-            }
+        }
+        if(this.props.active_project){
+            project = this.props.active_project;
         }
         let tableContents = "No hi ha tasques per mostrar.";
         let cols = [
@@ -52,7 +53,8 @@ export default class TasksView extends Component {
             "Descripció",
             "Responsable",
             "Prioritat",
-            "Estat"
+            "Estat",
+            "Workdones"
         ];
         if(this.props.loaded){
             let tasks = this.props.data.data.tasks;
@@ -68,6 +70,7 @@ export default class TasksView extends Component {
                 model="tasks"
                 title="Tasques"
                 fetching={this.props.isFetching}
+                refresh={() => this.props.fetchTasks(TOKEN, JSON.stringify(tasks_ids), false)}
                 breadcrumb={project}
                 table={<List columns={cols} tableBody={tableContents}/>}
             />
