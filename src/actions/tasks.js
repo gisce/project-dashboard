@@ -1,6 +1,7 @@
 import {FETCH_TASKS_REQUEST, RECEIVE_TASKS, SET_ACTIVE_TASK} from '../constants'
 import {redirectToRoute, define_token} from '../utils/http_functions'
 import {parseJSON, parseTasks} from '../utils/misc'
+import {setActiveProject} from './projects'
 import axios  from 'axios'
 
 export function fetchTasksRequest(initial) {
@@ -43,8 +44,14 @@ export function fetchTasks(token, tasques, initial = false) {
             dispatch(redirectToRoute("/tasks"));
         }
         let filter = '';
-        if(tasques) {
+        if(tasks_ids) {
             filter = "&filter=[('id','in'," + JSON.stringify(tasques).replace(/"/g, '') + ")]";
+        }
+        else{
+            /*
+            * Fetching all tasks. It is necessary to clean the active project.
+            * */
+            dispatch(setActiveProject(null));
         }
         let uri = "http://localhost:5000/project.task?" +
             "schema=name,project_id.name,user_id.name,total_hours,remaining_hours,planned_hours," +
