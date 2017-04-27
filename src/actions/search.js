@@ -1,5 +1,4 @@
 import {SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST} from '../constants'
-import {searchHelper} from '../utils/http_functions'
 import {parseJSON, parseTasks, parseProjects} from '../utils/misc'
 import {receiveProjects} from './projects'
 import {receiveTasks, fetchTasks} from './tasks'
