@@ -88,27 +88,32 @@ export default class MainView extends Component {
                         </div>
                     </div>
                     <div style={estils.contenidorSuperiorDreta}>
-                        <div style={estils.botonsSuperiors}>
-                            {this.props.buttons}
-                            <FlatButton
-                                label="Filtres"
-                                primary={true}
-                                icon={<FontIcon className="material-icons">filter_list</FontIcon>}
-                                onTouchTap={this.addFilter}
-                            />
-                            <FlatButton
-                                label="Nou"
-                                primary={true}
-                                icon={<FontIcon className="material-icons">note_add</FontIcon>}
-                                onTouchTap={this.newItem}
-                            />
-                            <FlatButton
-                                label="Refrescar"
-                                primary={true}
-                                icon={<FontIcon className="material-icons">refresh</FontIcon>}
-                                onTouchTap={this.refresh}
-                            />
-                        </div>
+                        {
+                            this.props.fetching ?
+                                <div></div>
+                            :
+                            <div style={estils.botonsSuperiors}>
+                                {this.props.buttons}
+                                <FlatButton
+                                    label="Filtres"
+                                    primary={true}
+                                    icon={<FontIcon className="material-icons">filter_list</FontIcon>}
+                                    onTouchTap={this.addFilter}
+                                />
+                                <FlatButton
+                                    label="Nou"
+                                    primary={true}
+                                    icon={<FontIcon className="material-icons">note_add</FontIcon>}
+                                    onTouchTap={this.newItem}
+                                />
+                                <FlatButton
+                                    label="Refrescar"
+                                    primary={true}
+                                    icon={<FontIcon className="material-icons">refresh</FontIcon>}
+                                    onTouchTap={this.props.refresh}
+                                />
+                            </div>
+                        }
                         <div style={estils.search_box}>
                             {this.props.model && !this.props.fetching ?
                                 <SearchBox original_ids={this.props.original_ids} model={this.props.model}/>
@@ -118,17 +123,25 @@ export default class MainView extends Component {
                         </div>
                     </div>
                     <div style={estils.continguts}>
-                        {this.props.contents}
+                        {
+                            this.props.fetching ?
+                                <div></div>
+                                :
+                                this.props.contents
+                        }
                     </div>
                     <div style={estils.filtres}>
-                        {this.props.filters}
+                        {
+                            this.props.fetching ?
+                                <div></div>
+                                :
+                                this.props.filters
+                        }
                     </div>
                     <div style={estils.taula}>
                         {
                             this.props.fetching ?
-                                <div style={estils.loading}>
-                                    <CircularProgress size={100} thickness={4}/>
-                                </div>
+                                this.circularProgress()
                             :
                             this.props.table
                         }
@@ -138,8 +151,12 @@ export default class MainView extends Component {
         )
     }
 
-    refresh(){
-        console.log("Refresh button pressed")
+    circularProgress(){
+        return (
+            <div style={estils.loading}>
+                <CircularProgress size={100} thickness={4}/>
+            </div>
+        );
     }
 
     newItem(){
