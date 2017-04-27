@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { TOKEN } from '../../constants'
 import {TableRow, TableRowColumn} from 'material-ui/Table';
 import Avatar from 'material-ui/Avatar'
-import * as actionCreators from '../../actions/tasks';
+import * as tasksCreators from '../../actions/tasks';
+import * as projectCreators from '../../actions/projects'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -17,7 +18,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(actionCreators, dispatch);
+    return bindActionCreators(Object.assign({}, tasksCreators, projectCreators), dispatch);
 }
 
 
@@ -34,6 +35,8 @@ export default class Project extends Component {
         const {project, token, loaded, isFetching,
             message_text, fetchTasksRequest,
             receiveTasks, fetchTasks, setActiveTask,
+            fetchProjectsRequest, receiveProjects,
+            setActiveProject, fetchProjects,
             ...otherProps} = this.props;
         return(
             <TableRow {...otherProps} onCellClick={this.onClick}>
@@ -53,6 +56,7 @@ export default class Project extends Component {
 
     onClick() {
         let tasks = JSON.stringify(this.props.project.tasks);
+        this.props.setActiveProject(this.props.project.title);
         this.props.fetchTasks(TOKEN, tasks, true);
     }
 }
