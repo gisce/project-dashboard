@@ -1,7 +1,8 @@
 import {SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST} from '../constants'
-import {parseJSON, parseTasks, parseProjects} from '../utils/misc'
+import {parseJSON, parseTasks, parseProjects, parseUsers} from '../utils/misc'
 import {receiveProjects} from './projects'
 import {receiveTasks, fetchTasks} from './tasks'
+import {receiveUsers} from './users'
 import axios from 'axios';
 
 export function searchProjectsRequest(initial) {
@@ -87,5 +88,24 @@ export function searchTasks(token, valueToSearch, original_tasks, initial = fals
                     console.log("API ERROR", error);
                 });
         }
+    }
+}
+
+export function searchUsers(token, valueToSearch, initial = false){
+    return(dispatch) => {
+        dispatch(searchProjectsRequest(initial));
+        axios.get("http://localhost:5000/res.users?schema=login,name&filter=[('name','like','" + valueToSearch + "')]")
+            .then(parseJSON)
+            .then(response => {
+                    if (response.n_items > 0) {
+                        dispatch(receiveUsers(parseUsers(response), initial));
+                    } else {
+                        dispatch(receiveUsers([], initial));
+                    }
+                }
+            )
+            .catch(error => {
+                console.log("API ERROR", error);
+            });
     }
 }
