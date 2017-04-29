@@ -77,6 +77,21 @@ export function parseWorkdones(response) {
     return workdones;
 }
 
+export function parseUsers(response) {
+    let users = [];
+    for(let i = 0; i < response.items.length; i++){
+        let actual = response.items[i];
+        let user = {
+            "id": actual.id,
+            "login": actual.login,
+            "name": actual.name,
+            "avatar": "https://avatars2.githubusercontent.com/u/294235?v=3&s=460"
+        };
+        users.push(user);
+    }
+    return users;
+}
+
 export function createReducer(initialState, reducerMap) {
     return (state = initialState, action) => {
         const reducer = reducerMap[action.type];
