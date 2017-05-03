@@ -106,8 +106,8 @@ export default class TasksView extends Component {
                 contents={continguts}
                 fetching={this.props.isFetching}
                 refresh={() => {
-                    let filter = "&filter=[('id','in'," + JSON.stringify(this.props.active_task_id).replace(/"/g, '') + ")]";
-                    this.props.fetchTasks(TOKEN, this.props.active_task_id, filter, false);
+                    let filter = "&filter=[('id','in',[" + JSON.stringify(this.props.active_task_id).replace(/"/g, '') + "])]";
+                    this.props.fetchTasks(TOKEN, [this.props.active_task_id], filter, false);
                     this.props.fetchTaskWorks(TOKEN, this.props.active_task_id, false);
                     }
                 }
