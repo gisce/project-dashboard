@@ -30,7 +30,7 @@ export function searchTasksRequest(initial) {
 export function searchProjects(token, valueToSearch, initial = false){
     return(dispatch) => {
         dispatch(searchProjectsRequest(initial));
-        axios.get("http://localhost:5000/project.project?schema=name,tasks,manager.name,state&filter=[('name','like','" + valueToSearch + "')]")
+        axios.get("http://localhost:5000/project.project?schema=name,tasks,manager.name,state&filter=[('name','ilike','" + valueToSearch + "')]")
             .then(parseJSON)
             .then(response => {
                     if (response.n_items > 0) {
@@ -55,7 +55,11 @@ export function searchTasks(token, valueToSearch, original_tasks, initial = fals
             * If search filter is empty, it must reload
             * the tasks of the selected project (original tasks).
             * */
-            dispatch(fetchTasks(token, JSON.stringify(original_tasks), false));
+            let filter = null;
+            if(original_tasks){
+                filter = "&filter=[('id','in'," + JSON.stringify(original_tasks).replace(/"/g, '') + ")]";
+            }
+            dispatch(fetchTasks(token, original_tasks, filter, false));
         }
         else{
             /*
@@ -63,10 +67,9 @@ export function searchTasks(token, valueToSearch, original_tasks, initial = fals
             * the value to search.
             * */
             dispatch(searchTasksRequest(initial));
-            let filter = "";
             let uri = "http://localhost:5000/project.task?schema=name,project_id.name,user_id.name,total_hours," +
                 "remaining_hours,planned_hours,effective_hours,priority,state,work_ids,delay_hours&" +
-                "filter=[('name','like','" + valueToSearch + "')";
+                "filter=[('name','ilike','" + valueToSearch + "')";
             if(original_tasks){
                 /*
                 * If original tasks is not empty, it must not search the value to search in the whole collection of
@@ -79,7 +82,8 @@ export function searchTasks(token, valueToSearch, original_tasks, initial = fals
                 .then(parseJSON)
                 .then(response => {
                     if(response.n_items > 0){
-                        dispatch(receiveTasks(parseTasks(response), original_tasks, initial));
+                        let filter = "&filter=[('id','in'," + JSON.stringify(original_tasks).replace(/"/g, '') + ")]";
+                        dispatch(receiveTasks(parseTasks(response), original_tasks, filter, initial));
                     }else{
                         dispatch(receiveTasks([], original_tasks, initial));
                     }
@@ -94,7 +98,7 @@ export function searchTasks(token, valueToSearch, original_tasks, initial = fals
 export function searchUsers(token, valueToSearch, initial = false){
     return(dispatch) => {
         dispatch(searchProjectsRequest(initial));
-        axios.get("http://localhost:5000/res.users?schema=login,name&filter=[('name','like','" + valueToSearch + "')]")
+        axios.get("http://localhost:5000/res.users?schema=login,name&filter=[('name','ilike','" + valueToSearch + "')]")
             .then(parseJSON)
             .then(response => {
                     if (response.n_items > 0) {
