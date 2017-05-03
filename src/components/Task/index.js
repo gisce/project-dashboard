@@ -30,9 +30,17 @@ export default class Task extends Component {
             task,
             fetchTaskWorkRequest, receiveTaskWork, fetchTaskWorks, dispatch,
             setActiveTask, fetchTasksRequest, receiveTasks, fetchTasks,
-            openTaskWorkDialogRequest, closeTaskWorkDialogRequest, openTaskWorkDialog, closeTaskWorkDialog,
+            openTaskWorkDialogRequest, closeTaskWorkDialogRequest, openTaskWorkDialog, closeTaskWorkDialog, userMode,
             ...otherProps} = this.props;
         return(
+            this.props.userMode ?
+                <TableRow {...otherProps} onCellClick={this.onClick}>
+                    <TableRowColumn>{task.description}</TableRowColumn>
+                    <TableRowColumn>{task.project}</TableRowColumn>
+                    <TableRowColumn>{task.status}</TableRowColumn>
+                    <TableRowColumn>01-01-2017</TableRowColumn>
+                </TableRow>
+            :
             <TableRow {...otherProps} onCellClick={this.onClick}>
                 <TableRowColumn>
                     <Avatar
