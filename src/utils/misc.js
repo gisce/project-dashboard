@@ -15,7 +15,7 @@ export function parseProjects(response) {
             "id": actual.id,
             "title": actual.name,
             "partner": actual.manager.name,
-            "avatar": "https://avatars2.githubusercontent.com/u/294235?v=3&s=460",
+            "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
             "status": actual.state,
             "tasks": tasks
         };
@@ -42,7 +42,7 @@ export function parseTasks(response) {
             "description": actual.name,
             "project": actual.project_id.name,
             "partner": actual.user_id.name,
-            "avatar": "https://avatars2.githubusercontent.com/u/294235?v=3&s=460",
+            "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
             "estimated_hours": actual.planned_hours,
             "dedicated_hours": actual.effective_hours,
             "total_hours": actual.total_hours,
@@ -85,7 +85,7 @@ export function parseUsers(response) {
             "id": actual.id,
             "login": actual.login,
             "name": actual.name,
-            "avatar": "https://avatars2.githubusercontent.com/u/294235?v=3&s=460"
+            "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400"
         };
         users.push(user);
     }
