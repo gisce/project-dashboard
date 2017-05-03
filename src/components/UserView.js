@@ -12,7 +12,15 @@ import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon'
 
 function mapStateToProps(state) {
+    let original_tasks_ids = [];
+    if(state.tasks.data) {
+        let tasks = state.tasks.data.tasks;
+        for (let i = 0; i < tasks.length; i++) {
+            original_tasks_ids.push(tasks[i].id);
+        }
+    }
     return {
+        original_tasks_ids: original_tasks_ids,
         tasks: state.tasks.data,
         users: state.users.data,
         token: null,
@@ -75,7 +83,6 @@ export default class UserView extends Component {
             "Estat",
             "Data inici"
         ];
-        let tasks = [];
         let userdata = [];
         let buttons = [];
         let user = null;
@@ -119,7 +126,7 @@ export default class UserView extends Component {
         }
         return(
             <MainView
-                original_ids={tasks}
+                original_ids={this.props.original_tasks_ids}
                 model="tasks"
                 title={userdata}
                 fetching={isFetching}
