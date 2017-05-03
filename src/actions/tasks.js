@@ -36,18 +36,13 @@ export function setActiveTask(active_task_id, initial) {
     }
 }
 
-export function fetchTasks(token, tasques, initial = false) {
+export function fetchTasks(token, original_tasks, filter, initial = false) {
     return (dispatch) => {
         dispatch(fetchTasksRequest(initial));
-        let tasks_ids = JSON.parse(tasques);
         if(initial){
             dispatch(redirectToRoute("/tasks"));
         }
-        let filter = '';
-        if(tasks_ids) {
-            filter = "&filter=[('id','in'," + JSON.stringify(tasques).replace(/"/g, '') + ")]";
-        }
-        else{
+        if(!filter){
             /*
             * Fetching all tasks. It is necessary to clean the active project.
             * */
@@ -62,7 +57,7 @@ export function fetchTasks(token, tasques, initial = false) {
         axios.get(uri)
             .then(parseJSON)
             .then(response => {
-                dispatch(receiveTasks(parseTasks(response), tasks_ids, initial));
+                dispatch(receiveTasks(parseTasks(response), original_tasks, initial));
             })
             .catch(error => {
                 console.log("API ERROR", error);
