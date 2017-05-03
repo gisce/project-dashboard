@@ -35,7 +35,7 @@ export default class UsersView extends Component {
     }
 
     fetchData(initial = true) {
-        this.props.fetchUsers(TOKEN, initial);
+        this.props.fetchUsers(TOKEN, [], null, initial);
     }
 
     render() {
@@ -61,6 +61,8 @@ export default class UsersView extends Component {
                 title="Usuaris"
                 fetching={this.props.isFetching}
                 refresh={() => this.fetchData(false)}
+                filters="disabled"
+                newButton="disabled"
                 table={<List columns={cols} tableBody={tableContents}/>}
             />
         )
