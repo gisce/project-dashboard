@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {TableRow, TableRowColumn} from 'material-ui/Table';
 import Avatar from 'material-ui/Avatar'
 import * as userCreators from '../../actions/users';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import {redirectToRoute} from '../../utils/http_functions'
+
 
 function mapStateToProps(state) {
     return {
@@ -21,7 +23,6 @@ const style = {margin: 5};
 export default class User extends Component {
     constructor(props) {
         super(props);
-        this.onClick = this.onClick.bind(this);
     }
 
     render(){
@@ -30,7 +31,7 @@ export default class User extends Component {
             fetchUsersRequest, fetchUsers, receiveUsers,
             ...otherProps} = this.props;
         return(
-            <TableRow {...otherProps} onCellClick={this.onClick}>
+            <TableRow {...otherProps} onCellClick={redirectToRoute("/user/"+user.id)}>
                 <TableRowColumn>
                     <Avatar
                         src={user.avatar}
@@ -43,9 +44,5 @@ export default class User extends Component {
                 <TableRowColumn>01/01/2016</TableRowColumn>
             </TableRow>
         )
-    }
-
-    onClick() {
-        console.log("User clicked");
     }
 }
