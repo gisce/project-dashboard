@@ -26,17 +26,20 @@ export function receiveUsers(users, original_ids, initial) {
     };
 }
 
-export function fetchUsers(token, usuaris, initial = false) {
+export function fetchUsers(token, usuaris_originals, filter, initial = false) {
     return (dispatch) => {
-        let users_ids = JSON.parse(usuaris);
         if(!axios.defaults.headers.common['Authorization']){
             define_token(token);
         }
         dispatch(fetchUsersRequest(initial));
-        axios.get("http://localhost:5000/res.users?schema=login,name")
+        let uri = "http://localhost:5000/res.users?schema=login,name";
+        if(filter){
+            uri += filter;
+        }
+        axios.get(uri)
             .then(parseJSON)
             .then(response => {
-                dispatch(receiveUsers(parseUsers(response), users_ids, initial));
+                dispatch(receiveUsers(parseUsers(response), usuaris_originals, initial));
             })
             .catch(error => {
                 console.log("API ERROR", error);
