@@ -76,6 +76,27 @@ const estils = {
 @connect(mapStateToProps)
 export default class MainView extends Component {
     render() {
+        let extraButtons = [];
+        if(this.props.filters !== "disabled"){
+            extraButtons.push(
+                <FlatButton
+                    label="Filtres"
+                    primary={true}
+                    icon={<FontIcon className="material-icons">filter_list</FontIcon>}
+                    onTouchTap={this.addFilter}
+                />
+            );
+        }
+        if(this.props.newButton !== "disabled"){
+            extraButtons.push(
+                <FlatButton
+                    label="Nou"
+                    primary={true}
+                    icon={<FontIcon className="material-icons">note_add</FontIcon>}
+                    onTouchTap={this.newItem}
+                />
+            );
+        }
         return(
             <div style={estils.container}>
                 <MainPaper>
@@ -94,18 +115,7 @@ export default class MainView extends Component {
                             :
                             <div style={estils.botonsSuperiors}>
                                 {this.props.buttons}
-                                <FlatButton
-                                    label="Filtres"
-                                    primary={true}
-                                    icon={<FontIcon className="material-icons">filter_list</FontIcon>}
-                                    onTouchTap={this.addFilter}
-                                />
-                                <FlatButton
-                                    label="Nou"
-                                    primary={true}
-                                    icon={<FontIcon className="material-icons">note_add</FontIcon>}
-                                    onTouchTap={this.newItem}
-                                />
+                                {extraButtons}
                                 <FlatButton
                                     label="Refrescar"
                                     primary={true}
@@ -131,12 +141,7 @@ export default class MainView extends Component {
                         }
                     </div>
                     <div style={estils.filtres}>
-                        {
-                            this.props.fetching ?
-                                <div></div>
-                                :
-                                this.props.filters
-                        }
+
                     </div>
                     <div style={estils.taula}>
                         {
