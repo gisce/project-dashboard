@@ -1,6 +1,6 @@
 import {FETCH_USERS_REQUEST, RECEIVE_USERS} from '../constants'
 import {redirectToRoute, define_token} from '../utils/http_functions'
-import {parseJSON, parseUsers} from '../utils/misc'
+import {parseJSON, parseUsers, parseTasksIds} from '../utils/misc'
 import axios  from 'axios'
 
 export function fetchUsersRequest(initial) {
@@ -20,26 +20,40 @@ export function receiveUsers(users, original_ids, initial) {
         type: RECEIVE_USERS,
         payload: {
             users,
-            original_ids,
             message,
         },
     };
 }
 
-export function fetchUsers(token, usuaris_originals, filter, initial = false) {
+export function fetchUsers(token, userId, loadTasks, initial = false) {
     return (dispatch) => {
         if(!axios.defaults.headers.common['Authorization']){
             define_token(token);
         }
         dispatch(fetchUsersRequest(initial));
         let uri = "http://localhost:5000/res.users?schema=login,name";
-        if(filter){
+        let filter = "";
+        if(userId){
+            filter = "&filter=[('id','='," + userId + ")]";
             uri += filter;
         }
+        let tasks_ids = [];
         axios.get(uri)
             .then(parseJSON)
             .then(response => {
-                dispatch(receiveUsers(parseUsers(response), usuaris_originals, initial));
+                if(loadTasks){
+                    axios.get("http://localhost:5000/project.task?schema=id" +
+                        "&filter=[('user_id','='," + userId + ")," +
+                        "('state','in',['open','pending'])]")
+                        .then(parseJSON)
+                        .then(tasksResponse => {
+                            tasks_ids = parseTasksIds(tasksResponse);
+                            dispatch(receiveUsers(parseUsers(response, tasks_ids), initial));
+                        }).catch(error => {
+                            console.log("API ERROR (Tasks IDS)", error);
+                        });
+                }
+                dispatch(receiveUsers(parseUsers(response, tasks_ids), initial));
             })
             .catch(error => {
                 console.log("API ERROR", error);
