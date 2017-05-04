@@ -46,52 +46,44 @@ export function searchProjects(token, valueToSearch, initial = false){
     }
 }
 
-export function searchTasks(token, valueToSearch, original_tasks, initial = false){
+export function searchTasks(token, valueToSearch, original_tasks, userScreen, initial = false){
     return(dispatch) => {
-        // let response = searchHelper("project.task", valueToSearch);
-        // let tasks = parseJSON(response);
-        if(valueToSearch == "") {
-            /*
-            * If search filter is empty, it must reload
-            * the tasks of the selected project (original tasks).
-            * */
-            let filter = null;
-            if(original_tasks){
-                filter = "&filter=[('id','in'," + JSON.stringify(original_tasks).replace(/"/g, '') + ")]";
-            }
-            dispatch(fetchTasks(token, original_tasks, filter, false));
-        }
-        else{
-            /*
-            * If search filter is not empty, it must search for a task with a name like
-            * the value to search.
-            * */
-            dispatch(searchTasksRequest(initial));
-            let uri = "http://localhost:5000/project.task?schema=name,project_id.name,user_id.name,total_hours," +
+        /*
+        * If search filter is not empty, it must search for a task with a name like
+        * the value to search.
+        * */
+        dispatch(searchTasksRequest(initial));
+        let uri = "";
+        if(!userScreen) {
+            uri = "http://localhost:5000/project.task?schema=name,project_id.name,user_id.name,total_hours," +
                 "remaining_hours,planned_hours,effective_hours,priority,state,work_ids,delay_hours&" +
                 "filter=[('name','ilike','" + valueToSearch + "')";
-            if(original_tasks){
-                /*
-                * If original tasks is not empty, it must not search the value to search in the whole collection of
-                * tasks, it must do it only in the range of the original tasks.
-                * */
-                uri = uri + ",('id','in',"+JSON.stringify(original_tasks).replace(/"/g, '')+")";
-            }
-            uri += "]";
-            axios.get(uri)
-                .then(parseJSON)
-                .then(response => {
-                    if(response.n_items > 0){
-                        let filter = "&filter=[('id','in'," + JSON.stringify(original_tasks).replace(/"/g, '') + ")]";
-                        dispatch(receiveTasks(parseTasks(response), original_tasks, filter, initial));
-                    }else{
-                        dispatch(receiveTasks([], original_tasks, initial));
-                    }
-                })
-                .catch(error => {
-                    console.log("API ERROR", error);
-                });
         }
+        else{
+            uri = "http://localhost:5000/project.task?schema=name,project_id.name,state,work_ids" +
+                "&filter=[('name','ilike','" + valueToSearch + "')";
+        }
+        if(original_tasks){
+            /*
+            * If original tasks is not empty, it must not search the value to search in the whole collection of
+            * tasks, it must do it only in the range of the original tasks.
+            * */
+            uri = uri + ",('id','in',"+JSON.stringify(original_tasks).replace(/"/g, '')+")";
+        }
+        uri += "]";
+        axios.get(uri)
+            .then(parseJSON)
+            .then(response => {
+                if(response.n_items > 0){
+                    //let filter = "&filter=[('id','in'," + JSON.stringify(original_tasks).replace(/"/g, '') + ")]";
+                    dispatch(receiveTasks(parseTasks(response, userScreen), original_tasks, initial));
+                }else{
+                    dispatch(receiveTasks([], original_tasks, initial));
+                }
+            })
+            .catch(error => {
+                console.log("API ERROR", error);
+            });
     }
 }
 
