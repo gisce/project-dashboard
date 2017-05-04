@@ -80,6 +80,7 @@ export default class MainView extends Component {
         if(this.props.filters !== "disabled"){
             extraButtons.push(
                 <FlatButton
+                    key="-1"
                     label="Filtres"
                     primary={true}
                     icon={<FontIcon className="material-icons">filter_list</FontIcon>}
@@ -90,6 +91,7 @@ export default class MainView extends Component {
         if(this.props.newButton !== "disabled"){
             extraButtons.push(
                 <FlatButton
+                    key="-2"
                     label="Nou"
                     primary={true}
                     icon={<FontIcon className="material-icons">note_add</FontIcon>}
@@ -101,12 +103,19 @@ export default class MainView extends Component {
             <div style={estils.container}>
                 <MainPaper>
                     <div style={estils.contenidorSuperiorEsquerra}>
-                        <div style={estils.titol}>
-                            {this.props.title}
-                        </div>
-                        <div style={estils.breadcrumb}>
-                            {this.props.breadcrumb}
-                        </div>
+                        {
+                            this.props.fetching ?
+                                <div></div>
+                            :
+                            <div>
+                                <div style={estils.titol}>
+                                    {this.props.title}
+                                </div>
+                                <div style={estils.breadcrumb}>
+                                    {this.props.breadcrumb}
+                                </div>
+                            </div>
+                        }
                     </div>
                     <div style={estils.contenidorSuperiorDreta}>
                         {
@@ -117,6 +126,7 @@ export default class MainView extends Component {
                                 {this.props.buttons}
                                 {extraButtons}
                                 <FlatButton
+                                    key="-3"
                                     label="Refrescar"
                                     primary={true}
                                     icon={<FontIcon className="material-icons">refresh</FontIcon>}
