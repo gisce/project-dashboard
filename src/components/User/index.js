@@ -28,7 +28,7 @@ export default class User extends Component {
     render(){
         const {
             user,
-            fetchUsersRequest, fetchUsers, receiveUsers,
+            fetchUsersRequest, fetchUsers, receiveUsers, setOriginalUserTasks,
             ...otherProps} = this.props;
         return(
             <TableRow {...otherProps} onCellClick={redirectToRoute("/user/"+user.id)}>
