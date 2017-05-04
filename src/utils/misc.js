@@ -24,7 +24,7 @@ export function parseProjects(response) {
     return projects;
 }
 
-export function parseTasks(response) {
+export function parseTasks(response, userScreen) {
     let tasks = [];
     for(let i = 0; i<response.items.length;i++){
         let actual = response.items[i];
@@ -37,24 +37,45 @@ export function parseTasks(response) {
         for(let j=0; j<actual.work_ids.length;j++){
             workdones.push(actual.work_ids[j].id);
         }
-        let task = {
-            "id": actual.id,
-            "description": actual.name,
-            "project": actual.project_id.name,
-            "partner": actual.user_id.name,
-            "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
-            "estimated_hours": actual.planned_hours,
-            "dedicated_hours": actual.effective_hours,
-            "total_hours": actual.total_hours,
-            "remaining_hours": actual.remaining_hours,
-            "delay_hours": delay_hours,
-            "priority": actual.priority,
-            "status": actual.state,
-            "work_ids": workdones
-        };
+        let task = {};
+        if(!userScreen) {
+            task = {
+                "id": actual.id,
+                "description": actual.name,
+                "project": actual.project_id.name,
+                "partner": actual.user_id.name,
+                "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
+                "estimated_hours": actual.planned_hours,
+                "dedicated_hours": actual.effective_hours,
+                "total_hours": actual.total_hours,
+                "remaining_hours": actual.remaining_hours,
+                "delay_hours": delay_hours,
+                "priority": actual.priority,
+                "status": actual.state,
+                "work_ids": workdones
+            };
+        }
+        else{
+            task = {
+                "id": actual.id,
+                "description": actual.name,
+                "project": actual.project_id.name,
+                "status": actual.state,
+                "work_ids": workdones
+            };
+        }
         tasks.push(task);
     }
     return tasks;
+}
+
+export function parseTasksIds(response){
+    let tasks_ids = [];
+    for(let i = 0; i < response.items.length; i++){
+        let actual = response.items[i];
+        tasks_ids.push(actual.id);
+    }
+    return tasks_ids;
 }
 
 export function parseWorkdones(response) {
