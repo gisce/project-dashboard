@@ -57,7 +57,7 @@ export function fetchTasks(token, original_tasks, filter, initial = false) {
         axios.get(uri)
             .then(parseJSON)
             .then(response => {
-                dispatch(receiveTasks(parseTasks(response), original_tasks, initial));
+                dispatch(receiveTasks(parseTasks(response, false), original_tasks, initial));
             })
             .catch(error => {
                 console.log("API ERROR", error);
