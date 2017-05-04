@@ -33,7 +33,7 @@ export default class Task extends Component {
             openTaskWorkDialogRequest, closeTaskWorkDialogRequest, openTaskWorkDialog, closeTaskWorkDialog, userMode,
             ...otherProps} = this.props;
         return(
-            this.props.userMode ?
+            userMode ?
                 <TableRow {...otherProps} onCellClick={this.onClick}>
                     <TableRowColumn>{task.description}</TableRowColumn>
                     <TableRowColumn>{task.project}</TableRowColumn>
