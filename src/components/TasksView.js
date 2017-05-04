@@ -34,7 +34,7 @@ export default class TasksView extends Component {
 
     componentDidMount() {
         if(!this.props.isFetching) {
-            this.props.fetchTasks(TOKEN, null, true);
+            this.props.fetchTasks(TOKEN, null, null, true);
         }
     }
 
@@ -64,13 +64,14 @@ export default class TasksView extends Component {
                     task={task}
                 />)
         }
+        let filter = "&filter=[('id','in'," + JSON.stringify(tasks_ids).replace(/"/g, '') + ")]";
         return(
             <MainView
                 original_ids={tasks_ids}
                 model="tasks"
                 title="Tasques"
                 fetching={this.props.isFetching}
-                refresh={() => this.props.fetchTasks(TOKEN, JSON.stringify(tasks_ids), false)}
+                refresh={() => this.props.fetchTasks(TOKEN, tasks_ids, filter, false)}
                 breadcrumb={project}
                 table={<List columns={cols} tableBody={tableContents}/>}
             />

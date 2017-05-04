@@ -5,11 +5,17 @@ import { App } from './containers/App';
 import Projects from './components/ProjectsView';
 import Tasks from './components/TasksView';
 import Task from './components/TaskView';
+import Users from './components/UsersView';
+import User from './components/UserView';
+import NotFound from './components/NotFound';
 
 export default (
     <Route path="/" component={App}>
-        <Route path="projects" component={Projects} />
-        <Route path="tasks" component={Tasks} />
-        <Route path="task" component={Task} />
+        <Route path="/projects" component={Projects} />
+        <Route path="/tasks" component={Tasks} />
+        <Route path="/task" component={Task} />
+        <Route path="/users" component={Users} />
+        <Route path="/user/:userId" component={User} />
+        <Route path="*" component={NotFound} />
     </Route>
 );

@@ -50,11 +50,18 @@ export default class SearchBox extends Component {
 
     searchRequest(e) {
         let token = "FOO";
-        if(this.props.model == "projects") {
+        let model = this.props.model;
+        if(model === "projects") {
             this.props.searchProjects(token, e.target.value, false);
         }
-        else if(this.props.model == "tasks"){
-            this.props.searchTasks(token, e.target.value, this.props.original_ids, false);
+        else if(model === "tasks"){
+            this.props.searchTasks(token, e.target.value, this.props.original_ids, false, false);
+        }
+        else if(model === "users"){
+            this.props.searchUsers(token, e.target.value, false);
+        }
+        else if(model === "userTasks"){
+            this.props.searchTasks(token, e.target.value, this.props.original_ids, true, false);
         }
     }
 }

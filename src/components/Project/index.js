@@ -55,8 +55,8 @@ export default class Project extends Component {
     }
 
     onClick() {
-        let tasks = JSON.stringify(this.props.project.tasks);
         this.props.setActiveProject(this.props.project.title);
-        this.props.fetchTasks(TOKEN, tasks, true);
+        let filter = "&filter=[('id','in'," + JSON.stringify(this.props.project.tasks).replace(/"/g, '') + ")]";
+        this.props.fetchTasks(TOKEN, this.props.project.tasks, filter, true);
     }
 }

@@ -76,16 +76,46 @@ const estils = {
 @connect(mapStateToProps)
 export default class MainView extends Component {
     render() {
+        let extraButtons = [];
+        if(this.props.filters !== "disabled"){
+            extraButtons.push(
+                <FlatButton
+                    key="-1"
+                    label="Filtres"
+                    primary={true}
+                    icon={<FontIcon className="material-icons">filter_list</FontIcon>}
+                    onTouchTap={this.addFilter}
+                />
+            );
+        }
+        if(this.props.newButton !== "disabled"){
+            extraButtons.push(
+                <FlatButton
+                    key="-2"
+                    label="Nou"
+                    primary={true}
+                    icon={<FontIcon className="material-icons">note_add</FontIcon>}
+                    onTouchTap={this.newItem}
+                />
+            );
+        }
         return(
             <div style={estils.container}>
                 <MainPaper>
                     <div style={estils.contenidorSuperiorEsquerra}>
-                        <div style={estils.titol}>
-                            {this.props.title}
-                        </div>
-                        <div style={estils.breadcrumb}>
-                            {this.props.breadcrumb}
-                        </div>
+                        {
+                            this.props.fetching ?
+                                <div></div>
+                            :
+                            <div>
+                                <div style={estils.titol}>
+                                    {this.props.title}
+                                </div>
+                                <div style={estils.breadcrumb}>
+                                    {this.props.breadcrumb}
+                                </div>
+                            </div>
+                        }
                     </div>
                     <div style={estils.contenidorSuperiorDreta}>
                         {
@@ -94,19 +124,9 @@ export default class MainView extends Component {
                             :
                             <div style={estils.botonsSuperiors}>
                                 {this.props.buttons}
+                                {extraButtons}
                                 <FlatButton
-                                    label="Filtres"
-                                    primary={true}
-                                    icon={<FontIcon className="material-icons">filter_list</FontIcon>}
-                                    onTouchTap={this.addFilter}
-                                />
-                                <FlatButton
-                                    label="Nou"
-                                    primary={true}
-                                    icon={<FontIcon className="material-icons">note_add</FontIcon>}
-                                    onTouchTap={this.newItem}
-                                />
-                                <FlatButton
+                                    key="-3"
                                     label="Refrescar"
                                     primary={true}
                                     icon={<FontIcon className="material-icons">refresh</FontIcon>}
@@ -131,12 +151,7 @@ export default class MainView extends Component {
                         }
                     </div>
                     <div style={estils.filtres}>
-                        {
-                            this.props.fetching ?
-                                <div></div>
-                                :
-                                this.props.filters
-                        }
+
                     </div>
                     <div style={estils.taula}>
                         {
