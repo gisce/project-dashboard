@@ -35,7 +35,7 @@ export default class UsersView extends Component {
     }
 
     fetchData(initial = true) {
-        this.props.fetchUsers(TOKEN, [], null, initial);
+        this.props.fetchUsers(TOKEN, null, false, initial);
     }
 
     render() {
