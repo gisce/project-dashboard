@@ -98,7 +98,7 @@ export function parseWorkdones(response) {
     return workdones;
 }
 
-export function parseUsers(response) {
+export function parseUsers(response, tasks_ids) {
     let users = [];
     for(let i = 0; i < response.items.length; i++){
         let actual = response.items[i];
@@ -106,7 +106,8 @@ export function parseUsers(response) {
             "id": actual.id,
             "login": actual.login,
             "name": actual.name,
-            "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400"
+            "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
+            "tasks_ids": tasks_ids
         };
         users.push(user);
     }
