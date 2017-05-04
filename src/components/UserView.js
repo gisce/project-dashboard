@@ -12,15 +12,7 @@ import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon'
 
 function mapStateToProps(state) {
-    let original_tasks_ids = [];
-    if(state.tasks.data) {
-        let tasks = state.tasks.data.tasks;
-        for (let i = 0; i < tasks.length; i++) {
-            original_tasks_ids.push(tasks[i].id);
-        }
-    }
     return {
-        original_tasks_ids: original_tasks_ids,
         tasks: state.tasks.data,
         users: state.users.data,
         token: null,
@@ -67,11 +59,11 @@ export default class UserView extends Component {
         this.fetchData();
     }
 
+
     fetchData(initial = true) {
         let taskFilter = "&filter=[('user_id','='," + this.props.params.userId + "),('state','in',['open','pending'])]";
-        this.props.fetchTasks(TOKEN, null, taskFilter, false);
-        let userFilter = "&filter=[('id','='," + this.props.params.userId + ")]";
-        this.props.fetchUsers(TOKEN, [], userFilter, initial);
+        this.props.fetchTasks(TOKEN, [], taskFilter, false);
+        this.props.fetchUsers(TOKEN, this.props.params.userId, true, initial);
     }
 
     render() {
@@ -85,6 +77,7 @@ export default class UserView extends Component {
         ];
         let userdata = [];
         let buttons = [];
+        let original_tasks = [];
         let user = null;
         if(this.props.tasksLoaded && this.props.userLoaded && !isFetching){
             let tasks = this.props.tasks.tasks;
@@ -95,6 +88,7 @@ export default class UserView extends Component {
                     userMode={true}
                 />);
             user = this.props.users.users[0];
+            original_tasks = user.tasks_ids;
             userdata.push(
                 <div key="-1">
                     <div style={style.userAvatar}>
@@ -120,14 +114,14 @@ export default class UserView extends Component {
                     label="Totes les tasques"
                     primary={true}
                     icon={<FontIcon className="material-icons">view_list</FontIcon>}
-                    onTouchTap={console.log("Veure totes les tasques")}
+                    onTouchTap={console.log("")}
                 />
             );
         }
         return(
             <MainView
-                original_ids={this.props.original_tasks_ids}
-                model="tasks"
+                original_ids={original_tasks}
+                model="userTasks"
                 title={userdata}
                 fetching={isFetching}
                 buttons={buttons}
