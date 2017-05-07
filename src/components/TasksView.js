@@ -10,8 +10,8 @@ import Task from './Task'
 function mapStateToProps(state) {
     return {
         data: state.tasks,
-        projects: state.projects.data,
         active_project: state.projects.active_project,
+        projects: state.projects.data,
         token: null,
         loaded: state.tasks.loaded,
         isFetching: state.tasks.isFetching,
@@ -33,20 +33,21 @@ export default class TasksView extends Component {
     }
 
     componentDidMount() {
-        if(!this.props.isFetching) {
-            this.props.fetchTasks(TOKEN, null, null, true);
+        this.fetchData(true);
+    }
+
+    fetchData(initial = true) {
+        let filter = null;
+        let projectId = true;
+        if(this.props.params.projectId) {
+            filter = "&filter=[('project_id','='," + this.props.params.projectId + ")]";
+            projectId = this.props.params.projectId;
         }
+        this.props.fetchTasks(TOKEN, filter, projectId, initial);
     }
 
     render() {
-        let tasks_ids = [];
         let project = "";
-        if(this.props.data.data){
-            tasks_ids = this.props.data.data.original_ids;
-        }
-        if(this.props.active_project){
-            project = this.props.active_project;
-        }
         let tableContents = "No hi ha tasques per mostrar.";
         let cols = [
             "Avatar",
@@ -64,14 +65,19 @@ export default class TasksView extends Component {
                     task={task}
                 />)
         }
-        let filter = "&filter=[('id','in'," + JSON.stringify(tasks_ids).replace(/"/g, '') + ")]";
+        let filter = null;
+        let active_project_id = null;
+        if(this.props.active_project) {
+            active_project_id = this.props.active_project.id;
+            project = this.props.active_project.title;
+        }
         return(
             <MainView
-                original_ids={tasks_ids}
+                filter_id={active_project_id}
                 model="tasks"
                 title="Tasques"
                 fetching={this.props.isFetching}
-                refresh={() => this.props.fetchTasks(TOKEN, tasks_ids, filter, false)}
+                refresh={() => this.fetchData(false)}
                 breadcrumb={project}
                 table={<List columns={cols} tableBody={tableContents}/>}
             />
