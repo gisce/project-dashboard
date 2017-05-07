@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {browserHistory} from 'react-router'
 import {TableRow, TableRowColumn} from 'material-ui/Table';
 import Avatar from 'material-ui/Avatar'
 import * as taskWorkCreators from '../../actions/task_work';
@@ -59,8 +60,7 @@ export default class Task extends Component {
     }
 
     onClick() {
-        let task_work_ids = JSON.stringify(this.props.task.work_ids);
-        this.props.setActiveTask(this.props.task.id);
-        this.props.fetchTaskWorks("", this.props.task.id, false);
+        this.props.setActiveTask(this.props.task);
+        browserHistory.push("/tasks/" + this.props.task.id);
     }
 }
