@@ -62,7 +62,7 @@ export default class UserView extends Component {
 
     fetchData(initial = true) {
         let taskFilter = "&filter=[('user_id','='," + this.props.params.userId + "),('state','in',['open','pending'])]";
-        this.props.fetchTasks(TOKEN, [], taskFilter, false);
+        this.props.fetchTasks(TOKEN, taskFilter, false, false);
         this.props.fetchUsers(TOKEN, this.props.params.userId, true, initial);
     }
 
@@ -77,7 +77,7 @@ export default class UserView extends Component {
         ];
         let userdata = [];
         let buttons = [];
-        let original_tasks = [];
+        let user_id = this.props.params.userId;
         let user = null;
         if(this.props.tasksLoaded && this.props.userLoaded && !isFetching){
             let tasks = this.props.tasks.tasks;
@@ -88,7 +88,6 @@ export default class UserView extends Component {
                     userMode={true}
                 />);
             user = this.props.users.users[0];
-            original_tasks = user.tasks_ids;
             userdata.push(
                 <div key="-1">
                     <div style={style.userAvatar}>
@@ -120,7 +119,7 @@ export default class UserView extends Component {
         }
         return(
             <MainView
-                original_ids={original_tasks}
+                filter_id={user_id}
                 model="userTasks"
                 title={userdata}
                 fetching={isFetching}
