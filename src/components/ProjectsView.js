@@ -56,7 +56,7 @@ export default class ProjectsView extends Component {
         }
         return(
             <MainView
-                original_ids={[]}
+                filter_id={null}
                 model="projects"
                 title="Projectes"
                 fetching={this.props.isFetching}
