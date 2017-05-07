@@ -136,7 +136,7 @@ export default class MainView extends Component {
                         }
                         <div style={estils.search_box}>
                             {this.props.model && !this.props.fetching ?
-                                <SearchBox original_ids={this.props.original_ids} model={this.props.model}/>
+                                <SearchBox filter_id={this.props.filter_id} model={this.props.model}/>
                                 :
                                 <div></div>
                             }
