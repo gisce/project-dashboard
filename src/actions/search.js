@@ -57,7 +57,7 @@ export function searchProjects(token, valueToSearch, initial = false){
     }
 }
 
-export function searchTasks(token, valueToSearch, original_tasks, userScreen, initial = false){
+export function searchTasks(token, valueToSearch, project_id, userId, initial = false){
     return(dispatch) => {
         /*
         * If search filter is not empty, it must search for a task with a name like
@@ -65,21 +65,24 @@ export function searchTasks(token, valueToSearch, original_tasks, userScreen, in
         * */
         dispatch(searchTasksRequest(initial));
         let uri = "";
-        if(!userScreen) {
+        //"&filter=[('user_id','='," + this.props.params.userId + "),('state','in',['open','pending'])]";
+        if(!userId) {
             uri = "http://localhost:5000/project.task?schema=name,project_id.name,user_id.name,total_hours," +
                 "remaining_hours,planned_hours,effective_hours,priority,state,work_ids,delay_hours&" +
                 "filter=[('name','ilike','" + valueToSearch + "')";
         }
         else{
             uri = "http://localhost:5000/project.task?schema=name,project_id.name,state,work_ids" +
-                "&filter=[('name','ilike','" + valueToSearch + "')";
+                "&filter=[('name','ilike','" + valueToSearch + "')," +
+                "('user_id','='," + userId + ")," +
+                "('state','in',['open','pending'])";
         }
-        if(original_tasks){
+        if(project_id){
             /*
-            * If original tasks is not empty, it must not search the value to search in the whole collection of
-            * tasks, it must do it only in the range of the original tasks.
+            * If project_id is not empty, it must not search the value to search in the whole collection of
+            * tasks, it must only fetch the tasks from the project_id.
             * */
-            uri = uri + ",('id','in',"+JSON.stringify(original_tasks).replace(/"/g, '')+")";
+            uri = uri + ",('project_id','='," + project_id + ")";
         }
         uri += "]";
         axios.get(uri)
@@ -87,9 +90,9 @@ export function searchTasks(token, valueToSearch, original_tasks, userScreen, in
             .then(response => {
                 if(response.n_items > 0){
                     //let filter = "&filter=[('id','in'," + JSON.stringify(original_tasks).replace(/"/g, '') + ")]";
-                    dispatch(receiveTasks(parseTasks(response, userScreen), original_tasks, initial));
+                    dispatch(receiveTasks(parseTasks(response, userId), initial));
                 }else{
-                    dispatch(receiveTasks([], original_tasks, initial));
+                    dispatch(receiveTasks([], initial));
                 }
             })
             .catch(error => {
@@ -100,7 +103,7 @@ export function searchTasks(token, valueToSearch, original_tasks, userScreen, in
 
 export function searchUsers(token, valueToSearch, initial = false){
     return(dispatch) => {
-        dispatch(searchProjectsRequest(initial));
+        dispatch(searchUsersRequest(initial));
         axios.get("http://localhost:5000/res.users?schema=login,name&filter=[('name','ilike','" + valueToSearch + "')]")
             .then(parseJSON)
             .then(response => {
