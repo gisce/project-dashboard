@@ -1,4 +1,4 @@
-import {SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST} from '../constants'
+import {SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST, SEARCH_USERS_REQUEST} from '../constants'
 import {parseJSON, parseTasks, parseProjects, parseUsers} from '../utils/misc'
 import {receiveProjects} from './projects'
 import {receiveTasks, fetchTasks} from './tasks'
@@ -21,6 +21,17 @@ export function searchTasksRequest(initial) {
 
     return {
         type:  SEARCH_TASKS_REQUEST,
+        payload: {
+            message,
+        }
+    }
+}
+
+export function searchUsersRequest(initial) {
+    const message = (initial)?null:"Users search requested";
+
+    return {
+        type: SEARCH_USERS_REQUEST,
         payload: {
             message,
         }
