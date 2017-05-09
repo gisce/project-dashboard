@@ -9,7 +9,6 @@ import CircularProgress from 'material-ui/CircularProgress'
 function mapStateToProps(state) {
     return {
         data: state.projects,
-        token: null,
         loaded: state.projects.loaded,
         isFetching: state.projects.isFetching,
         message_text: state.projects.message_text,
@@ -144,10 +143,7 @@ export default class MainView extends Component {
                     </div>
                     <div style={estils.continguts}>
                         {
-                            this.props.fetching ?
-                                <div></div>
-                                :
-                                this.props.contents
+                            this.props.fetching && this.props.contents
                         }
                     </div>
                     <div style={estils.filtres}>
