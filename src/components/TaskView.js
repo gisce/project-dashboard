@@ -18,7 +18,6 @@ function mapStateToProps(state) {
         taskWorks: taskWorks,
         tasks: state.tasks.data,
         active_task: state.tasks.active_task,
-        token: null,
         loaded: state.taskWorks.loaded,
         isFetching: state.taskWorks.isFetching,
         message_text: state.taskWorks.message_text,
