@@ -61,10 +61,10 @@ export default class TaskWork extends Component {
     }
 
     deleteTaskWork() {
-        this.props.handleOpen();
+        console.log("esborrar");
     }
 
     handleEdit() {
-        this.props.handleEdit();
+        console.log("editar");
     }
 }
