@@ -12,7 +12,6 @@ function mapStateToProps(state) {
         data: state.tasks,
         active_project: state.projects.active_project,
         projects: state.projects.data,
-        token: null,
         loaded: state.tasks.loaded,
         isFetching: state.tasks.isFetching,
         message_text: state.tasks.message_text,

@@ -63,5 +63,8 @@ export default class SearchBox extends Component {
         else if(model === "userTasks"){
             this.props.searchTasks(token, e.target.value, false, this.props.filter_id, false);
         }
+        else if(model === "companies"){
+            //this.props.searchCompanies(token, e.target.value, false);
+        }
     }
 }

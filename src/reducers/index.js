@@ -4,6 +4,7 @@ import tasks from './tasks'
 import taskWorks from './task_work'
 import search from './search'
 import users from './users'
+import companies from './companies'
 import ui from './ui'
 
 const appReducer = combineReducers({
@@ -12,6 +13,7 @@ const appReducer = combineReducers({
     taskWorks,
     search,
     users,
+    companies,
     ui
 });
 

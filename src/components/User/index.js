@@ -9,7 +9,6 @@ import {redirectToRoute} from '../../utils/http_functions'
 
 function mapStateToProps(state) {
     return {
-        data: state.tasks
     };
 }
 

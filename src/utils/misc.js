@@ -114,10 +114,33 @@ export function parseUsers(response, tasks_ids) {
     return users;
 }
 
+export function parseCompanies(response, tasks_ids){
+    let companies = [];
+    for(let i = 0; i < response.items.length; i++){
+        let actual = response.items[i];
+        let country = "-";
+        let city = "-";
+        if(actual.country){
+            country = actual.country.name;
+        }
+        if(actual.city){
+            city = actual.city;
+        }
+        let company = {
+            "id": actual.id,
+            "name": actual.name,
+            "city": city,
+            "country": country,
+            "tasks_ids": tasks_ids
+        };
+        companies.push(company);
+    }
+    return companies;
+}
+
 export function createReducer(initialState, reducerMap) {
     return (state = initialState, action) => {
         const reducer = reducerMap[action.type];
-
 
         return reducer
             ? reducer(state, action.payload)

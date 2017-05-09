@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {browserHistory} from 'react-router';
 import { redirectToRoute } from '../../utils/http_functions'
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
@@ -52,10 +53,10 @@ export class Header extends Component {
                     />
                     <MenuItem primaryText="Timer" leftIcon={<FontIcon className="material-icons">watch_later</FontIcon>} />
                     <MenuItem primaryText="Dashboard" leftIcon={<FontIcon className="material-icons">dashboard</FontIcon>} />
-                    <MenuItem primaryText="Projectes" onTouchTap={redirectToRoute("/projects")} leftIcon={<FontIcon className="material-icons">folder</FontIcon>} />
-                    <MenuItem primaryText="Tasques" onTouchTap={redirectToRoute("/tasks")} leftIcon={<FontIcon className="material-icons">view_list</FontIcon>} />
-                    <MenuItem primaryText="Usuaris" onTouchTap={redirectToRoute("/users")} leftIcon={<FontIcon className="material-icons">account_circle</FontIcon>} />
-                    <MenuItem primaryText="Empreses" leftIcon={<FontIcon className="material-icons">business_center</FontIcon>} />
+                    <MenuItem primaryText="Projectes" onTouchTap={this.redirect("/projects")} leftIcon={<FontIcon className="material-icons">folder</FontIcon>} />
+                    <MenuItem primaryText="Tasques" onTouchTap={this.redirect("/tasks")} leftIcon={<FontIcon className="material-icons">view_list</FontIcon>} />
+                    <MenuItem primaryText="Usuaris" onTouchTap={this.redirect("/users")} leftIcon={<FontIcon className="material-icons">account_circle</FontIcon>} />
+                    <MenuItem primaryText="Empreses" onTouchTap={this.redirect("/companies")} leftIcon={<FontIcon className="material-icons">business_center</FontIcon>} />
                     <MenuItem primaryText="Configuració" leftIcon={<FontIcon className="material-icons">settings</FontIcon>}/>
                 </Drawer>
                 <AppBar onLeftIconButtonTouchTap={this.handleSwipe} style={style.appBar}
@@ -63,6 +64,13 @@ export class Header extends Component {
                 />
             </header>
         )
+    }
+
+    redirect(route){
+        return () => {
+            browserHistory.push(route);
+            this.handleSwipe();
+        }
     }
 
     handleSwipe() {

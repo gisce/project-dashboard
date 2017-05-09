@@ -10,7 +10,6 @@ import MainView from './MainView'
 function mapStateToProps(state) {
     return {
         data: state.users,
-        token: null,
         loaded: state.users.loaded,
         isFetching: state.users.isFetching,
         message_text: state.users.message_text,

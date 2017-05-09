@@ -7,6 +7,7 @@ import Tasks from './components/TasksView';
 import Task from './components/TaskView';
 import Users from './components/UsersView';
 import User from './components/UserView';
+import Companies from './components/CompaniesView';
 import NotFound from './components/NotFound';
 
 export default (
@@ -17,6 +18,7 @@ export default (
         <Route path="/tasks/:taskId" component={Task} />
         <Route path="/users" component={Users} />
         <Route path="/user/:userId" component={User} />
+        <Route path="/companies" component={Companies} />
         <Route path="*" component={NotFound} />
     </Route>
 );
