@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {browserHistory} from 'react-router';
 import { TOKEN } from '../../constants'
 import {TableRow, TableRowColumn} from 'material-ui/Table';
 import Avatar from 'material-ui/Avatar'
@@ -55,8 +56,7 @@ export default class Project extends Component {
     }
 
     onClick() {
-        this.props.setActiveProject(this.props.project.title);
-        let filter = "&filter=[('id','in'," + JSON.stringify(this.props.project.tasks).replace(/"/g, '') + ")]";
-        this.props.fetchTasks(TOKEN, this.props.project.tasks, filter, true);
+        this.props.setActiveProject(this.props.project);
+        browserHistory.push("/projects/" + this.props.project.id + "/tasks");
     }
 }

@@ -55,13 +55,13 @@ export default class SearchBox extends Component {
             this.props.searchProjects(token, e.target.value, false);
         }
         else if(model === "tasks"){
-            this.props.searchTasks(token, e.target.value, this.props.original_ids, false, false);
+            this.props.searchTasks(token, e.target.value, this.props.filter_id, false, false);
         }
         else if(model === "users"){
             this.props.searchUsers(token, e.target.value, false);
         }
         else if(model === "userTasks"){
-            this.props.searchTasks(token, e.target.value, this.props.original_ids, true, false);
+            this.props.searchTasks(token, e.target.value, false, this.props.filter_id, false);
         }
     }
 }

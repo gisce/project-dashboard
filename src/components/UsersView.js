@@ -56,7 +56,7 @@ export default class UsersView extends Component {
         }
         return(
             <MainView
-                original_ids={[]}
+                filter_id={null}
                 model="users"
                 title="Usuaris"
                 fetching={this.props.isFetching}

@@ -12,8 +12,9 @@ import NotFound from './components/NotFound';
 export default (
     <Route path="/" component={App}>
         <Route path="/projects" component={Projects} />
+        <Route path="/projects/:projectId/tasks" component={Tasks} />
         <Route path="/tasks" component={Tasks} />
-        <Route path="/task" component={Task} />
+        <Route path="/tasks/:taskId" component={Task} />
         <Route path="/users" component={Users} />
         <Route path="/user/:userId" component={User} />
         <Route path="*" component={NotFound} />

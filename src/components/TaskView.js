@@ -10,23 +10,14 @@ import List from './List'
 import TaskWork from './TaskWork'
 
 function mapStateToProps(state) {
-    let task = null;
-    if(state.tasks.data) {
-        let tasks = state.tasks.data.tasks;
-        for (let i = 0; i < tasks.length; i++) {
-            if (tasks[i].id == state.tasks.active_task_id) {
-                task = tasks[i]
-            }
-        }
-    }
     let taskWorks = null;
     if(state.taskWorks.data){
         taskWorks = state.taskWorks.data.taskWorks
     }
     return {
         taskWorks: taskWorks,
-        task: task,
-        active_task_id: state.tasks.active_task_id,
+        tasks: state.tasks.data,
+        active_task: state.tasks.active_task,
         token: null,
         loaded: state.taskWorks.loaded,
         isFetching: state.taskWorks.isFetching,
@@ -46,6 +37,21 @@ export default class TasksView extends Component {
             message_text: null
         };
     }
+
+    componentDidMount() {
+        this.fetchData(true);
+    }
+
+    fetchData(initial = true) {
+        if(!this.props.active_task){
+            let task_id = this.props.params.taskId;
+            this.props.fetchTaskWorks(TOKEN, task_id, true, false);
+        }
+        else{
+            this.props.fetchTaskWorks(TOKEN, this.props.active_task.id, false, false);
+        }
+    }
+
     render() {
         let project = '';
         let title = 'Tasca';
@@ -58,9 +64,9 @@ export default class TasksView extends Component {
             ""
         ];
         let tableContents = "No s'ha seleccionat cap tasca.";
-        if(this.props.task && this.props.taskWorks) {
-            project = this.props.task.project;
-            title = this.props.task.description;
+        if(this.props.active_task && this.props.taskWorks) {
+            project = this.props.active_task.project;
+            title = this.props.active_task.description;
             let workdones = this.props.taskWorks;
             tableContents = workdones.map(task =>
                 <TaskWork
@@ -75,24 +81,24 @@ export default class TasksView extends Component {
                     <div>
                         <TextField
                             disabled={true}
-                            defaultValue={this.props.task.estimated_hours}
+                            defaultValue={this.props.active_task.estimated_hours}
                             floatingLabelText="Hores estimades"
                         />
                         <TextField style={{paddingLeft: 10}}
                                    disabled={true}
-                                   defaultValue={this.props.task.delay_hours}
+                                   defaultValue={this.props.active_task.delay_hours}
                                    floatingLabelText="Retràs hores"
                         />
                     </div>
                     <div>
                         <TextField
                                    disabled={true}
-                                   defaultValue={this.props.task.remaining_hours}
+                                   defaultValue={this.props.active_task.remaining_hours}
                                    floatingLabelText="Hores restants"
                         />
                         <TextField style={{paddingLeft: 10}}
                             disabled={true}
-                            defaultValue={this.props.task.dedicated_hours}
+                            defaultValue={this.props.active_task.dedicated_hours}
                             floatingLabelText="Hores dedicades"
                         />
                     </div>
@@ -105,12 +111,7 @@ export default class TasksView extends Component {
                 breadcrumb={project}
                 contents={continguts}
                 fetching={this.props.isFetching}
-                refresh={() => {
-                    let filter = "&filter=[('id','in',[" + JSON.stringify(this.props.active_task_id).replace(/"/g, '') + "])]";
-                    this.props.fetchTasks(TOKEN, [this.props.active_task_id], filter, false);
-                    this.props.fetchTaskWorks(TOKEN, this.props.active_task_id, false);
-                    }
-                }
+                refresh={() => this.fetchData(false)}
                 filters="disabled"
                 table={<List columns={cols} tableBody={tableContents}/>}
             />

@@ -5,6 +5,7 @@ const initialState = {
     data: null,
     isFetching: false,
     loaded: false,
+    active_task: null
 };
 
 export default createReducer(initialState, {
@@ -22,6 +23,6 @@ export default createReducer(initialState, {
         }),
     [SET_ACTIVE_TASK]: (state, payload) =>
         Object.assign({}, state, {
-            active_task_id: payload.active_task_id
+            active_task: payload.active_task
         })
 });
