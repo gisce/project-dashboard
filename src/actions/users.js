@@ -14,7 +14,7 @@ export function fetchUsersRequest(initial) {
     };
 }
 
-export function receiveUsers(users, original_ids, initial) {
+export function receiveUsers(users, initial) {
     const message = (initial)?null:"Users list updated";
     return {
         type: RECEIVE_USERS,
