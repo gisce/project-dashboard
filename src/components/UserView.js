@@ -15,7 +15,6 @@ function mapStateToProps(state) {
     return {
         tasks: state.tasks.data,
         users: state.users.data,
-        token: null,
         tasksLoaded: state.tasks.loaded,
         userLoaded: state.users.loaded,
         isFetchingTasks: state.tasks.isFetching,
