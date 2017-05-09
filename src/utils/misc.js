@@ -135,7 +135,6 @@ export function parseCompanies(response, tasks_ids){
         };
         companies.push(company);
     }
-    console.log("COMPANIEEEEEEEEEES : ", JSON.stringify(companies));
     return companies;
 }
 
