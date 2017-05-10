@@ -5,7 +5,9 @@ import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/users';
 import User from './User'
 import List from './List'
-import MainView from './MainView'
+import SearchBox from './SearchBox';
+import LoadingIndicator from './LoadingIndicator';
+import RefreshButton from './RefreshButton';
 
 function mapStateToProps(state) {
     return {
@@ -54,16 +56,44 @@ export default class UsersView extends Component {
                 />)
         }
         return(
-            <MainView
-                filter_id={null}
-                model="users"
-                title="Usuaris"
-                fetching={this.props.isFetching}
-                refresh={() => this.fetchData(false)}
-                filters="disabled"
-                newButton="disabled"
-                table={<List columns={cols} tableBody={tableContents}/>}
-            />
+            <div>
+                <div className="leftContainer">
+                    {
+                        !this.props.isFetching && (
+                            <div>
+                                <div className="title">
+                                    Usuaris
+                                </div>
+                            </div>
+                        )
+                    }
+                </div>
+                <div className="rightContainer">
+                    {
+                        !this.props.isFetching && (
+                            <div className="upperButtons">
+                                <RefreshButton
+                                    refresh={() => this.fetchData(false)}
+                                />
+                            </div>
+                        )
+                    }
+                    <div className="searchBox">
+                        {
+                            !this.props.isFetching &&
+                            <SearchBox filter_id={null} model={"users"}/>
+                        }
+                    </div>
+                </div>
+                <div className="tableContainer" style={{paddingTop: 50 }}>
+                    {
+                        this.props.isFetching ?
+                            <LoadingIndicator/>
+                        :
+                        <List columns={cols} tableBody={tableContents}/>
+                    }
+                </div>
+            </div>
         )
     }
 }
