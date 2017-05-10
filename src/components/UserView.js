@@ -5,11 +5,13 @@ import { bindActionCreators } from 'redux';
 import * as tasksCreators from '../actions/tasks';
 import * as userCreators from '../actions/users'
 import Task from './Task'
-import List from './List'
-import MainView from './MainView'
 import Avatar from 'material-ui/Avatar'
 import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon'
+import List from './List';
+import SearchBox from './SearchBox';
+import LoadingIndicator from './LoadingIndicator';
+import RefreshButton from './RefreshButton';
 
 function mapStateToProps(state) {
     return {
@@ -117,18 +119,45 @@ export default class UserView extends Component {
             );
         }
         return(
-            <MainView
-                filter_id={user_id}
-                model="userTasks"
-                title={userdata}
-                fetching={isFetching}
-                buttons={buttons}
-                refresh={() => this.fetchData(false)}
-                filters="disabled"
-                newButton="disabled"
-                contents="Tasques on l'usuari treballa actualment:"
-                table={<List columns={cols} tableBody={tableContents}/>}
-            />
+            <div>
+                <div className="leftContainer">
+                    {
+                        !isFetching && (
+                            <div>
+                                <div className="title">
+                                    {userdata}
+                                </div>
+                            </div>
+                        )
+                    }
+                </div>
+                <div className="rightContainer">
+                    {
+                        !isFetching && (
+                            <div className="upperButtons">
+                                {buttons}
+                                <RefreshButton
+                                    refresh={() => this.fetchData(false)}
+                                />
+                            </div>
+                        )
+                    }
+                </div>
+                <div className="contents">
+                    {
+                        !isFetching &&
+                        <div>Tasques actives o pendents on l'usuari treballa actualment:</div>
+                    }
+                </div>
+                <div className="tableContainer" style={{paddingTop: 20 }}>
+                    {
+                        isFetching ?
+                            <LoadingIndicator/>
+                        :
+                        <List columns={cols} tableBody={tableContents}/>
+                    }
+                </div>
+            </div>
         )
     }
 }
