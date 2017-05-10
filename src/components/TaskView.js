@@ -135,7 +135,10 @@ export default class TasksView extends Component {
                     }
                 </div>
                 <div className="contents">
-                    {continguts}
+                    {
+                        !this.props.isFetching &&
+                        continguts
+                    }
                 </div>
                 <div className="tableContainer" style={{paddingTop: 20 }}>
                     {
