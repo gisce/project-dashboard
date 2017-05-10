@@ -7,3 +7,68 @@
     content: '';
     top: 0;
 }
+
+.mainPaperContainer{
+    width: 70%;
+    padding-left: 15%;
+    padding-right: 15%;
+    padding-top: 120px;
+    padding-bottom: 30px;
+}
+
+.leftContainer{
+    position: relative;
+    float: left;
+}
+
+.rightContainer{
+    position: relative;
+    float: right;
+    text-align: right;
+    right: 5px;
+    top: 5px;
+}
+
+.title{
+    padding-top: 20px;
+    padding-left: 20px;
+    font-size: 26px;
+}
+
+.breadcrumb{
+    padding-top: 6px;
+    padding-left: 20px;
+    font-size: 14px;
+}
+
+.upperButtons{
+
+}
+
+.searchBox{
+    font-size: 26px;
+}
+
+.contents{
+    clear: both;
+    width: 100%;
+    padding-top: 30px;
+    padding-left: 20px;
+}
+
+.filters{
+    clear: both;
+    width: 100%;
+}
+
+.tableContainer{
+    clear: both;
+    width: 100%;
+}
+
+.loading{
+    width: 100%;
+    text-align: center;
+    padding-bottom: 50px;
+    padding-top: 50px;
+}
