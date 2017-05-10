@@ -30,6 +30,12 @@ const orangeWedge = getMuiTheme({
     },
 });
 
+/* application components */
+import MainPaper from '../../components/MainPaper';
+
+/* global styles for app */
+import './styles/app.scss';
+
 class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
     static propTypes = {
         children: React.PropTypes.node,
@@ -41,7 +47,11 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
                 <section>
                     <Header />
                     <div className="container">
-                        {this.props.children}
+                        <div className="mainPaperContainer">
+                            <MainPaper>
+                                {this.props.children}
+                            </MainPaper>
+                        </div>
                     </div>
                 </section>
             </MuiThemeProvider>

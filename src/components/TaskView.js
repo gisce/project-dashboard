@@ -5,9 +5,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as taskWorkCreators from '../actions/task_work';
 import * as tasksCreators from '../actions/tasks';
-import MainView from './MainView'
 import List from './List'
 import TaskWork from './TaskWork'
+import LoadingIndicator from './LoadingIndicator';
+import NewButton from './NewButton';
+import RefreshButton from './RefreshButton';
 
 function mapStateToProps(state) {
     let taskWorks = null;
@@ -105,15 +107,48 @@ export default class TasksView extends Component {
             );
         }
         return(
-            <MainView
-                title={title}
-                breadcrumb={project}
-                contents={continguts}
-                fetching={this.props.isFetching}
-                refresh={() => this.fetchData(false)}
-                filters="disabled"
-                table={<List columns={cols} tableBody={tableContents}/>}
-            />
+            <div>
+                <div className="leftContainer">
+                    {
+                        !this.props.isFetching && (
+                            <div>
+                                <div className="title">
+                                    {title}
+                                </div>
+                                <div className="breadcrumb">
+                                    {project}
+                                </div>
+                            </div>
+                        )
+                    }
+                </div>
+                <div className="rightContainer">
+                    {
+                        !this.props.isFetching && (
+                            <div className="upperButtons">
+                                <NewButton/>
+                                <RefreshButton
+                                    refresh={() => this.fetchData(false)}
+                                />
+                            </div>
+                        )
+                    }
+                </div>
+                <div className="contents">
+                    {
+                        !this.props.isFetching &&
+                        continguts
+                    }
+                </div>
+                <div className="tableContainer" style={{paddingTop: 20 }}>
+                    {
+                        this.props.isFetching ?
+                            <LoadingIndicator/>
+                        :
+                        <List columns={cols} tableBody={tableContents}/>
+                    }
+                </div>
+            </div>
         )
     }
 }

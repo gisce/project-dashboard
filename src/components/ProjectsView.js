@@ -3,9 +3,13 @@ import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/projects';
-import Project from './Project'
-import List from './List'
-import MainView from './MainView'
+import Project from './Project';
+import List from './List';
+import SearchBox from './SearchBox';
+import LoadingIndicator from './LoadingIndicator';
+import NewButton from './NewButton';
+import FilterButton from './FilterButton';
+import RefreshButton from './RefreshButton';
 
 function mapStateToProps(state) {
     return {
@@ -54,14 +58,48 @@ export default class ProjectsView extends Component {
                 />)
         }
         return(
-            <MainView
-                filter_id={null}
-                model="projects"
-                title="Projectes"
-                fetching={this.props.isFetching}
-                refresh={() => this.fetchData(false)}
-                table={<List columns={cols} tableBody={tableContents}/>}
-            />
+            <div>
+                <div className="leftContainer">
+                    {
+                        !this.props.isFetching && (
+                            <div>
+                                <div className="title">
+                                    Projectes
+                                </div>
+                            </div>
+                        )
+                    }
+                </div>
+                <div className="rightContainer">
+                    {
+                        !this.props.isFetching && (
+                            <div className="upperButtons">
+                                <NewButton/>
+                                <FilterButton/>
+                                <RefreshButton
+                                    refresh={() => this.fetchData(false)}
+                                />
+                            </div>
+                        )
+                    }
+                    <div className="searchBox">
+                        {
+                            !this.props.isFetching &&
+                            <SearchBox filter_id={null} model={"projects"}/>
+                        }
+                    </div>
+                </div>
+                <div className="filters">
+                </div>
+                <div className="tableContainer" style={{paddingTop: 50 }}>
+                    {
+                        this.props.isFetching ?
+                            <LoadingIndicator/>
+                        :
+                        <List columns={cols} tableBody={tableContents}/>
+                    }
+                </div>
+            </div>
         )
     }
 }
