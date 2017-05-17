@@ -10,6 +10,7 @@ import TaskWork from './TaskWork'
 import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
 import RefreshButton from './RefreshButton';
+import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
     let taskWorks = null;
@@ -37,6 +38,7 @@ export default class TasksView extends Component {
         this.state = {
             message_text: null
         };
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -53,30 +55,26 @@ export default class TasksView extends Component {
         }
     }
 
+    handleClick(element){
+        console.log("Workdone clicat");
+    }
+
     render() {
         let project = '';
         let title = 'Tasca';
+        let workdones = {};
         let continguts = [];
-        let cols = [
-            "Data",
-            "Realitzar per",
-            "Temps dedicat",
-            "Resum del treball",
-            ""
-        ];
-        let tableContents = "No s'ha seleccionat cap tasca.";
+        let cols = {
+            "Data": "date",
+            "Realitzar per": "user",
+            "Temps dedicat": "hours",
+            "Resum del treball": "work_summary",
+            "": "extras",
+        };
         if(this.props.active_task && this.props.taskWorks) {
             project = this.props.active_task.project;
             title = this.props.active_task.description;
-            let workdones = this.props.taskWorks;
-            tableContents = workdones.map(task =>
-                <TaskWork
-                    key={task.id}
-                    taskWork={task}
-                    handleOpen={this.handleOpen}
-                    handleEdit={this.editTaskWork}
-                />
-            );
+            workdones = this.props.taskWorks;
             continguts.push(
                 <div>
                     <div>
@@ -142,10 +140,14 @@ export default class TasksView extends Component {
                 </div>
                 <div className="tableContainer" style={{paddingTop: 20 }}>
                     {
-                        this.props.isFetching ?
+                        this.props.isFetching || !this.props.loaded ?
                             <LoadingIndicator/>
                         :
-                        <List columns={cols} tableBody={tableContents}/>
+                        <SmartTable
+                            handleClick={this.handleClick}
+                            columns={cols}
+                            data={workdones}
+                        />
                     }
                 </div>
             </div>
