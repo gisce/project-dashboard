@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
+import {browserHistory} from 'react-router';
 import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/tasks';
-import List from './List';
-import Task from './Task';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
 import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
+import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
     return {
@@ -33,6 +33,7 @@ export default class TasksView extends Component {
         this.state = {
             message_text: null
         };
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -49,26 +50,24 @@ export default class TasksView extends Component {
         this.props.fetchTasks(TOKEN, filter, projectId, initial);
     }
 
+    handleClick(element){
+        this.props.setActiveTask(element);
+        browserHistory.push("/tasks/" + element.id);
+    }
+
     render() {
         let project = "";
-        let tableContents = "No hi ha tasques per mostrar.";
-        let cols = [
-            "Avatar",
-            "Descripció",
-            "Responsable",
-            "Prioritat",
-            "Estat",
-            "Workdones"
-        ];
+        let tasks = {};
+        let cols = {
+            "Avatar": "avatar",
+            "Descripció": "description",
+            "Responsable": "partner",
+            "Prioritat": "priority",
+            "Estat": "status"
+        };
         if(this.props.loaded){
-            let tasks = this.props.data.data.tasks;
-            tableContents = tasks.map(task =>
-                <Task
-                    key={task.id}
-                    task={task}
-                />)
+            tasks = this.props.data.data.tasks;
         }
-        let filter = null;
         let active_project_id = null;
         if(this.props.active_project) {
             active_project_id = this.props.active_project.id;
@@ -113,10 +112,14 @@ export default class TasksView extends Component {
                 </div>
                 <div className="tableContainer" style={{paddingTop: 50 }}>
                     {
-                        this.props.isFetching ?
+                        this.props.isFetching || !this.props.loaded ?
                             <LoadingIndicator/>
                         :
-                        <List columns={cols} tableBody={tableContents}/>
+                        <SmartTable
+                            handleClick={this.handleClick}
+                            columns={cols}
+                            data={tasks}
+                        />
                     }
                 </div>
             </div>
