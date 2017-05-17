@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
+import {browserHistory} from 'react-router';
 import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/projects';
-import Project from './Project';
-import List from './List';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
 import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
+import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
     return {
@@ -31,6 +31,7 @@ export default class ProjectsView extends Component {
         this.state = {
             message_text: null
         };
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -41,22 +42,19 @@ export default class ProjectsView extends Component {
         this.props.fetchProjects(TOKEN, initial);
     }
 
+    handleClick(element){
+        this.props.setActiveProject(element.id);
+        browserHistory.push("/projects/" + element.id + "/tasks");
+    }
+
     render() {
         let projects = this.props.data.data;
-        let tableContents = "No hi ha projectes per mostrar.";
-        let cols = [
-            "Avatar",
-            "Títol",
-            "Responsable",
-            "Estat"
-        ];
-        if(this.props.loaded){
-            tableContents = projects.map(project =>
-                <Project
-                    key={project.id}
-                    project={project}
-                />)
-        }
+        let cols = {
+            "Avatar": 'avatar',
+            "Títol": 'title',
+            "Responsable": 'partner',
+            "Estat": 'status'
+        };
         return(
             <div>
                 <div className="leftContainer">
@@ -91,12 +89,16 @@ export default class ProjectsView extends Component {
                 </div>
                 <div className="filters">
                 </div>
-                <div className="tableContainer" style={{paddingTop: 50 }}>
+                <div className="tableContainer" style={{paddingTop: 30 }}>
                     {
-                        this.props.isFetching ?
+                        this.props.isFetching || !this.props.loaded ?
                             <LoadingIndicator/>
                         :
-                        <List columns={cols} tableBody={tableContents}/>
+                        <SmartTable
+                            handleClick={this.handleClick}
+                            columns={cols}
+                            data={projects}
+                        />
                     }
                 </div>
             </div>
