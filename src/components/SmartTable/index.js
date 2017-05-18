@@ -41,24 +41,35 @@ export default class SmartTable extends Component {
         let attributes = [];
         let i = 0;
         const columns = this.props.columns;
-        for(var col in columns){
+        for(let col in columns){
             /*
             * Columns titles retrieving
             * */
             headers.push(
                 <TableHeaderColumn key={i}>
-                    <FlatButton
-                        labelStyle={styles.sortButton}
-                        label={col}
-                        icon={<FontIcon className="material-icons">sort</FontIcon>}
-                        onTouchTap={this.sort(i)}
-                    />
+                    {
+                        col.length > 0 && (
+                            <FlatButton
+                                labelStyle={styles.sortButton}
+                                label={col}
+                                icon={<FontIcon
+                                    className="material-icons">sort</FontIcon>}
+                                onTouchTap={this.sort(i)}
+                            />
+                        )
+                    }
                 </TableHeaderColumn>
             );
             attributes.push(columns[col]);
             i++;
         }
         const data = this.props.data;
+        if(data.length == 0){
+            return(
+                <div className="contents" style={{paddingBottom: "20px", paddingTop: "50px"}}>No hi ha dades per mostrar.</div>
+            )
+        }
+
         return(
             <Table style={{ tableLayout: 'auto' }} fixedHeader={false}  onCellClick={this.onClick}>
                 <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
@@ -68,10 +79,16 @@ export default class SmartTable extends Component {
                 </TableHeader>
                 <TableBody showRowHover={true} displayRowCheckbox={false} stripedRows={true}>
                     {
+                        /*
+                        * Row iteration
+                        * */
                         data.map(element => {
                             let i = element.id * -1;
                             let contents = [];
                             rowContents.push(element);
+                            /*
+                            * Column iteration
+                            * */
                             attributes.map(att => {
                                 i-=2;
                                 if(att === 'avatar') {
@@ -89,10 +106,10 @@ export default class SmartTable extends Component {
                                     contents.push(
                                         <TableRowColumn key={i-2}>
                                             <IconButton>
-                                                <FontIcon onTouchTap={this.props.handleEdit()} className="material-icons">mode_edit</FontIcon>
+                                                <FontIcon onTouchTap={() => this.props.handleEdit(element)} className="material-icons">mode_edit</FontIcon>
                                             </IconButton>
                                             <IconButton>
-                                                <FontIcon onTouchTap={this.props.handleDelete()} className="material-icons">delete</FontIcon>
+                                                <FontIcon onTouchTap={() => this.props.handleDelete(element)} className="material-icons">delete</FontIcon>
                                             </IconButton>
                                         </TableRowColumn>
                                     );
