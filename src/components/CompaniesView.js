@@ -3,11 +3,10 @@ import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/companies';
-import Company from './Company'
-import List from './List'
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import RefreshButton from './RefreshButton';
+import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
     return {
@@ -29,6 +28,7 @@ export default class CompaniesView extends Component {
         this.state = {
             message_text: null
         };
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -39,20 +39,19 @@ export default class CompaniesView extends Component {
         this.props.fetchCompanies(TOKEN, null, false, initial);
     }
 
+    handleClick(element){
+        console.log("Company ID: ", element.id);
+    }
+
     render() {
-        let tableContents = "No hi ha empreses per mostrar.";
-        let cols = [
-            "Nom",
-            "Ciutat",
-            "País"
-        ];
+        let companies = {};
+        let cols = {
+            "Nom": "name",
+            "Ciutat": "city",
+            "País": "country"
+        };
         if(this.props.loaded){
-            let companies = this.props.data.data.companies;
-            tableContents = companies.map(company =>
-                <Company
-                    key={company.id}
-                    company={company}
-                />)
+            companies = this.props.data.data.companies;
         }
         return(
             <div>
@@ -86,10 +85,14 @@ export default class CompaniesView extends Component {
                 </div>
                 <div className="tableContainer" style={{paddingTop: 50 }}>
                     {
-                        this.props.isFetching ?
+                        !this.props.loaded || this.props.isFetching ?
                             <LoadingIndicator/>
                         :
-                        <List columns={cols} tableBody={tableContents}/>
+                        <SmartTable
+                            handleClick={this.handleClick}
+                            columns={cols}
+                            data={companies}
+                        />
                     }
                 </div>
             </div>

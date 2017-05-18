@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
+import {browserHistory} from 'react-router';
 import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as tasksCreators from '../actions/tasks';
 import * as userCreators from '../actions/users'
-import Task from './Task'
 import Avatar from 'material-ui/Avatar'
 import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon'
-import List from './List';
-import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import RefreshButton from './RefreshButton';
+import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
     return {
@@ -54,6 +53,7 @@ export default class UserView extends Component {
         this.state = {
             message_text: null
         };
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -67,27 +67,26 @@ export default class UserView extends Component {
         this.props.fetchUsers(TOKEN, this.props.params.userId, true, initial);
     }
 
+    handleClick(element){
+        this.props.setActiveTask(element);
+        browserHistory.push("/tasks/" + element.id);
+    }
+
     render() {
         let isFetching = this.props.isFetchingTasks || this.props.isFetchingUsers;
-        let tableContents = "No existeix cap usuari amb ID " + this.props.params.userId + ".";
-        let cols = [
-            "Tasca",
-            "Projecte",
-            "Estat",
-            "Data inici"
-        ];
+        let cols = {
+            "Tasca": "description",
+            "Projecte": "project",
+            "Estat": "status",
+            "Data inici:": "project"
+        };
         let userdata = [];
         let buttons = [];
+        let tasks = {};
         let user_id = this.props.params.userId;
         let user = null;
         if(this.props.tasksLoaded && this.props.userLoaded && !isFetching){
-            let tasks = this.props.tasks.tasks;
-            tableContents = tasks.map(task =>
-                <Task
-                    key={task.id}
-                    task={task}
-                    userMode={true}
-                />);
+            tasks = this.props.tasks.tasks;
             user = this.props.users.users[0];
             userdata.push(
                 <div key="-1">
@@ -151,10 +150,14 @@ export default class UserView extends Component {
                 </div>
                 <div className="tableContainer" style={{paddingTop: 20 }}>
                     {
-                        isFetching ?
+                        !this.props.tasksLoaded || !this.props.userLoaded || isFetching ?
                             <LoadingIndicator/>
                         :
-                        <List columns={cols} tableBody={tableContents}/>
+                        <SmartTable
+                            handleClick={this.handleClick}
+                            columns={cols}
+                            data={tasks}
+                        />
                     }
                 </div>
             </div>

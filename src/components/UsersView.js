@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
+import {browserHistory} from 'react-router';
 import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/users';
-import User from './User'
-import List from './List'
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import RefreshButton from './RefreshButton';
+import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
     return {
@@ -29,6 +29,7 @@ export default class UsersView extends Component {
         this.state = {
             message_text: null
         };
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -39,21 +40,20 @@ export default class UsersView extends Component {
         this.props.fetchUsers(TOKEN, null, false, initial);
     }
 
+    handleClick(element){
+        browserHistory.push("/user/"+element.id)
+    }
+
     render() {
-        let tableContents = "No hi ha usuaris per mostrar.";
-        let cols = [
-            "Avatar",
-            "Nom",
-            "Usuari",
-            "Ultima connexió"
-        ];
+        let users = {};
+        let cols = {
+            "Avatar": "avatar",
+            "Nom": "name",
+            "Usuari": "login",
+            "Ultima connexió": "name"
+        };
         if(this.props.loaded){
-            let users = this.props.data.data.users;
-            tableContents = users.map(user =>
-                <User
-                    key={user.id}
-                    user={user}
-                />)
+            users = this.props.data.data.users;
         }
         return(
             <div>
@@ -87,10 +87,14 @@ export default class UsersView extends Component {
                 </div>
                 <div className="tableContainer" style={{paddingTop: 50 }}>
                     {
-                        this.props.isFetching ?
+                        this.props.isFetching || !this.props.loaded ?
                             <LoadingIndicator/>
                         :
-                        <List columns={cols} tableBody={tableContents}/>
+                        <SmartTable
+                            handleClick={this.handleClick}
+                            columns={cols}
+                            data={users}
+                        />
                     }
                 </div>
             </div>

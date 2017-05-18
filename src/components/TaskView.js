@@ -5,11 +5,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as taskWorkCreators from '../actions/task_work';
 import * as tasksCreators from '../actions/tasks';
-import List from './List'
-import TaskWork from './TaskWork'
 import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
 import RefreshButton from './RefreshButton';
+import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
     let taskWorks = null;
@@ -37,6 +36,9 @@ export default class TasksView extends Component {
         this.state = {
             message_text: null
         };
+        this.handleClick = this.handleClick.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     componentDidMount() {
@@ -53,39 +55,44 @@ export default class TasksView extends Component {
         }
     }
 
+    handleClick(element){
+        //Nothing
+    }
+
+    handleEdit(element){
+        console.log("Editant workdone amb ID ", element.id);
+    }
+
+    handleDelete(element){
+        console.log("Petició per esborrar workdone amb ID ", element.id);
+    }
+
     render() {
         let project = '';
         let title = 'Tasca';
+        let workdones = {};
         let continguts = [];
-        let cols = [
-            "Data",
-            "Realitzar per",
-            "Temps dedicat",
-            "Resum del treball",
-            ""
-        ];
-        let tableContents = "No s'ha seleccionat cap tasca.";
+        let cols = {
+            "Data": "date",
+            "Realitzar per": "user",
+            "Temps dedicat": "hours",
+            "Resum del treball": "work_summary",
+            "": "extras",
+        };
         if(this.props.active_task && this.props.taskWorks) {
             project = this.props.active_task.project;
             title = this.props.active_task.description;
-            let workdones = this.props.taskWorks;
-            tableContents = workdones.map(task =>
-                <TaskWork
-                    key={task.id}
-                    taskWork={task}
-                    handleOpen={this.handleOpen}
-                    handleEdit={this.editTaskWork}
-                />
-            );
+            workdones = this.props.taskWorks;
             continguts.push(
-                <div>
+                <div key="1">
                     <div>
                         <TextField
                             disabled={true}
                             defaultValue={this.props.active_task.estimated_hours}
                             floatingLabelText="Hores estimades"
                         />
-                        <TextField style={{paddingLeft: 10}}
+                        <TextField
+                                   style={{paddingLeft: 10}}
                                    disabled={true}
                                    defaultValue={this.props.active_task.delay_hours}
                                    floatingLabelText="Retràs hores"
@@ -97,7 +104,8 @@ export default class TasksView extends Component {
                                    defaultValue={this.props.active_task.remaining_hours}
                                    floatingLabelText="Hores restants"
                         />
-                        <TextField style={{paddingLeft: 10}}
+                        <TextField
+                            style={{paddingLeft: 10}}
                             disabled={true}
                             defaultValue={this.props.active_task.dedicated_hours}
                             floatingLabelText="Hores dedicades"
@@ -142,10 +150,16 @@ export default class TasksView extends Component {
                 </div>
                 <div className="tableContainer" style={{paddingTop: 20 }}>
                     {
-                        this.props.isFetching ?
+                        this.props.isFetching || !this.props.active_task || !this.props.taskWorks ?
                             <LoadingIndicator/>
                         :
-                        <List columns={cols} tableBody={tableContents}/>
+                        <SmartTable
+                            handleClick={this.handleClick}
+                            handleEdit={this.handleEdit}
+                            handleDelete={this.handleDelete}
+                            columns={cols}
+                            data={workdones}
+                        />
                     }
                 </div>
             </div>
