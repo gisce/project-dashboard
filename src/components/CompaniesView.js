@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/companies';
+import * as companiesCreators from '../actions/companies';
+import * as searchCreators from '../actions/search';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import RefreshButton from './RefreshButton';
@@ -18,7 +19,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(actionCreators, dispatch);
+    return bindActionCreators(Object.assign({}, companiesCreators, searchCreators), dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -79,7 +80,9 @@ export default class CompaniesView extends Component {
                     <div className="searchBox">
                         {
                             !this.props.isFetching &&
-                            <SearchBox filter_id={null} model={"companies"}/>
+                            <SearchBox
+                                searchFunction={this.props.searchCompanies}
+                            />
                         }
                     </div>
                 </div>
