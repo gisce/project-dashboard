@@ -1,8 +1,9 @@
-import {SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST, SEARCH_USERS_REQUEST} from '../constants'
-import {parseJSON, parseTasks, parseProjects, parseUsers} from '../utils/misc'
+import {SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST, SEARCH_USERS_REQUEST, SEARCH_COMPANIES_REQUEST} from '../constants'
+import {parseJSON, parseTasks, parseProjects, parseUsers, parseCompanies} from '../utils/misc'
 import {receiveProjects} from './projects'
 import {receiveTasks, fetchTasks} from './tasks'
 import {receiveUsers} from './users'
+import {receiveCompanies} from './companies'
 import axios from 'axios';
 
 export function searchProjectsRequest(initial) {
@@ -32,6 +33,17 @@ export function searchUsersRequest(initial) {
 
     return {
         type: SEARCH_USERS_REQUEST,
+        payload: {
+            message,
+        }
+    }
+}
+
+export function searchCompaniesRequest(initial){
+    const message = (initial)?null:"Companies search requested";
+
+    return {
+        type: SEARCH_COMPANIES_REQUEST,
         payload: {
             message,
         }
@@ -124,6 +136,24 @@ export function searchUsers(valueToSearch, initial = false){
             )
             .catch(error => {
                 console.log("API ERROR", error);
+            });
+    }
+}
+
+export function searchCompanies(valueToSearch, initial = false){
+    return(dispatch) => {
+        dispatch(searchCompaniesRequest(initial));
+        axios.get("http://localhost:5000/res.partner?schema=name,city,country.name&filter=[('name', 'ilike', '" + valueToSearch + "')]")
+            .then(parseJSON)
+            .then(response => {
+                if (response.n_items > 0) {
+                    dispatch(receiveCompanies(parseCompanies(response), initial));
+                } else {
+                    dispatch(receiveCompanies([], initial));
+                    }
+            })
+            .catch(error => {
+               console.log("API ERROR", error);
             });
     }
 }
