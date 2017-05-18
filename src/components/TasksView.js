@@ -42,7 +42,7 @@ export default class TasksView extends Component {
 
     fetchData(initial = true) {
         let filter = null;
-        let projectId = true;
+        let projectId = false;
         if(this.props.params.projectId) {
             filter = "&filter=[('project_id','='," + this.props.params.projectId + ")]";
             projectId = this.props.params.projectId;
