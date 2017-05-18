@@ -3,7 +3,8 @@ import {browserHistory} from 'react-router';
 import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/users';
+import * as usersCreators from '../actions/users';
+import * as searchCreators from '../actions/search';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import RefreshButton from './RefreshButton';
@@ -19,7 +20,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(actionCreators, dispatch);
+    return bindActionCreators(Object.assign({}, usersCreators, searchCreators), dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -81,7 +82,9 @@ export default class UsersView extends Component {
                     <div className="searchBox">
                         {
                             !this.props.isFetching &&
-                            <SearchBox filter_id={null} model={"users"}/>
+                            <SearchBox
+                                searchFunction={this.props.searchUsers}
+                            />
                         }
                     </div>
                 </div>
