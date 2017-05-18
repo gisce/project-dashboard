@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as taskWorkCreators from '../actions/task_work';
 import * as tasksCreators from '../actions/tasks';
-import List from './List'
-import TaskWork from './TaskWork'
 import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
 import RefreshButton from './RefreshButton';
@@ -39,6 +37,8 @@ export default class TasksView extends Component {
             message_text: null
         };
         this.handleClick = this.handleClick.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     componentDidMount() {
@@ -56,7 +56,15 @@ export default class TasksView extends Component {
     }
 
     handleClick(element){
-        console.log("Workdone clicat");
+        //Nothing
+    }
+
+    handleEdit(element){
+        console.log("Editant workdone amb ID ", element.id);
+    }
+
+    handleDelete(element){
+        console.log("Petició per esborrar workdone amb ID ", element.id);
     }
 
     render() {
@@ -76,14 +84,15 @@ export default class TasksView extends Component {
             title = this.props.active_task.description;
             workdones = this.props.taskWorks;
             continguts.push(
-                <div>
+                <div key="1">
                     <div>
                         <TextField
                             disabled={true}
                             defaultValue={this.props.active_task.estimated_hours}
                             floatingLabelText="Hores estimades"
                         />
-                        <TextField style={{paddingLeft: 10}}
+                        <TextField
+                                   style={{paddingLeft: 10}}
                                    disabled={true}
                                    defaultValue={this.props.active_task.delay_hours}
                                    floatingLabelText="Retràs hores"
@@ -95,7 +104,8 @@ export default class TasksView extends Component {
                                    defaultValue={this.props.active_task.remaining_hours}
                                    floatingLabelText="Hores restants"
                         />
-                        <TextField style={{paddingLeft: 10}}
+                        <TextField
+                            style={{paddingLeft: 10}}
                             disabled={true}
                             defaultValue={this.props.active_task.dedicated_hours}
                             floatingLabelText="Hores dedicades"
@@ -140,11 +150,13 @@ export default class TasksView extends Component {
                 </div>
                 <div className="tableContainer" style={{paddingTop: 20 }}>
                     {
-                        this.props.isFetching || !this.props.loaded ?
+                        this.props.isFetching || !this.props.active_task || !this.props.taskWorks ?
                             <LoadingIndicator/>
                         :
                         <SmartTable
                             handleClick={this.handleClick}
+                            handleEdit={this.handleEdit}
+                            handleDelete={this.handleDelete}
                             columns={cols}
                             data={workdones}
                         />
