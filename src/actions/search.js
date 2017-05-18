@@ -38,7 +38,7 @@ export function searchUsersRequest(initial) {
     }
 }
 
-export function searchProjects(token, valueToSearch, initial = false){
+export function searchProjects(valueToSearch, initial = false){
     return(dispatch) => {
         dispatch(searchProjectsRequest(initial));
         axios.get("http://localhost:5000/project.project?schema=name,tasks,manager.name,state&filter=[('name','ilike','" + valueToSearch + "')]")
@@ -57,7 +57,7 @@ export function searchProjects(token, valueToSearch, initial = false){
     }
 }
 
-export function searchTasks(token, valueToSearch, project_id, userId, initial = false){
+export function iSearchTasks(valueToSearch, project_id, userId, initial = false){
     return(dispatch) => {
         /*
         * If search filter is not empty, it must search for a task with a name like
@@ -101,7 +101,15 @@ export function searchTasks(token, valueToSearch, project_id, userId, initial = 
     }
 }
 
-export function searchUsers(token, valueToSearch, initial = false){
+export function searchTasks(valueToSearch, filter_id, initial = false){
+    return iSearchTasks(valueToSearch, filter_id, false, initial);
+}
+
+export function searchUserTasks(valueToSearch, filter_id, initial = false){
+    return iSearchTasks(valueToSearch, false, filter_id, initial);
+}
+
+export function searchUsers(valueToSearch, initial = false){
     return(dispatch) => {
         dispatch(searchUsersRequest(initial));
         axios.get("http://localhost:5000/res.users?schema=login,name&filter=[('name','ilike','" + valueToSearch + "')]")
