@@ -1,8 +1,9 @@
-import {SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST, SEARCH_USERS_REQUEST} from '../constants'
-import {parseJSON, parseTasks, parseProjects, parseUsers} from '../utils/misc'
+import {SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST, SEARCH_USERS_REQUEST, SEARCH_COMPANIES_REQUEST} from '../constants'
+import {parseJSON, parseTasks, parseProjects, parseUsers, parseCompanies} from '../utils/misc'
 import {receiveProjects} from './projects'
 import {receiveTasks, fetchTasks} from './tasks'
 import {receiveUsers} from './users'
+import {receiveCompanies} from './companies'
 import axios from 'axios';
 
 export function searchProjectsRequest(initial) {
@@ -38,7 +39,18 @@ export function searchUsersRequest(initial) {
     }
 }
 
-export function searchProjects(token, valueToSearch, initial = false){
+export function searchCompaniesRequest(initial){
+    const message = (initial)?null:"Companies search requested";
+
+    return {
+        type: SEARCH_COMPANIES_REQUEST,
+        payload: {
+            message,
+        }
+    }
+}
+
+export function searchProjects(valueToSearch, initial = false){
     return(dispatch) => {
         dispatch(searchProjectsRequest(initial));
         axios.get("http://localhost:5000/project.project?schema=name,tasks,manager.name,state&filter=[('name','ilike','" + valueToSearch + "')]")
@@ -57,7 +69,7 @@ export function searchProjects(token, valueToSearch, initial = false){
     }
 }
 
-export function searchTasks(token, valueToSearch, project_id, userId, initial = false){
+export function iSearchTasks(valueToSearch, project_id, userId, initial = false){
     return(dispatch) => {
         /*
         * If search filter is not empty, it must search for a task with a name like
@@ -101,7 +113,15 @@ export function searchTasks(token, valueToSearch, project_id, userId, initial = 
     }
 }
 
-export function searchUsers(token, valueToSearch, initial = false){
+export function searchTasks(valueToSearch, filter_id, initial = false){
+    return iSearchTasks(valueToSearch, filter_id, false, initial);
+}
+
+export function searchUserTasks(valueToSearch, filter_id, initial = false){
+    return iSearchTasks(valueToSearch, false, filter_id, initial);
+}
+
+export function searchUsers(valueToSearch, initial = false){
     return(dispatch) => {
         dispatch(searchUsersRequest(initial));
         axios.get("http://localhost:5000/res.users?schema=login,name&filter=[('name','ilike','" + valueToSearch + "')]")
@@ -116,6 +136,24 @@ export function searchUsers(token, valueToSearch, initial = false){
             )
             .catch(error => {
                 console.log("API ERROR", error);
+            });
+    }
+}
+
+export function searchCompanies(valueToSearch, initial = false){
+    return(dispatch) => {
+        dispatch(searchCompaniesRequest(initial));
+        axios.get("http://localhost:5000/res.partner?schema=name,city,country.name&filter=[('name', 'ilike', '" + valueToSearch + "')]")
+            .then(parseJSON)
+            .then(response => {
+                if (response.n_items > 0) {
+                    dispatch(receiveCompanies(parseCompanies(response), initial));
+                } else {
+                    dispatch(receiveCompanies([], initial));
+                    }
+            })
+            .catch(error => {
+               console.log("API ERROR", error);
             });
     }
 }

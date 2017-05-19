@@ -3,7 +3,8 @@ import {browserHistory} from 'react-router';
 import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/projects';
+import * as projectCreators from '../actions/projects';
+import * as searchCreators from '../actions/search'
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
@@ -21,7 +22,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(actionCreators, dispatch);
+    return bindActionCreators(Object.assign({}, projectCreators, searchCreators), dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -83,7 +84,9 @@ export default class ProjectsView extends Component {
                     <div className="searchBox">
                         {
                             !this.props.isFetching &&
-                            <SearchBox filter_id={null} model={"projects"}/>
+                            <SearchBox
+                                searchFunction={this.props.searchProjects}
+                            />
                         }
                     </div>
                 </div>
