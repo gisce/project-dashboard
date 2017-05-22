@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
+import {browserHistory} from 'react-router';
 import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as companiesCreators from '../actions/companies';
 import * as searchCreators from '../actions/search';
+import * as breadcrumbCreators from '../actions/breadcrumb';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import RefreshButton from './RefreshButton';
+import NewButton from './NewButton';
 import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
@@ -15,11 +18,12 @@ function mapStateToProps(state) {
         loaded: state.companies.loaded,
         isFetching: state.companies.isFetching,
         message_text: state.companies.message_text,
+        breadcrumb: state.breadcrumb.breadcrumb_data
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, companiesCreators, searchCreators), dispatch);
+    return bindActionCreators(Object.assign({}, companiesCreators, searchCreators, breadcrumbCreators), dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -41,7 +45,13 @@ export default class CompaniesView extends Component {
     }
 
     handleClick(element){
-        console.log("Company ID: ", element.id);
+        this.props.setActiveCompany(element);
+        const route = "/companies/" + element.id + "/projects";
+        let newBreadcrumb = this.props.breadcrumb;
+        newBreadcrumb.push(['Empreses', '/companies']);
+        newBreadcrumb.push([element.name, route]);
+        this.props.breadcrumbAdd(newBreadcrumb);
+        browserHistory.push(route);
     }
 
     render() {
@@ -71,6 +81,7 @@ export default class CompaniesView extends Component {
                     {
                         !this.props.isFetching && (
                             <div className="upperButtons">
+                                <NewButton/>
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
                                 />
