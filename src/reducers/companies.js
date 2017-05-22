@@ -1,10 +1,11 @@
-import { RECEIVE_COMPANIES, FETCH_COMPANIES_REQUEST } from '../constants';
+import { RECEIVE_COMPANIES, FETCH_COMPANIES_REQUEST, SET_ACTIVE_COMPANY } from '../constants';
 import { createReducer } from '../utils/misc';
 
 const initialState = {
     data: null,
     isFetching: false,
-    loaded: false
+    loaded: false,
+    active_company: null
 };
 
 export default createReducer(initialState, {
@@ -19,5 +20,9 @@ export default createReducer(initialState, {
         Object.assign({}, state, {
             isFetching: true,
             message_text: payload.message,
+        }),
+    [SET_ACTIVE_COMPANY]: (state, payload) =>
+        Object.assign({}, state, {
+            active_company: payload.active_company
         })
 });
