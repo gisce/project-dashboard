@@ -50,10 +50,17 @@ export function searchCompaniesRequest(initial){
     }
 }
 
-export function searchProjects(valueToSearch, initial = false){
+export function searchProjects(valueToSearch, companyId, initial = false){
     return(dispatch) => {
         dispatch(searchProjectsRequest(initial));
-        axios.get("http://localhost:5000/project.project?schema=name,tasks,manager.name,state&filter=[('name','ilike','" + valueToSearch + "')]")
+        let uri = "http://localhost:5000/project.project?schema=name,tasks,manager.name,state";
+        let filter = "&filter=[('name','ilike','" + valueToSearch + "')";
+        if(companyId){
+            filter += ",('partner_id','='," + companyId + ")";
+        }
+        filter += "]";
+        uri += filter;
+        axios.get(uri)
             .then(parseJSON)
             .then(response => {
                     if (response.n_items > 0) {
