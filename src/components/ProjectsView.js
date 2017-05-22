@@ -64,6 +64,7 @@ export default class ProjectsView extends Component {
     }
 
     render() {
+        const companyId = this.props.params.companyId;
         let projects = this.props.data.data;
         let newBreadcrumb = this.props.breadcrumb;
         const cols = {
@@ -112,6 +113,7 @@ export default class ProjectsView extends Component {
                             !this.props.isFetching &&
                             <SearchBox
                                 searchFunction={this.props.searchProjects}
+                                filter_id={companyId}
                             />
                         }
                     </div>
