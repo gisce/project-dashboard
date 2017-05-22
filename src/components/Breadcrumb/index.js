@@ -1,28 +1,23 @@
 import React, { Component } from 'react';
-import { redirectToRoute } from '../../utils/http_functions'
-import AppBar from 'material-ui/AppBar';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
-import FontIcon from 'material-ui/FontIcon';
-import LogoutIcon from 'material-ui/svg-icons/navigation/close';
-import IconButton from 'material-ui/IconButton';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as actionCreators from '../../actions/ui';
 
-function mapStateToProps(state) {
-    return {
-    };
-}
-
-export class Breadcrumb extends Component {
-    constructor(props) {
-        super(props);
-    }
-
+export default class Breadcrumb extends Component {
     render(){
+        let link = [];
+        const data = this.props.data;
+        for(let i=0; i < data.length; i++){
+            link.push(
+                <a key={i} href={data[i][1]}>
+                    {data[i][0]}
+                </a>
+            );
+            if(i < data.length -1){
+                link.push(" / ");
+            }
+        }
         return(
-            <div>Breadcrumb</div>
+            <div>
+                {link}
+            </div>
         )
     }
 }

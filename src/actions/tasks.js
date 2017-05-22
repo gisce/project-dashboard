@@ -39,7 +39,7 @@ export function fetchTasks(token, filter, project_id, initial = false) {
     return (dispatch) => {
         dispatch(fetchTasksRequest(initial));
         let uri = "http://localhost:5000/project.task?" +
-            "schema=name,project_id.name,user_id.name,total_hours,remaining_hours,planned_hours," +
+            "schema=name,project_id.id, project_id.name,user_id.name,total_hours,remaining_hours,planned_hours," +
             "effective_hours,priority,state,work_ids,delay_hours" + filter;
         if(!axios.defaults.headers.common['Authorization']){
             define_token(token);

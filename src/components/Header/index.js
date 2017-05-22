@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {browserHistory} from 'react-router';
-import { redirectToRoute } from '../../utils/http_functions'
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
@@ -9,7 +8,11 @@ import LogoutIcon from 'material-ui/svg-icons/navigation/close';
 import IconButton from 'material-ui/IconButton';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../../actions/ui';
+import * as uiCreators from '../../actions/ui';
+import * as projectCreators from '../../actions/projects';
+import * as taskCreators from '../../actions/tasks';
+import * as companyCreators from '../../actions/companies';
+import * as breadcrumbCreators from '../../actions/breadcrumb';
 
 function mapStateToProps(state) {
     return {
@@ -18,7 +21,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(actionCreators, dispatch);
+    return bindActionCreators(Object.assign(
+        {}, uiCreators, projectCreators, taskCreators, companyCreators, breadcrumbCreators
+    ), dispatch);
 }
 
 const style = {
@@ -34,6 +39,7 @@ export class Header extends Component {
     constructor(props) {
         super(props);
         this.handleSwipe = this.handleSwipe.bind(this);
+        this.redirect = this.redirect.bind(this);
     }
 
     render(){
@@ -68,6 +74,10 @@ export class Header extends Component {
 
     redirect(route){
         return () => {
+            this.props.setActiveTask(null);
+            this.props.setActiveProject(null);
+            this.props.setActiveCompany(null);
+            this.props.breadcrumbClear();
             browserHistory.push(route);
             this.handleSwipe();
         }

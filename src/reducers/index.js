@@ -6,6 +6,7 @@ import search from './search'
 import users from './users'
 import companies from './companies'
 import ui from './ui'
+import breadcrumb from './breadcrumb'
 
 const appReducer = combineReducers({
     projects,
@@ -14,7 +15,8 @@ const appReducer = combineReducers({
     search,
     users,
     companies,
-    ui
+    ui,
+    breadcrumb
 });
 
 const rootReducer = (state, action) => {

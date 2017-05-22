@@ -9,6 +9,7 @@ import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
+import Breadcrumb from './Breadcrumb';
 
 function mapStateToProps(state) {
     let taskWorks = null;
@@ -22,6 +23,7 @@ function mapStateToProps(state) {
         loaded: state.taskWorks.loaded,
         isFetching: state.taskWorks.isFetching,
         message_text: state.taskWorks.message_text,
+        breadcrumb: state.breadcrumb.breadcrumb_data
     };
 }
 
@@ -68,11 +70,11 @@ export default class TasksView extends Component {
     }
 
     render() {
-        let project = '';
         let title = 'Tasca';
         let workdones = {};
+        let newBreadcrumb = this.props.breadcrumb;
         let continguts = [];
-        let cols = {
+        const cols = {
             "Data": "date",
             "Realitzar per": "user",
             "Temps dedicat": "hours",
@@ -80,7 +82,11 @@ export default class TasksView extends Component {
             "": "extras",
         };
         if(this.props.active_task && this.props.taskWorks) {
-            project = this.props.active_task.project;
+            if(newBreadcrumb.length == 0){
+                const route = "/projects/" + this.props.active_task.project_id + "/tasks";
+                newBreadcrumb.push(['Projectes', '/projects']);
+                newBreadcrumb.push([this.props.active_task.project, route]);
+            }
             title = this.props.active_task.description;
             workdones = this.props.taskWorks;
             continguts.push(
@@ -124,7 +130,9 @@ export default class TasksView extends Component {
                                     {title}
                                 </div>
                                 <div className="breadcrumb">
-                                    {project}
+                                    <Breadcrumb
+                                        data={newBreadcrumb}
+                                    />
                                 </div>
                             </div>
                         )

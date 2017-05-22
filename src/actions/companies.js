@@ -1,4 +1,4 @@
-import {FETCH_COMPANIES_REQUEST, RECEIVE_COMPANIES} from '../constants'
+import {FETCH_COMPANIES_REQUEST, RECEIVE_COMPANIES, SET_ACTIVE_COMPANY} from '../constants'
 import {define_token} from '../utils/http_functions'
 import {parseJSON, parseCompanies, parseTasksIds} from '../utils/misc'
 import axios  from 'axios'
@@ -23,6 +23,15 @@ export function receiveCompanies(companies, initial) {
             message,
         },
     };
+}
+
+export function setActiveCompany(active_company) {
+    return {
+        type: SET_ACTIVE_COMPANY,
+        payload: {
+            active_company
+        }
+    }
 }
 
 export function fetchCompanies(token, companyId, loadTasks, initial = false) {

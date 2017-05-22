@@ -19,6 +19,7 @@ export default (
         <Route path="/users" component={Users} />
         <Route path="/user/:userId" component={User} />
         <Route path="/companies" component={Companies} />
+        <Route path="/companies/:companyId/projects" component={Projects} />
         <Route path="*" component={NotFound} />
     </Route>
 );

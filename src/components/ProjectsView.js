@@ -4,13 +4,15 @@ import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as projectCreators from '../actions/projects';
-import * as searchCreators from '../actions/search'
+import * as searchCreators from '../actions/search';
+import * as breadcrumbCreators from '../actions/breadcrumb';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
 import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
+import Breadcrumb from './Breadcrumb';
 
 function mapStateToProps(state) {
     return {
@@ -18,11 +20,13 @@ function mapStateToProps(state) {
         loaded: state.projects.loaded,
         isFetching: state.projects.isFetching,
         message_text: state.projects.message_text,
+        breadcrumb: state.breadcrumb.breadcrumb_data,
+        active_company: state.companies.active_company
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, projectCreators, searchCreators), dispatch);
+    return bindActionCreators(Object.assign({}, projectCreators, searchCreators, breadcrumbCreators), dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -40,22 +44,39 @@ export default class ProjectsView extends Component {
     }
 
     fetchData(initial = true) {
-        this.props.fetchProjects(TOKEN, initial);
+        let filter = "";
+        let companyId = null;
+        if(this.props.params.companyId) {
+            companyId = this.props.params.companyId;
+            filter = "&filter=[('partner_id','='," + this.props.params.companyId + ")]";
+        }
+        this.props.fetchProjects(TOKEN, filter, companyId, initial);
     }
 
     handleClick(element){
+        const route = "/projects/" + element.id + "/tasks";
         this.props.setActiveProject(element.id);
-        browserHistory.push("/projects/" + element.id + "/tasks");
+        let newBreadcrumb = this.props.breadcrumb;
+        newBreadcrumb.push(['Projectes', '/projects']);
+        newBreadcrumb.push([element.title, route]);
+        this.props.breadcrumbAdd(newBreadcrumb);
+        browserHistory.push(route);
     }
 
     render() {
         let projects = this.props.data.data;
-        let cols = {
+        let newBreadcrumb = this.props.breadcrumb;
+        const cols = {
             "Avatar": 'avatar',
             "Títol": 'title',
             "Responsable": 'partner',
             "Estat": 'status'
         };
+        if(this.props.loaded && this.props.active_company && newBreadcrumb.length == 0){
+            const route = "/companies/" + this.props.active_company.id + "/projects";
+            newBreadcrumb.push(['Empreses', '/companies']);
+            newBreadcrumb.push([this.props.active_company.name, route]);
+        }
         return(
             <div>
                 <div className="leftContainer">
@@ -64,6 +85,11 @@ export default class ProjectsView extends Component {
                             <div>
                                 <div className="title">
                                     Projectes
+                                </div>
+                                <div className="breadcrumb">
+                                    <Breadcrumb
+                                        data={newBreadcrumb}
+                                    />
                                 </div>
                             </div>
                         )
