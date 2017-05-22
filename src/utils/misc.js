@@ -42,6 +42,7 @@ export function parseTasks(response, userScreen) {
             task = {
                 "id": actual.id,
                 "description": actual.name,
+                "project_id": actual.project_id.id,
                 "project": actual.project_id.name,
                 "partner": actual.user_id.name,
                 "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
