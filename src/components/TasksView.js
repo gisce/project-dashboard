@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as tasksCreators from '../actions/tasks';
 import * as searchCreators from '../actions/search';
+import * as breadcrumbCreators from '../actions/breadcrumb';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
 import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
+import Breadcrumb from './Breadcrumb';
 
 function mapStateToProps(state) {
     return {
@@ -20,11 +22,12 @@ function mapStateToProps(state) {
         loaded: state.tasks.loaded,
         isFetching: state.tasks.isFetching,
         message_text: state.tasks.message_text,
+        breadcrumb: state.breadcrumb.breadcrumb_data
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, tasksCreators, searchCreators), dispatch);
+    return bindActionCreators(Object.assign({}, tasksCreators, searchCreators, breadcrumbCreators), dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -57,9 +60,9 @@ export default class TasksView extends Component {
     }
 
     render() {
-        let project = "";
         let tasks = {};
-        let cols = {
+        let newBreadcrumb = this.props.breadcrumb;
+        const cols = {
             "Avatar": "avatar",
             "Descripció": "description",
             "Responsable": "partner",
@@ -68,11 +71,15 @@ export default class TasksView extends Component {
         };
         if(this.props.loaded){
             tasks = this.props.data.data.tasks;
+            if(this.props.active_project && newBreadcrumb.length == 0){
+                const route = "/projects/" + this.props.active_project.id + "/tasks";
+                newBreadcrumb.push(['Projectes', '/projects']);
+                newBreadcrumb.push([this.props.active_project.title, route]);
+            }
         }
         let active_project_id = null;
         if(this.props.active_project) {
             active_project_id = this.props.active_project.id;
-            project = this.props.active_project.title;
         }
         return(
             <div>
@@ -84,7 +91,9 @@ export default class TasksView extends Component {
                                     Tasques
                                 </div>
                                 <div className="breadcrumb">
-                                    {project}
+                                    <Breadcrumb
+                                        data={newBreadcrumb}
+                                    />
                                 </div>
                             </div>
                         )
