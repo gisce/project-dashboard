@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 function mapStateToProps(state) {
-//     // if(this.props.model == "project.project") {
         return {
             data: state.projects,
             token: null,
@@ -13,19 +12,6 @@ function mapStateToProps(state) {
             isFetching: state.projects.isFetching,
             message_text: state.projects.message_text,
         };
-    // }
-    // else if(this.props.model == "project.task") {
-    //     return {
-    //         data: state.tasks,
-    //         token: null,
-    //         loaded: state.tasks.loaded,
-    //         isFetching: state.tasks.isFetching,
-    //         message_text: state.tasks.message_text,
-    //     };
-    // }
-    // else{
-    //     return {}
-    // }
 }
 
 function mapDispatchToProps(dispatch) {
