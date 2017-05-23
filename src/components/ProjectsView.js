@@ -129,6 +129,7 @@ export default class ProjectsView extends Component {
                             handleClick={this.handleClick}
                             columns={cols}
                             data={projects}
+                            handleUpdate={this.props.receiveProjects}
                         />
                     }
                 </div>
