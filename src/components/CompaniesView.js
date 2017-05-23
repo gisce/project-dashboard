@@ -104,6 +104,7 @@ export default class CompaniesView extends Component {
                         :
                         <SmartTable
                             handleClick={this.handleClick}
+                            handleUpdate={this.props.receiveCompanies}
                             columns={cols}
                             data={companies}
                         />
