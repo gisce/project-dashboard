@@ -90,9 +90,7 @@ export default class SmartTable extends Component {
         let attributes = [];
         let i = 0;
         const columns = this.props.columns;
-        if(data.length == 0) {
-            data = this.props.data;
-        }
+        data = this.props.data;
         for(let col in columns){
             /*
             * Columns titles retrieving
@@ -128,9 +126,7 @@ export default class SmartTable extends Component {
                                 onTouchTap={() => {
                                     data = this.sort(columns[col]);
                                     asc = !asc;
-                                    this.setState({
-                                        data: data
-                                    });
+                                    this.props.handleUpdate(data, false);
                                 }}
                             />
                         )
