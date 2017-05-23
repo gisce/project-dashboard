@@ -19,20 +19,69 @@ const styles = {
 };
 
 let rowContents;
+let data = [];
+let asc = true;
+let selectedColumn = null;
 
 export default class SmartTable extends Component {
 
     constructor(props) {
         super(props);
         this.onClick = this.onClick.bind(this);
+        this.sort = this.sort.bind(this);
+        data = [];
+        asc = true;
     }
 
     onClick(row, column, event) {
         this.props.handleClick(rowContents[row]);
     }
 
-    sort(key) {
+    sort(value) {
+        selectedColumn = value;
+        return this.mergeSort(this.props.data, value);
+    }
 
+    mergeSort(arr, value){
+        if (arr.length < 2)
+            return arr;
+
+        let middle = parseInt(arr.length / 2);
+        let left   = arr.slice(0, middle);
+        let right  = arr.slice(middle, arr.length);
+
+        return this.merge(this.mergeSort(left, value), this.mergeSort(right, value), value);
+    }
+
+    merge(left, right, value)
+    {
+        var result = [];
+
+        while (left.length && right.length) {
+            if (String(left[0][value]).toLocaleLowerCase() <= String(right[0][value]).toLocaleLowerCase()) {
+                if(asc) {
+                    result.push(left.shift());
+                }
+                else{
+                    result.push(right.shift());
+                }
+            } else {
+                if(asc) {
+                    result.push(right.shift());
+                }
+                else{
+                    result.push(left.shift());
+                }
+            }
+        }
+
+        while (left.length)
+            result.push(left.shift());
+
+        while (right.length)
+            result.push(right.shift());
+
+        return result;
     }
 
     render(){
@@ -41,10 +90,33 @@ export default class SmartTable extends Component {
         let attributes = [];
         let i = 0;
         const columns = this.props.columns;
+        if(data.length == 0) {
+            data = this.props.data;
+        }
         for(let col in columns){
             /*
             * Columns titles retrieving
             * */
+            let fontIcon = [];
+            if(columns[col] == selectedColumn){
+                if(asc){
+                    fontIcon.push(
+                        <FontIcon
+                        className="material-icons">sort</FontIcon>
+                    );
+                }
+                else{
+                    fontIcon.push(
+                        <FontIcon
+                        className="material-icons" style={{transform: 'rotate(180deg)'}}>sort</FontIcon>
+                    );
+                }
+            }
+            else{
+                fontIcon.push(
+                    <FontIcon/>
+                );
+            }
             headers.push(
                 <TableHeaderColumn key={i}>
                     {
@@ -52,9 +124,14 @@ export default class SmartTable extends Component {
                             <FlatButton
                                 labelStyle={styles.sortButton}
                                 label={col}
-                                icon={<FontIcon
-                                    className="material-icons">sort</FontIcon>}
-                                onTouchTap={this.sort(i)}
+                                icon={fontIcon[0]}
+                                onTouchTap={() => {
+                                    data = this.sort(columns[col]);
+                                    asc = !asc;
+                                    this.setState({
+                                        data: data
+                                    });
+                                }}
                             />
                         )
                     }
@@ -63,7 +140,6 @@ export default class SmartTable extends Component {
             attributes.push(columns[col]);
             i++;
         }
-        const data = this.props.data;
         if(data.length == 0){
             return(
                 <div className="contents" style={{paddingBottom: "20px", paddingTop: "50px"}}>No hi ha dades per mostrar.</div>
