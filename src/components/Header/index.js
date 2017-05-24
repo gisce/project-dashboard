@@ -42,6 +42,26 @@ export class Header extends Component {
         this.redirect = this.redirect.bind(this);
     }
 
+    redirect(route){
+        return () => {
+            this.props.setActiveTask(null);
+            this.props.setActiveProject(null);
+            this.props.setActiveCompany(null);
+            this.props.breadcrumbClear();
+            browserHistory.push(route);
+            this.handleSwipe();
+        }
+    }
+
+    handleSwipe() {
+        if(this.props.menu_open){
+            this.props.closeMenu();
+        }
+        else{
+            this.props.openMenu();
+        }
+    }
+
     render(){
         return(
             <header>
@@ -70,25 +90,5 @@ export class Header extends Component {
                 />
             </header>
         )
-    }
-
-    redirect(route){
-        return () => {
-            this.props.setActiveTask(null);
-            this.props.setActiveProject(null);
-            this.props.setActiveCompany(null);
-            this.props.breadcrumbClear();
-            browserHistory.push(route);
-            this.handleSwipe();
-        }
-    }
-
-    handleSwipe() {
-        if(this.props.menu_open){
-            this.props.closeMenu();
-        }
-        else{
-            this.props.openMenu();
-        }
     }
 }
