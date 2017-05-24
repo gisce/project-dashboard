@@ -101,7 +101,7 @@ export default class TasksView extends Component {
                                    style={{paddingLeft: 10}}
                                    disabled={true}
                                    defaultValue={this.props.active_task.delay_hours}
-                                   floatingLabelText="Retràs hores"
+                                   floatingLabelText="Retard hores"
                         />
                     </div>
                     <div>
