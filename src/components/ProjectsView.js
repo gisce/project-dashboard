@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as projectCreators from '../actions/projects';
 import * as searchCreators from '../actions/search';
 import * as breadcrumbCreators from '../actions/breadcrumb';
+import * as filterCreators from '../actions/filter';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
@@ -13,6 +14,7 @@ import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
+import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
@@ -26,8 +28,21 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, projectCreators, searchCreators, breadcrumbCreators), dispatch);
+    return bindActionCreators(Object.assign(
+        {},
+        projectCreators,
+        searchCreators,
+        breadcrumbCreators,
+        filterCreators
+    ), dispatch);
 }
+
+const cols = {
+    "Avatar": 'avatar',
+    "Títol": 'title',
+    "Responsable": 'partner',
+    "Estat": 'status'
+};
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ProjectsView extends Component {
@@ -51,6 +66,7 @@ export default class ProjectsView extends Component {
             filter = "&filter=[('partner_id','='," + this.props.params.companyId + ")]";
         }
         this.props.fetchProjects(TOKEN, filter, companyId, initial);
+        this.props.setFilters(initializeFilters(cols));
     }
 
     handleClick(element){
@@ -63,16 +79,14 @@ export default class ProjectsView extends Component {
         browserHistory.push(route);
     }
 
+    addFilter(key, value){
+        console.log("KEY: " + key + ", VALUE: " + value);
+    }
+
     render() {
         const companyId = this.props.params.companyId;
         let projects = this.props.data.data;
         let newBreadcrumb = this.props.breadcrumb;
-        const cols = {
-            "Avatar": 'avatar',
-            "Títol": 'title',
-            "Responsable": 'partner',
-            "Estat": 'status'
-        };
         if(this.props.loaded && this.props.active_company && newBreadcrumb.length == 0){
             const route = "/companies/" + this.props.active_company.id + "/projects";
             newBreadcrumb.push(['Empreses', '/companies']);
@@ -102,7 +116,7 @@ export default class ProjectsView extends Component {
                             <div className="upperButtons">
                                 <NewButton/>
                                 <FilterButton
-                                    filterItems={cols}
+                                    addFilter={this.addFilter}
                                 />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
