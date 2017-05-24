@@ -6,12 +6,14 @@ import { bindActionCreators } from 'redux';
 import * as companiesCreators from '../actions/companies';
 import * as searchCreators from '../actions/search';
 import * as breadcrumbCreators from '../actions/breadcrumb';
+import * as filterCreators from '../actions/filter';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import RefreshButton from './RefreshButton';
 import NewButton from './NewButton';
 import FilterButton from './FilterButton';
 import SmartTable from './SmartTable';
+import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
@@ -24,8 +26,19 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, companiesCreators, searchCreators, breadcrumbCreators), dispatch);
+    return bindActionCreators(Object.assign(
+        {}, companiesCreators,
+        searchCreators,
+        breadcrumbCreators,
+        filterCreators
+    ), dispatch);
 }
+
+const cols = {
+    "Nom": "name",
+    "Ciutat": "city",
+    "País": "country"
+};
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class CompaniesView extends Component {
@@ -43,6 +56,7 @@ export default class CompaniesView extends Component {
 
     fetchData(initial = true) {
         this.props.fetchCompanies(TOKEN, null, false, initial);
+        this.props.setFilters(initializeFilters(cols));
     }
 
     handleClick(element){
@@ -55,13 +69,12 @@ export default class CompaniesView extends Component {
         browserHistory.push(route);
     }
 
+    addFilter(key, value){
+        console.log("KEY: " + key + ", VALUE: " + value);
+    }
+
     render() {
         let companies = {};
-        let cols = {
-            "Nom": "name",
-            "Ciutat": "city",
-            "País": "country"
-        };
         if(this.props.loaded){
             companies = this.props.data.data.companies;
         }
@@ -84,7 +97,7 @@ export default class CompaniesView extends Component {
                             <div className="upperButtons">
                                 <NewButton/>
                                 <FilterButton
-                                    filterItems={cols}
+                                    addFilter={this.addFilter}
                                 />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
