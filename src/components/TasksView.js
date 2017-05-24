@@ -104,7 +104,9 @@ export default class TasksView extends Component {
                         !this.props.isFetching && (
                             <div className="upperButtons">
                                 <NewButton/>
-                                <FilterButton/>
+                                <FilterButton
+                                    filterItems={cols}
+                                />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
                                 />
