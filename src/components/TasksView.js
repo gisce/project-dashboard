@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as tasksCreators from '../actions/tasks';
 import * as searchCreators from '../actions/search';
 import * as breadcrumbCreators from '../actions/breadcrumb';
+import * as filterCreators from '../actions/filter';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
@@ -13,6 +14,7 @@ import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
+import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
@@ -27,8 +29,22 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, tasksCreators, searchCreators, breadcrumbCreators), dispatch);
+    return bindActionCreators(Object.assign(
+        {},
+        tasksCreators,
+        searchCreators,
+        breadcrumbCreators,
+        filterCreators
+    ), dispatch);
 }
+
+const cols = {
+    "Avatar": "avatar",
+    "Descripció": "description",
+    "Responsable": "partner",
+    "Prioritat": "priority",
+    "Estat": "status"
+};
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class TasksView extends Component {
@@ -52,6 +68,7 @@ export default class TasksView extends Component {
             projectId = this.props.params.projectId;
         }
         this.props.fetchTasks(TOKEN, filter, projectId, initial);
+        this.props.setFilters(initializeFilters(cols));
     }
 
     handleClick(element){
@@ -59,16 +76,13 @@ export default class TasksView extends Component {
         browserHistory.push("/tasks/" + element.id);
     }
 
+    addFilter(key, value){
+        console.log("KEY: " + key + ", VALUE: " + value);
+    }
+
     render() {
         let tasks = {};
         let newBreadcrumb = this.props.breadcrumb;
-        const cols = {
-            "Avatar": "avatar",
-            "Descripció": "description",
-            "Responsable": "partner",
-            "Prioritat": "priority",
-            "Estat": "status"
-        };
         if(this.props.loaded){
             tasks = this.props.data.data.tasks;
             if(this.props.active_project && newBreadcrumb.length == 0){
@@ -105,7 +119,7 @@ export default class TasksView extends Component {
                             <div className="upperButtons">
                                 <NewButton/>
                                 <FilterButton
-                                    filterItems={cols}
+                                    addFilter={this.addFilter}
                                 />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
