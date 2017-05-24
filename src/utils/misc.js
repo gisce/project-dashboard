@@ -139,6 +139,14 @@ export function parseCompanies(response, tasks_ids){
     return companies;
 }
 
+export function initializeFilters(cols){
+    let res = {};
+    for(var key in cols){
+        res[key] = [cols[key], false];
+    }
+    return res;
+}
+
 export function createReducer(initialState, reducerMap) {
     return (state = initialState, action) => {
         const reducer = reducerMap[action.type];
