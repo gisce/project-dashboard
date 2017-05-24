@@ -132,6 +132,7 @@ export default class TasksView extends Component {
                             handleClick={this.handleClick}
                             columns={cols}
                             data={tasks}
+                            handleUpdate={this.props.receiveTasks}
                         />
                     }
                 </div>

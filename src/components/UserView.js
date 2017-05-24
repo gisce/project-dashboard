@@ -155,6 +155,7 @@ export default class UserView extends Component {
                         :
                         <SmartTable
                             handleClick={this.handleClick}
+                            handleUpdate={this.props.receiveTasks}
                             columns={cols}
                             data={tasks}
                         />

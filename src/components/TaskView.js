@@ -165,6 +165,7 @@ export default class TasksView extends Component {
                             handleClick={this.handleClick}
                             handleEdit={this.handleEdit}
                             handleDelete={this.handleDelete}
+                            handleUpdate={this.props.receiveTaskWork}
                             columns={cols}
                             data={workdones}
                         />
