@@ -9,7 +9,8 @@ import MenuItem from 'material-ui/MenuItem';
 
 function mapStateToProps(state) {
     return {
-        filter_menu_open: state.ui.filter_menu_open
+        filter_menu_open: state.ui.filter_menu_open,
+        filterItems: state.filter.filters
     };
 }
 
@@ -33,14 +34,17 @@ export default class FilterButton extends Component {
     }
 
     render(){
-        const filterItems = this.props.filterItems;
         let items = [];
-        for(var key in filterItems){
+        for(var key in this.props.filterItems){
             if(String(key).toLowerCase() != 'avatar') {
+                const title = key;
+                const value = this.props.filterItems[key];
                 items.push(
                     <MenuItem
                         key={key}
-                        primaryText={key}/>
+                        primaryText={key}
+                        onTouchTap={() => this.props.addFilter(title, value)}
+                    />
                 );
             }
         }
