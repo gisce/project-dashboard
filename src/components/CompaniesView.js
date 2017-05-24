@@ -10,6 +10,7 @@ import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import RefreshButton from './RefreshButton';
 import NewButton from './NewButton';
+import FilterButton from './FilterButton';
 import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
@@ -82,6 +83,9 @@ export default class CompaniesView extends Component {
                         !this.props.isFetching && (
                             <div className="upperButtons">
                                 <NewButton/>
+                                <FilterButton
+                                    filterItems={cols}
+                                />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
                                 />
