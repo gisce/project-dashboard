@@ -101,7 +101,9 @@ export default class ProjectsView extends Component {
                         !this.props.isFetching && (
                             <div className="upperButtons">
                                 <NewButton/>
-                                <FilterButton/>
+                                <FilterButton
+                                    filterItems={cols}
+                                />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
                                 />
