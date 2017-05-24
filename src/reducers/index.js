@@ -1,12 +1,13 @@
-import { combineReducers } from 'redux'
-import projects from './projects'
-import tasks from './tasks'
-import taskWorks from './task_work'
-import search from './search'
-import users from './users'
-import companies from './companies'
-import ui from './ui'
-import breadcrumb from './breadcrumb'
+import { combineReducers } from 'redux';
+import projects from './projects';
+import tasks from './tasks';
+import taskWorks from './task_work';
+import search from './search';
+import users from './users';
+import companies from './companies';
+import ui from './ui';
+import breadcrumb from './breadcrumb';
+import filter from './filter';
 
 const appReducer = combineReducers({
     projects,
@@ -16,7 +17,8 @@ const appReducer = combineReducers({
     users,
     companies,
     ui,
-    breadcrumb
+    breadcrumb,
+    filter
 });
 
 const rootReducer = (state, action) => {
