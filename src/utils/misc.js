@@ -142,7 +142,9 @@ export function parseCompanies(response, tasks_ids){
 export function initializeFilters(cols){
     let res = {};
     for(var key in cols){
-        res[key] = [cols[key], false];
+        if(String(key).toLowerCase() !== 'avatar') {
+            res[key] = [cols[key], false];
+        }
     }
     return res;
 }
