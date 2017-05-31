@@ -5,6 +5,7 @@ import {receiveTasks, fetchTasks} from './tasks'
 import {receiveUsers} from './users'
 import {receiveCompanies} from './companies'
 import axios from 'axios';
+import {Project, Task, User, Company} from '../models/model'
 
 export function searchProjectsRequest(initial) {
     const message = (initial)?null:"Projects search requested";
@@ -53,26 +54,25 @@ export function searchCompaniesRequest(initial){
 export function searchProjects(valueToSearch, companyId, initial = false){
     return(dispatch) => {
         dispatch(searchProjectsRequest(initial));
-        let uri = "http://localhost:5000/project.project?schema=name,tasks,manager.name,state";
-        let filter = "&filter=[('name','ilike','" + valueToSearch + "')";
-        if(companyId){
-            filter += ",('partner_id','='," + companyId + ")";
+
+        let search_params = [];
+        search_params.push(["name", "ilike", valueToSearch]);
+
+        if (companyId) {
+            search_params.push(['partner_id', '=', companyId]);
         }
-        filter += "]";
-        uri += filter;
-        axios.get(uri)
-            .then(parseJSON)
-            .then(response => {
-                    if (response.n_items > 0) {
-                        dispatch(receiveProjects(parseProjects(response), initial));
-                    } else {
-                        dispatch(receiveProjects([], initial));
-                    }
+
+        let model = new Project();
+        model.search(search_params, {
+            transformResponse: [function (data) {
+                let newData = JSON.parse(data);
+                let results = [];
+                if (newData.n_items > 0) {
+                    results = model.parse(newData);
                 }
-            )
-            .catch(error => {
-                console.log("API ERROR", error);
-            });
+                dispatch(receiveProjects(results, initial));
+            }]
+        })
     }
 }
 
@@ -83,40 +83,32 @@ export function iSearchTasks(valueToSearch, project_id, userId, initial = false)
         * the value to search.
         * */
         dispatch(searchTasksRequest(initial));
-        let uri = "";
-        //"&filter=[('user_id','='," + this.props.params.userId + "),('state','in',['open','pending'])]";
-        if(!userId) {
-            uri = "http://localhost:5000/project.task?schema=name,project_id.name,user_id.name,total_hours," +
-                "remaining_hours,planned_hours,effective_hours,priority,state,work_ids,delay_hours&" +
-                "filter=[('name','ilike','" + valueToSearch + "')";
-        }
-        else{
-            uri = "http://localhost:5000/project.task?schema=name,project_id.name,state,work_ids" +
-                "&filter=[('name','ilike','" + valueToSearch + "')," +
-                "('user_id','='," + userId + ")," +
-                "('state','in',['open','pending'])";
+        let model = new Task();
+        let search_params = [];
+        search_params.push(["name", "ilike", valueToSearch]);
+        if (userId) {
+            search_params.push(
+                ["user_id", "=", userId],
+                ["state", "in", ['open', 'pending']]
+            );
         }
         if(project_id){
             /*
             * If project_id is not empty, it must not search the value to search in the whole collection of
             * tasks, it must only fetch the tasks from the project_id.
             * */
-            uri = uri + ",('project_id','='," + project_id + ")";
+            search_params.push(["project_id", "=", project_id]);
         }
-        uri += "]";
-        axios.get(uri)
-            .then(parseJSON)
-            .then(response => {
-                if(response.n_items > 0){
-                    //let filter = "&filter=[('id','in'," + JSON.stringify(original_tasks).replace(/"/g, '') + ")]";
-                    dispatch(receiveTasks(parseTasks(response, userId), initial));
-                }else{
-                    dispatch(receiveTasks([], initial));
+        model.search(search_params, {
+            transformResponse: [function (data) {
+                let newData = JSON.parse(data);
+                let results = [];
+                if (newData.n_items > 0) {
+                    results = model.parse(newData);
                 }
-            })
-            .catch(error => {
-                console.log("API ERROR", error);
-            });
+                dispatch(receiveTasks(results, initial));
+            }]
+        })
     }
 }
 
@@ -131,36 +123,37 @@ export function searchUserTasks(valueToSearch, filter_id, initial = false){
 export function searchUsers(valueToSearch, initial = false){
     return(dispatch) => {
         dispatch(searchUsersRequest(initial));
-        axios.get("http://localhost:5000/res.users?schema=login,name&filter=[('name','ilike','" + valueToSearch + "')]")
-            .then(parseJSON)
-            .then(response => {
-                    if (response.n_items > 0) {
-                        dispatch(receiveUsers(parseUsers(response), initial));
-                    } else {
-                        dispatch(receiveUsers([], initial));
-                    }
+        let search_params = [];
+        search_params.push(["name", "ilike", valueToSearch]);
+        let model = new User();
+        model.search(search_params, {
+            transformResponse: [function (data) {
+                let newData = JSON.parse(data);
+                let results = [];
+                if (newData.n_items > 0) {
+                    results = model.parse(newData);
                 }
-            )
-            .catch(error => {
-                console.log("API ERROR", error);
-            });
+                dispatch(receiveUsers(results, initial));
+            }]
+        })
     }
 }
 
 export function searchCompanies(valueToSearch, initial = false){
     return(dispatch) => {
         dispatch(searchCompaniesRequest(initial));
-        axios.get("http://localhost:5000/res.partner?schema=name,city,country.name&filter=[('name', 'ilike', '" + valueToSearch + "')]")
-            .then(parseJSON)
-            .then(response => {
-                if (response.n_items > 0) {
-                    dispatch(receiveCompanies(parseCompanies(response), initial));
-                } else {
-                    dispatch(receiveCompanies([], initial));
-                    }
-            })
-            .catch(error => {
-               console.log("API ERROR", error);
-            });
+        let search_params = [];
+        search_params.push(["name", "ilike", valueToSearch]);
+        let model = new Company();
+        model.search(search_params, {
+            transformResponse: [function (data) {
+                let newData = JSON.parse(data);
+                let results = [];
+                if (newData.n_items > 0) {
+                    results = model.parse(newData);
+                }
+                dispatch(receiveCompanies(results, initial));
+            }]
+        })
     }
 }
