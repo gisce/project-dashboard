@@ -59,6 +59,8 @@
 .filters{
     clear: both;
     width: 100%;
+    padding-top: 5px;
+    padding-left: 10px;
 }
 
 .tableContainer{
@@ -71,4 +73,17 @@
     text-align: center;
     padding-bottom: 50px;
     padding-top: 50px;
+}
+
+.chip{
+    float: left;
+    margin-left: 10px;
+}
+
+.chipButton{
+    top: 5px;
+}
+
+.chipbutton:hover{
+    cursor: hand;
 }
