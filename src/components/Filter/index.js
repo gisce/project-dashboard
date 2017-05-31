@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import TextField from 'material-ui/TextField';
+import FontIcon from 'material-ui/FontIcon';
+import {grey700} from 'material-ui/styles/colors';
 
 export default class Filter extends Component {
     constructor(props) {
@@ -7,7 +10,13 @@ export default class Filter extends Component {
 
     render(){
         return (
-            <div>Filter</div>
+            <div className="chip">
+                <TextField
+                    hintText={this.props.field}
+                    floatingLabelText={this.props.field}
+                />
+                <FontIcon onClick={() => console.log(this.props.value)} color={grey700} className="material-icons chipButton">cancel</FontIcon>
+            </div>
         )
     }
 }
