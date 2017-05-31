@@ -25,28 +25,28 @@ export default class FilterButton extends Component {
     }
 
     handleOpenMenu() {
-        if(this.props.filter_menu_open){
+        if (this.props.filter_menu_open) {
             this.props.closeFilterButtonMenu();
         }
-        else{
-            this.props.openFilterButtonMenu();
+        else {
+            if(Object.keys(this.props.filterItems).length > 0) {
+                this.props.openFilterButtonMenu();
+            }
         }
     }
 
     render(){
         let items = [];
         for(var key in this.props.filterItems){
-            if(String(key).toLowerCase() != 'avatar') {
-                const title = key;
-                const value = this.props.filterItems[key];
-                items.push(
-                    <MenuItem
-                        key={key}
-                        primaryText={key}
-                        onTouchTap={() => this.props.addFilter(title, value)}
-                    />
-                );
-            }
+            const title = key;
+            const value = this.props.filterItems[key];
+            items.push(
+                <MenuItem
+                    key={key}
+                    primaryText={key}
+                    onTouchTap={() => this.props.addFilter(title, value)}
+                />
+            );
         }
         return (
             <IconMenu
