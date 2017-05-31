@@ -14,6 +14,7 @@ import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
+import Filter from './Filter';
 import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
@@ -24,7 +25,8 @@ function mapStateToProps(state) {
         loaded: state.tasks.loaded,
         isFetching: state.tasks.isFetching,
         message_text: state.tasks.message_text,
-        breadcrumb: state.breadcrumb.breadcrumb_data
+        breadcrumb: state.breadcrumb.breadcrumb_data,
+        filters: state.filter.filters
     };
 }
 
@@ -46,6 +48,8 @@ const cols = {
     "Estat": "status"
 };
 
+let activeFilters = [];
+
 @connect(mapStateToProps, mapDispatchToProps)
 export default class TasksView extends Component {
     constructor(props){
@@ -54,6 +58,7 @@ export default class TasksView extends Component {
             message_text: null
         };
         this.handleClick = this.handleClick.bind(this);
+        this.addFilter = this.addFilter.bind(this);
     }
 
     componentDidMount() {
@@ -61,11 +66,11 @@ export default class TasksView extends Component {
     }
 
     fetchData(initial = true) {
-        let filter = null;
+        let filter = [];
         let projectId = false;
         if(this.props.params.projectId) {
-            filter = "&filter=[('project_id','='," + this.props.params.projectId + ")]";
             projectId = this.props.params.projectId;
+            filter.push(["project_id", "=", parseInt(projectId, 10)]);
         }
         this.props.fetchTasks(TOKEN, filter, projectId, initial);
         this.props.setFilters(initializeFilters(cols));
@@ -77,7 +82,16 @@ export default class TasksView extends Component {
     }
 
     addFilter(key, value){
-        console.log("KEY: " + key + ", VALUE: " + value);
+        let filters = this.props.filters;
+        activeFilters.push(
+            <Filter
+                key={key}
+                field={key}
+                value={value[0]}
+            />
+        );
+        delete filters[key];
+        this.props.setFilters(initializeFilters(filters));
     }
 
     render() {
@@ -138,6 +152,7 @@ export default class TasksView extends Component {
                     </div>
                 </div>
                 <div className="filters">
+                    {activeFilters}
                 </div>
                 <div className="tableContainer" style={{paddingTop: 50 }}>
                     {
