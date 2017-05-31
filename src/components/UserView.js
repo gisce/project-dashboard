@@ -62,7 +62,10 @@ export default class UserView extends Component {
 
 
     fetchData(initial = true) {
-        let taskFilter = "&filter=[('user_id','='," + this.props.params.userId + "),('state','in',['open','pending'])]";
+        let taskFilter = [
+            ["user_id", "=", parseInt(this.props.params.userId, 10)],
+            ["state", "in", ["open", "pending"]]
+        ];
         this.props.fetchTasks(TOKEN, taskFilter, false, false);
         this.props.fetchUsers(TOKEN, this.props.params.userId, true, initial);
     }
