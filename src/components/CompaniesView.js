@@ -13,6 +13,7 @@ import RefreshButton from './RefreshButton';
 import NewButton from './NewButton';
 import FilterButton from './FilterButton';
 import SmartTable from './SmartTable';
+import Filter from './Filter';
 import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
@@ -21,7 +22,8 @@ function mapStateToProps(state) {
         loaded: state.companies.loaded,
         isFetching: state.companies.isFetching,
         message_text: state.companies.message_text,
-        breadcrumb: state.breadcrumb.breadcrumb_data
+        breadcrumb: state.breadcrumb.breadcrumb_data,
+        filters: state.filter.filters
     };
 }
 
@@ -40,6 +42,8 @@ const cols = {
     "País": "country"
 };
 
+let activeFilters = [];
+
 @connect(mapStateToProps, mapDispatchToProps)
 export default class CompaniesView extends Component {
     constructor(props){
@@ -48,6 +52,7 @@ export default class CompaniesView extends Component {
             message_text: null
         };
         this.handleClick = this.handleClick.bind(this);
+        this.addFilter = this.addFilter.bind(this);
     }
 
     componentDidMount() {
@@ -70,7 +75,15 @@ export default class CompaniesView extends Component {
     }
 
     addFilter(key, value){
-        console.log("KEY: " + key + ", VALUE: " + value);
+        let filters = this.props.filters;
+        activeFilters.push(
+            <Filter
+                key={key}
+                field={key}
+            />
+        );
+        delete filters[key];
+        this.props.setFilters(initializeFilters(filters));
     }
 
     render() {
@@ -113,6 +126,9 @@ export default class CompaniesView extends Component {
                             />
                         }
                     </div>
+                </div>
+                <div className="filters">
+                    {activeFilters}
                 </div>
                 <div className="tableContainer" style={{paddingTop: 50 }}>
                     {
