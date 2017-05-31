@@ -3,6 +3,7 @@ import {parseJSON, parseProjects, parseCompanies } from '../utils/misc';
 import { receiveCompanies, setActiveCompany } from './companies';
 import {define_token} from '../utils/http_functions';
 import axios  from 'axios';
+import {Project, Company} from '../models/model'
 
 export function fetchProjectsRequest(initial) {
     const message = (initial)?null:"Refreshing projects list";
@@ -39,31 +40,31 @@ export function fetchProjects(token, filter, companyId, initial = false) {
     return (dispatch) => {
         dispatch(fetchProjectsRequest(initial));
         define_token(token);
-        axios.get("http://localhost:5000/project.project?schema=name,tasks,manager.name,state" + filter)
-            .then(parseJSON)
-            .then(response => {
-                dispatch(receiveProjects(parseProjects(response), initial));
-                if(companyId){
-                    let uri = "http://localhost:5000/res.partner?schema=name,city,country.name";
-                    if(companyId){
-                        filter = "&filter=[('id','='," + companyId + ")]";
-                        uri += filter;
-                    }
-                    axios.get(uri)
-                        .then(parseJSON)
-                        .then(response => {
-                            const companies = parseCompanies(response, []);
-                            dispatch(receiveCompanies(companies, initial));
-                            dispatch(setActiveCompany(companies[0]));
-                        })
-                        .catch(error => {
-                            console.log("API ERROR", error);
-                        });
+        let model = new Project();
+        model.search(filter, {
+            transformResponse: [function(data) {
+                let newData = JSON.parse(data);
+                let results = [];
+                if (newData.n_items > 0) {
+                    results = model.parse(newData);
                 }
-            })
-            .catch(error => {
-                console.log("API ERROR", error);
-            });
+                dispatch(receiveProjects(results, initial));
+                if (companyId) {
+                    let company = new Company();
+                    company.search([["id", "=", companyId]], {
+                        transformResponse: [function (data) {
+                            let newData = JSON.parse(data);
+                            let results = [];
+                            if (newData.n_items > 0) {
+                                results = company.parse(newData, []);
+                            }
+                            dispatch(receiveCompanies(results, initial));
+                            dispatch(setActiveCompany(results[0]))
+                        }]
+                    });
+                }
+            }]
+        });
         dispatch(setActiveProject(null));
     }
 }
