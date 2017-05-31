@@ -14,6 +14,7 @@ import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
+import Filter from './Filter';
 import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
@@ -23,7 +24,8 @@ function mapStateToProps(state) {
         isFetching: state.projects.isFetching,
         message_text: state.projects.message_text,
         breadcrumb: state.breadcrumb.breadcrumb_data,
-        active_company: state.companies.active_company
+        active_company: state.companies.active_company,
+        filters: state.filter.filters
     };
 }
 
@@ -44,6 +46,8 @@ const cols = {
     "Estat": 'status'
 };
 
+let activeFilters = [];
+
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ProjectsView extends Component {
     constructor(props){
@@ -52,6 +56,9 @@ export default class ProjectsView extends Component {
             message_text: null
         };
         this.handleClick = this.handleClick.bind(this);
+        this.addFilter = this.addFilter.bind(this);
+        this.removeFilter = this.removeFilter.bind(this);
+        activeFilters = [];
     }
 
     componentDidMount() {
@@ -59,11 +66,11 @@ export default class ProjectsView extends Component {
     }
 
     fetchData(initial = true) {
-        let filter = "";
+        let filter = [];
         let companyId = null;
         if(this.props.params.companyId) {
             companyId = this.props.params.companyId;
-            filter = "&filter=[('partner_id','='," + this.props.params.companyId + ")]";
+            filter.push(["partner_id", "=", parseInt(this.props.params.companyId, 10)]);
         }
         this.props.fetchProjects(TOKEN, filter, companyId, initial);
         this.props.setFilters(initializeFilters(cols));
@@ -80,7 +87,28 @@ export default class ProjectsView extends Component {
     }
 
     addFilter(key, value){
-        console.log("KEY: " + key + ", VALUE: " + value);
+        let filters = JSON.parse(JSON.stringify(this.props.filters));
+        activeFilters.push(
+            <Filter
+                key={key}
+                field={key}
+                value={value[0]}
+            />
+        );
+        delete filters[key];
+        this.props.setFilters(filters);
+    }
+
+    removeFilter(key, value){
+        let filters = this.props.filters;
+        activeFilters.push(
+            <Filter
+                field={key}
+                value={value}
+            />
+        );
+        delete filters[key];
+        this.props.setFilters(initializeFilters(filters));
     }
 
     render() {
@@ -117,6 +145,7 @@ export default class ProjectsView extends Component {
                                 <NewButton/>
                                 <FilterButton
                                     addFilter={this.addFilter}
+                                    removeFilter={this.removeFilter}
                                 />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
@@ -135,6 +164,7 @@ export default class ProjectsView extends Component {
                     </div>
                 </div>
                 <div className="filters">
+                    {activeFilters}
                 </div>
                 <div className="tableContainer" style={{paddingTop: 30 }}>
                     {
