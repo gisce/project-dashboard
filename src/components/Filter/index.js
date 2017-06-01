@@ -15,7 +15,7 @@ export default class Filter extends Component {
                     hintText={this.props.field}
                     floatingLabelText={this.props.field}
                 />
-                <FontIcon onClick={() => console.log(this.props.value)} color={grey700} className="material-icons chipButton">cancel</FontIcon>
+                <FontIcon onClick={() => this.props.removeFilter()} color={grey700} className="material-icons chipButton">cancel</FontIcon>
             </div>
         )
     }
