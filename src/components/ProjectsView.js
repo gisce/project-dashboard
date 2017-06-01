@@ -56,8 +56,6 @@ export default class ProjectsView extends Component {
             message_text: null
         };
         this.handleClick = this.handleClick.bind(this);
-        this.addFilter = this.addFilter.bind(this);
-        this.removeFilter = this.removeFilter.bind(this);
         activeFilters = [];
     }
 
@@ -84,31 +82,6 @@ export default class ProjectsView extends Component {
         newBreadcrumb.push([element.title, route]);
         this.props.breadcrumbAdd(newBreadcrumb);
         browserHistory.push(route);
-    }
-
-    addFilter(key, value){
-        let filters = JSON.parse(JSON.stringify(this.props.filters));
-        activeFilters.push(
-            <Filter
-                key={key}
-                field={key}
-                value={value[0]}
-            />
-        );
-        delete filters[key];
-        this.props.setFilters(filters);
-    }
-
-    removeFilter(key, value){
-        let filters = this.props.filters;
-        activeFilters.push(
-            <Filter
-                field={key}
-                value={value}
-            />
-        );
-        delete filters[key];
-        this.props.setFilters(initializeFilters(filters));
     }
 
     render() {
@@ -144,8 +117,9 @@ export default class ProjectsView extends Component {
                             <div className="upperButtons">
                                 <NewButton/>
                                 <FilterButton
-                                    addFilter={this.addFilter}
-                                    removeFilter={this.removeFilter}
+                                    filters={this.props.filters}
+                                    setter={this.props.setFilters}
+                                    activeFilters={activeFilters}
                                 />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
