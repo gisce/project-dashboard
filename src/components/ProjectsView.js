@@ -14,7 +14,6 @@ import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
-import Filter from './Filter';
 import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
