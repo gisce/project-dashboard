@@ -164,13 +164,29 @@ export function createReducer(initialState, reducerMap) {
 
 export function addFilter(key, value, items, setter, activeFilters){
     let filters = JSON.parse(JSON.stringify(items));
+    const remove = function(){
+        removeFilter(key, value, items, setter, activeFilters)
+    };
     activeFilters.push(
         <Filter
             key={key}
             field={key}
             value={value[0]}
+            removeFilter={remove}
         />
     );
     delete filters[key];
     setter(filters);
+}
+
+export function removeFilter(key, value, items, setter, activeFilters){
+    let filters = JSON.parse(JSON.stringify(items));
+    let newFilters = [];
+    filters[key] = value;
+    for(let i = 0; i < activeFilters.length; i++){
+        if(activeFilters[i].key == key){
+            activeFilters.splice(activeFilters[i], 1);
+        }
+    }
+    setter(filters);;
 }
