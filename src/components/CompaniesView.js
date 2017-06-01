@@ -52,7 +52,6 @@ export default class CompaniesView extends Component {
             message_text: null
         };
         this.handleClick = this.handleClick.bind(this);
-        this.addFilter = this.addFilter.bind(this);
     }
 
     componentDidMount() {
@@ -72,18 +71,6 @@ export default class CompaniesView extends Component {
         newBreadcrumb.push([element.name, route]);
         this.props.breadcrumbAdd(newBreadcrumb);
         browserHistory.push(route);
-    }
-
-    addFilter(key, value){
-        let filters = this.props.filters;
-        activeFilters.push(
-            <Filter
-                key={key}
-                field={key}
-            />
-        );
-        delete filters[key];
-        this.props.setFilters(initializeFilters(filters));
     }
 
     render() {
@@ -110,7 +97,9 @@ export default class CompaniesView extends Component {
                             <div className="upperButtons">
                                 <NewButton/>
                                 <FilterButton
-                                    addFilter={this.addFilter}
+                                    filters={this.props.filters}
+                                    setter={this.props.setFilters}
+                                    activeFilters={activeFilters}
                                 />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
