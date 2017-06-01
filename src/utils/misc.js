@@ -1,3 +1,6 @@
+import React from 'react';
+import Filter from '../components/Filter';
+
 export function parseJSON(response) {
     return response.data;
 }
@@ -157,4 +160,17 @@ export function createReducer(initialState, reducerMap) {
             ? reducer(state, action.payload)
             : state;
     };
+}
+
+export function addFilter(key, value, items, setter, activeFilters){
+    let filters = JSON.parse(JSON.stringify(items));
+    activeFilters.push(
+        <Filter
+            key={key}
+            field={key}
+            value={value[0]}
+        />
+    );
+    delete filters[key];
+    setter(filters);
 }
