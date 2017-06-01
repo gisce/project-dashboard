@@ -58,7 +58,6 @@ export default class TasksView extends Component {
             message_text: null
         };
         this.handleClick = this.handleClick.bind(this);
-        this.addFilter = this.addFilter.bind(this);
     }
 
     componentDidMount() {
@@ -80,20 +79,6 @@ export default class TasksView extends Component {
         this.props.setActiveTask(element);
         browserHistory.push("/tasks/" + element.id);
     }
-
-    addFilter(key, value){
-        let filters = this.props.filters;
-        activeFilters.push(
-            <Filter
-                key={key}
-                field={key}
-                value={value[0]}
-            />
-        );
-        delete filters[key];
-        this.props.setFilters(initializeFilters(filters));
-    }
-
     render() {
         let tasks = {};
         let newBreadcrumb = this.props.breadcrumb;
@@ -133,7 +118,9 @@ export default class TasksView extends Component {
                             <div className="upperButtons">
                                 <NewButton/>
                                 <FilterButton
-                                    addFilter={this.addFilter}
+                                    filters={this.props.filters}
+                                    setter={this.props.setFilters}
+                                    activeFilters={activeFilters}
                                 />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
