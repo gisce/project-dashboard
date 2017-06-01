@@ -6,6 +6,7 @@ import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
+import { addFilter } from '../../utils/misc';
 
 function mapStateToProps(state) {
     return {
@@ -44,7 +45,7 @@ export default class FilterButton extends Component {
                 <MenuItem
                     key={key}
                     primaryText={key}
-                    onTouchTap={() => this.props.addFilter(title, value)}
+                    onTouchTap={() => addFilter(title, value, this.props.filters, this.props.setter, this.props.activeFilters)}
                 />
             );
         }
