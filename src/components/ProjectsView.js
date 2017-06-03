@@ -24,7 +24,7 @@ function mapStateToProps(state) {
         message_text: state.projects.message_text,
         breadcrumb: state.breadcrumb.breadcrumb_data,
         active_company: state.companies.active_company,
-        filters: state.filter.filters
+        filters: state.filter
     };
 }
 
@@ -40,9 +40,9 @@ function mapDispatchToProps(dispatch) {
 
 const cols = {
     "Avatar": 'avatar',
-    "Títol": 'title',
-    "Responsable": 'partner',
-    "Estat": 'status'
+    "Títol": 'name',
+    "Responsable": 'manager.name',
+    "Estat": 'state'
 };
 
 let activeFilters = [];
@@ -70,7 +70,7 @@ export default class ProjectsView extends Component {
             filter.push(["partner_id", "=", parseInt(this.props.params.companyId, 10)]);
         }
         this.props.fetchProjects(TOKEN, filter, companyId, initial);
-        this.props.setFilters(initializeFilters(cols));
+        this.props.setFilters(initializeFilters(cols), [this.props.searchProjects, companyId]);
     }
 
     handleClick(element){
@@ -78,7 +78,7 @@ export default class ProjectsView extends Component {
         this.props.setActiveProject(element.id);
         let newBreadcrumb = this.props.breadcrumb;
         newBreadcrumb.push(['Projectes', '/projects']);
-        newBreadcrumb.push([element.title, route]);
+        newBreadcrumb.push([element.name, route]);
         this.props.breadcrumbAdd(newBreadcrumb);
         browserHistory.push(route);
     }
@@ -118,6 +118,7 @@ export default class ProjectsView extends Component {
                                 <FilterButton
                                     filters={this.props.filters}
                                     setter={this.props.setFilters}
+                                    adder={this.props.addFilter}
                                     activeFilters={activeFilters}
                                 />
                                 <RefreshButton
@@ -132,6 +133,7 @@ export default class ProjectsView extends Component {
                             <SearchBox
                                 searchFunction={this.props.searchProjects}
                                 filter_id={companyId}
+                                field="name"
                             />
                         }
                     </div>
