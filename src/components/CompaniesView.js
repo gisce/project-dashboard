@@ -23,7 +23,7 @@ function mapStateToProps(state) {
         isFetching: state.companies.isFetching,
         message_text: state.companies.message_text,
         breadcrumb: state.breadcrumb.breadcrumb_data,
-        filters: state.filter.filters
+        filters: state.filter
     };
 }
 
@@ -60,7 +60,7 @@ export default class CompaniesView extends Component {
 
     fetchData(initial = true) {
         this.props.fetchCompanies(TOKEN, null, false, initial);
-        this.props.setFilters(initializeFilters(cols));
+        this.props.setFilters(initializeFilters(cols), [this.props.searchCompanies, false]);
     }
 
     handleClick(element){
@@ -99,6 +99,7 @@ export default class CompaniesView extends Component {
                                 <FilterButton
                                     filters={this.props.filters}
                                     setter={this.props.setFilters}
+                                    adder={this.props.addFilter}
                                     activeFilters={activeFilters}
                                 />
                                 <RefreshButton
@@ -112,6 +113,7 @@ export default class CompaniesView extends Component {
                             !this.props.isFetching &&
                             <SearchBox
                                 searchFunction={this.props.searchCompanies}
+                                field="name"
                             />
                         }
                     </div>
