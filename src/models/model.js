@@ -44,10 +44,10 @@ export class Project extends Model {
             }
             let project = {
                 "id": actual.id,
-                "title": actual.name,
-                "partner": actual.manager.name,
+                "name": actual.name,
+                "manager.name": actual.manager.name,
                 "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
-                "status": actual.state,
+                "state": actual.state,
                 "tasks": tasks
             };
             projects.push(project);
@@ -107,18 +107,18 @@ export class Task extends Model {
             let task = {};
             task = {
                 "id": actual.id,
-                "description": actual.name,
-                "project_id": actual.project_id.id,
-                "project": actual.project_id.name,
-                "partner": actual.user_id.name,
+                "name": actual.name,
+                "project_id.id": actual.project_id.id,
+                "project_id.name": actual.project_id.name,
+                "user_id.name": actual.user_id.name,
                 "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
-                "estimated_hours": actual.planned_hours,
-                "dedicated_hours": actual.effective_hours,
+                "planned_hours": actual.planned_hours,
+                "effective_hours": actual.effective_hours,
                 "total_hours": actual.total_hours,
                 "remaining_hours": actual.remaining_hours,
                 "delay_hours": delay_hours,
                 "priority": actual.priority,
-                "status": actual.state,
+                "state": actual.state,
                 "work_ids": workdones
             };
             tasks.push(task);
