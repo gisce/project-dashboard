@@ -83,11 +83,11 @@ export default class TasksView extends Component {
         };
         if(this.props.active_task && this.props.taskWorks) {
             if(newBreadcrumb.length == 0){
-                const route = "/projects/" + this.props.active_task.project_id + "/tasks";
+                const route = "/projects/" + this.props.active_task['project_id.id'] + "/tasks";
                 newBreadcrumb.push(['Projectes', '/projects']);
-                newBreadcrumb.push([this.props.active_task.project, route]);
+                newBreadcrumb.push([this.props.active_task['project_id.name'], route]);
             }
-            title = this.props.active_task.description;
+            title = this.props.active_task.name;
             workdones = this.props.taskWorks;
             continguts.push(
                 <div key="1">
