@@ -25,10 +25,15 @@ export default class SearchBox extends Component {
         this.searchRequest = this.searchRequest.bind(this);
     }
 
+
     render(){
+        let label = "Cerca";
+        if(this.props.label){
+            label = this.props.label;
+        }
         return(
             <TextField
-                floatingLabelText="Cerca"
+                floatingLabelText={label}
                 onChange={this.searchRequest}
             />
         )
@@ -36,10 +41,10 @@ export default class SearchBox extends Component {
 
     searchRequest(e) {
         if(!this.props.filter_id) {
-            this.props.searchFunction(e.target.value, false);
+            this.props.searchFunction(e.target.value, this.props.field, false);
         }
         else{
-            this.props.searchFunction(e.target.value, this.props.filter_id, false);
+            this.props.searchFunction(e.target.value, this.props.field, this.props.filter_id, false);
         }
     }
 }

@@ -6,11 +6,15 @@ import { bindActionCreators } from 'redux';
 import * as companiesCreators from '../actions/companies';
 import * as searchCreators from '../actions/search';
 import * as breadcrumbCreators from '../actions/breadcrumb';
+import * as filterCreators from '../actions/filter';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import RefreshButton from './RefreshButton';
 import NewButton from './NewButton';
+import FilterButton from './FilterButton';
 import SmartTable from './SmartTable';
+import Filter from './Filter';
+import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
@@ -18,13 +22,27 @@ function mapStateToProps(state) {
         loaded: state.companies.loaded,
         isFetching: state.companies.isFetching,
         message_text: state.companies.message_text,
-        breadcrumb: state.breadcrumb.breadcrumb_data
+        breadcrumb: state.breadcrumb.breadcrumb_data,
+        filters: state.filter
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, companiesCreators, searchCreators, breadcrumbCreators), dispatch);
+    return bindActionCreators(Object.assign(
+        {}, companiesCreators,
+        searchCreators,
+        breadcrumbCreators,
+        filterCreators
+    ), dispatch);
 }
+
+const cols = {
+    "Nom": "name",
+    "Ciutat": "city",
+    "País": "country"
+};
+
+let activeFilters = [];
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class CompaniesView extends Component {
@@ -42,6 +60,7 @@ export default class CompaniesView extends Component {
 
     fetchData(initial = true) {
         this.props.fetchCompanies(TOKEN, null, false, initial);
+        this.props.setFilters(initializeFilters(cols), [this.props.searchCompanies, false]);
     }
 
     handleClick(element){
@@ -56,11 +75,6 @@ export default class CompaniesView extends Component {
 
     render() {
         let companies = {};
-        let cols = {
-            "Nom": "name",
-            "Ciutat": "city",
-            "País": "country"
-        };
         if(this.props.loaded){
             companies = this.props.data.data.companies;
         }
@@ -82,6 +96,12 @@ export default class CompaniesView extends Component {
                         !this.props.isFetching && (
                             <div className="upperButtons">
                                 <NewButton/>
+                                <FilterButton
+                                    filters={this.props.filters}
+                                    setter={this.props.setFilters}
+                                    adder={this.props.addFilter}
+                                    activeFilters={activeFilters}
+                                />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
                                 />
@@ -93,9 +113,13 @@ export default class CompaniesView extends Component {
                             !this.props.isFetching &&
                             <SearchBox
                                 searchFunction={this.props.searchCompanies}
+                                field="name"
                             />
                         }
                     </div>
+                </div>
+                <div className="filters">
+                    {activeFilters}
                 </div>
                 <div className="tableContainer" style={{paddingTop: 50 }}>
                     {

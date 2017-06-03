@@ -1,7 +1,7 @@
-import {FETCH_USERS_REQUEST, RECEIVE_USERS} from '../constants'
-import {redirectToRoute, define_token} from '../utils/http_functions'
-import {parseJSON, parseUsers, parseTasksIds} from '../utils/misc'
-import axios  from 'axios'
+import {FETCH_USERS_REQUEST, RECEIVE_USERS} from '../constants';
+import {define_token} from '../utils/http_functions';
+import axios  from 'axios';
+import {User, Task} from '../models/model';
 
 export function fetchUsersRequest(initial) {
     const message = (initial)?null:"Refreshing users list";
@@ -25,38 +25,43 @@ export function receiveUsers(users, initial) {
     };
 }
 
+
 export function fetchUsers(token, userId, loadTasks, initial = false) {
     return (dispatch) => {
         if(!axios.defaults.headers.common['Authorization']){
             define_token(token);
         }
         dispatch(fetchUsersRequest(initial));
-        let uri = "http://localhost:5000/res.users?schema=login,name";
-        let filter = "";
+        let filter = [];
         if(userId){
-            filter = "&filter=[('id','='," + userId + ")]";
-            uri += filter;
+            filter.push(["id", "=", parseInt(userId, 10)]);
         }
         let tasks_ids = [];
-        axios.get(uri)
-            .then(parseJSON)
-            .then(response => {
-                if(loadTasks){
-                    axios.get("http://localhost:5000/project.task?schema=id" +
-                        "&filter=[('user_id','='," + userId + ")," +
-                        "('state','in',['open','pending'])]")
-                        .then(parseJSON)
-                        .then(tasksResponse => {
-                            tasks_ids = parseTasksIds(tasksResponse);
-                            dispatch(receiveUsers(parseUsers(response, tasks_ids), initial));
-                        }).catch(error => {
-                            console.log("API ERROR (Tasks IDS)", error);
-                        });
-                }
-                dispatch(receiveUsers(parseUsers(response, tasks_ids), initial));
-            })
-            .catch(error => {
-                console.log("API ERROR", error);
-            });
+        let model = new User();
+        model.search(filter, {
+          transformResponse: [function (data) {
+              let newData = JSON.parse(data);
+              let results = [];
+              if(newData.n_items > 0){
+                  if(loadTasks){
+                      let task = new Task();
+                      task.search([
+                          ["user_id", "=", parseInt(userId, 10)],
+                          ["state", "in", ["open", "pending"]]
+                      ], {
+                          transformResponse: [function (data) {
+                              let newTaskData = JSON.parse(data);
+                              tasks_ids = task.parseTaskIds(newTaskData);
+                              dispatch(receiveUsers(model.parse(newData, tasks_ids), initial));
+                          }]
+                      });
+                  }
+              }
+              else{
+                  results = model.parse(newData, tasks_ids);
+                  dispatch(receiveUsers(results), initial);
+              }
+          }]
+        });
     }
 }

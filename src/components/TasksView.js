@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as tasksCreators from '../actions/tasks';
 import * as searchCreators from '../actions/search';
 import * as breadcrumbCreators from '../actions/breadcrumb';
+import * as filterCreators from '../actions/filter';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
@@ -13,6 +14,8 @@ import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
+import Filter from './Filter';
+import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
@@ -22,13 +25,30 @@ function mapStateToProps(state) {
         loaded: state.tasks.loaded,
         isFetching: state.tasks.isFetching,
         message_text: state.tasks.message_text,
-        breadcrumb: state.breadcrumb.breadcrumb_data
+        breadcrumb: state.breadcrumb.breadcrumb_data,
+        filters: state.filter
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, tasksCreators, searchCreators, breadcrumbCreators), dispatch);
+    return bindActionCreators(Object.assign(
+        {},
+        tasksCreators,
+        searchCreators,
+        breadcrumbCreators,
+        filterCreators
+    ), dispatch);
 }
+
+const cols = {
+    "Avatar": "avatar",
+    "Descripció": "name",
+    "Responsable": "user_id.name",
+    "Prioritat": "priority",
+    "Estat": "state"
+};
+
+let activeFilters = [];
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class TasksView extends Component {
@@ -45,36 +65,29 @@ export default class TasksView extends Component {
     }
 
     fetchData(initial = true) {
-        let filter = null;
+        let filter = [];
         let projectId = false;
         if(this.props.params.projectId) {
-            filter = "&filter=[('project_id','='," + this.props.params.projectId + ")]";
             projectId = this.props.params.projectId;
+            filter.push(["project_id", "=", parseInt(projectId, 10)]);
         }
         this.props.fetchTasks(TOKEN, filter, projectId, initial);
+        this.props.setFilters(initializeFilters(cols), [this.props.searchTasks, projectId]);
     }
 
     handleClick(element){
         this.props.setActiveTask(element);
         browserHistory.push("/tasks/" + element.id);
     }
-
     render() {
         let tasks = {};
         let newBreadcrumb = this.props.breadcrumb;
-        const cols = {
-            "Avatar": "avatar",
-            "Descripció": "description",
-            "Responsable": "partner",
-            "Prioritat": "priority",
-            "Estat": "status"
-        };
         if(this.props.loaded){
             tasks = this.props.data.data.tasks;
             if(this.props.active_project && newBreadcrumb.length == 0){
                 const route = "/projects/" + this.props.active_project.id + "/tasks";
                 newBreadcrumb.push(['Projectes', '/projects']);
-                newBreadcrumb.push([this.props.active_project.title, route]);
+                newBreadcrumb.push([this.props.active_project.name, route]);
             }
         }
         let active_project_id = null;
@@ -104,7 +117,12 @@ export default class TasksView extends Component {
                         !this.props.isFetching && (
                             <div className="upperButtons">
                                 <NewButton/>
-                                <FilterButton/>
+                                <FilterButton
+                                    filters={this.props.filters}
+                                    setter={this.props.setFilters}
+                                    adder={this.props.addFilter}
+                                    activeFilters={activeFilters}
+                                />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
                                 />
@@ -117,11 +135,13 @@ export default class TasksView extends Component {
                             <SearchBox
                                 searchFunction={this.props.searchTasks}
                                 filter_id={active_project_id}
+                                field="name"
                             />
                         }
                     </div>
                 </div>
                 <div className="filters">
+                    {activeFilters}
                 </div>
                 <div className="tableContainer" style={{paddingTop: 50 }}>
                     {

@@ -1,7 +1,8 @@
-import {FETCH_COMPANIES_REQUEST, RECEIVE_COMPANIES, SET_ACTIVE_COMPANY} from '../constants'
-import {define_token} from '../utils/http_functions'
-import {parseJSON, parseCompanies, parseTasksIds} from '../utils/misc'
-import axios  from 'axios'
+import {FETCH_COMPANIES_REQUEST, RECEIVE_COMPANIES, SET_ACTIVE_COMPANY} from '../constants';
+import {define_token} from '../utils/http_functions';
+import {parseJSON, parseCompanies, parseTasksIds} from '../utils/misc';
+import axios  from 'axios';
+import { Company, Task } from '../models/model';
 
 export function fetchCompaniesRequest(initial) {
     const message = (initial)?null:"Refreshing companies list";
@@ -40,32 +41,34 @@ export function fetchCompanies(token, companyId, loadTasks, initial = false) {
             define_token(token);
         }
         dispatch(fetchCompaniesRequest(initial));
-        let uri = "http://localhost:5000/res.partner?schema=name,city,country.name";
-        let filter = "";
-        if(companyId){
-            filter = "&filter=[('id','='," + companyId + ")]";
-            uri += filter;
-        }
+        let model = new Company();
+        let filter = [];
         let tasks_ids = [];
-        axios.get(uri)
-            .then(parseJSON)
-            .then(response => {
-                if(loadTasks){
-                    axios.get("http://localhost:5000/project.task?schema=id" +
-                        "&filter=[('partner_id','='," + companyId + ")," +
-                        "('state','in',['open','pending'])]")
-                        .then(parseJSON)
-                        .then(tasksResponse => {
-                            tasks_ids = parseTasksIds(tasksResponse);
-                            dispatch(receiveCompanies(parseCompanies(response, tasks_ids), initial));
-                        }).catch(error => {
-                            console.log("API ERROR (Tasks IDS)", error);
-                        });
-                }
-                dispatch(receiveCompanies(parseCompanies(response, tasks_ids), initial));
-            })
-            .catch(error => {
-                console.log("API ERROR", error);
-            });
+        if(companyId){
+            filter.push(["id", "=", parseInt(companyId, 10)]);
+        }
+        model.search(filter, {
+            transformResponse: [function (data) {
+                    let newData = JSON.parse(data);
+                    let results = [];
+                    if (newData.n_items > 0) {
+                        if(loadTasks){
+                            let task = new Task();
+                            task.search([
+                                ["partner_id", "=", parseInt(companyId, 10)],
+                                ["state", "in", ["open", "pending"]]
+                            ], {
+                                transformResponse: [function (data) {
+                                    let newData = JSON.parse(data);
+                                    tasks_ids = task.parseTaskIds(newData);
+                                    dispatch(receiveCompanies(model.parse(newData, tasks_ids), initial));
+                                }]
+                            });
+                        }
+                        results = model.parse(newData, tasks_ids);
+                    }
+                    dispatch(receiveCompanies(results, initial));
+            }]
+        });
     }
 }

@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as projectCreators from '../actions/projects';
 import * as searchCreators from '../actions/search';
 import * as breadcrumbCreators from '../actions/breadcrumb';
+import * as filterCreators from '../actions/filter';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import NewButton from './NewButton';
@@ -13,6 +14,7 @@ import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
+import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
@@ -21,13 +23,29 @@ function mapStateToProps(state) {
         isFetching: state.projects.isFetching,
         message_text: state.projects.message_text,
         breadcrumb: state.breadcrumb.breadcrumb_data,
-        active_company: state.companies.active_company
+        active_company: state.companies.active_company,
+        filters: state.filter
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, projectCreators, searchCreators, breadcrumbCreators), dispatch);
+    return bindActionCreators(Object.assign(
+        {},
+        projectCreators,
+        searchCreators,
+        breadcrumbCreators,
+        filterCreators
+    ), dispatch);
 }
+
+const cols = {
+    "Avatar": 'avatar',
+    "Títol": 'name',
+    "Responsable": 'manager.name',
+    "Estat": 'state'
+};
+
+let activeFilters = [];
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ProjectsView extends Component {
@@ -37,6 +55,7 @@ export default class ProjectsView extends Component {
             message_text: null
         };
         this.handleClick = this.handleClick.bind(this);
+        activeFilters = [];
     }
 
     componentDidMount() {
@@ -44,13 +63,14 @@ export default class ProjectsView extends Component {
     }
 
     fetchData(initial = true) {
-        let filter = "";
+        let filter = [];
         let companyId = null;
         if(this.props.params.companyId) {
             companyId = this.props.params.companyId;
-            filter = "&filter=[('partner_id','='," + this.props.params.companyId + ")]";
+            filter.push(["partner_id", "=", parseInt(this.props.params.companyId, 10)]);
         }
         this.props.fetchProjects(TOKEN, filter, companyId, initial);
+        this.props.setFilters(initializeFilters(cols), [this.props.searchProjects, companyId]);
     }
 
     handleClick(element){
@@ -58,7 +78,7 @@ export default class ProjectsView extends Component {
         this.props.setActiveProject(element.id);
         let newBreadcrumb = this.props.breadcrumb;
         newBreadcrumb.push(['Projectes', '/projects']);
-        newBreadcrumb.push([element.title, route]);
+        newBreadcrumb.push([element.name, route]);
         this.props.breadcrumbAdd(newBreadcrumb);
         browserHistory.push(route);
     }
@@ -67,12 +87,6 @@ export default class ProjectsView extends Component {
         const companyId = this.props.params.companyId;
         let projects = this.props.data.data;
         let newBreadcrumb = this.props.breadcrumb;
-        const cols = {
-            "Avatar": 'avatar',
-            "Títol": 'title',
-            "Responsable": 'partner',
-            "Estat": 'status'
-        };
         if(this.props.loaded && this.props.active_company && newBreadcrumb.length == 0){
             const route = "/companies/" + this.props.active_company.id + "/projects";
             newBreadcrumb.push(['Empreses', '/companies']);
@@ -101,7 +115,12 @@ export default class ProjectsView extends Component {
                         !this.props.isFetching && (
                             <div className="upperButtons">
                                 <NewButton/>
-                                <FilterButton/>
+                                <FilterButton
+                                    filters={this.props.filters}
+                                    setter={this.props.setFilters}
+                                    adder={this.props.addFilter}
+                                    activeFilters={activeFilters}
+                                />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
                                 />
@@ -114,11 +133,13 @@ export default class ProjectsView extends Component {
                             <SearchBox
                                 searchFunction={this.props.searchProjects}
                                 filter_id={companyId}
+                                field="name"
                             />
                         }
                     </div>
                 </div>
                 <div className="filters">
+                    {activeFilters}
                 </div>
                 <div className="tableContainer" style={{paddingTop: 30 }}>
                     {
