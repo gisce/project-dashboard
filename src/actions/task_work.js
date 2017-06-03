@@ -1,6 +1,5 @@
 import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK, UI_OPEN_TASK_WORK_DIALOG, UI_CLOSE_TASK_WORK_DIALOG} from '../constants';
 import {redirectToRoute, getTaskWorks, define_token} from '../utils/http_functions';
-import {parseJSON, parseWorkdones, parseTasks} from '../utils/misc';
 import {fetchTasksRequest, receiveTasks, setActiveTask} from './tasks';
 import axios  from 'axios';
 import { Task, TaskWork } from '../models/model';
@@ -73,7 +72,7 @@ export function fetchTaskWorks(token, task_id, active_task, initial = false) {
                     task.search([["id", "=", parseInt(task_id, 10)]], {
                         transformResponse: [function (data) {
                             let newData = JSON.parse(data);
-                            let tasks = parseTasks(newData, false);
+                            let tasks = task.parse(newData, false);
                             dispatch(receiveTasks(tasks, initial));
                             dispatch(setActiveTask(tasks[0]));
                         }]
