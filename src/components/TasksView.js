@@ -26,7 +26,7 @@ function mapStateToProps(state) {
         isFetching: state.tasks.isFetching,
         message_text: state.tasks.message_text,
         breadcrumb: state.breadcrumb.breadcrumb_data,
-        filters: state.filter.filters
+        filters: state.filter
     };
 }
 
@@ -42,10 +42,10 @@ function mapDispatchToProps(dispatch) {
 
 const cols = {
     "Avatar": "avatar",
-    "Descripció": "description",
-    "Responsable": "partner",
+    "Descripció": "name",
+    "Responsable": "user_id.name",
     "Prioritat": "priority",
-    "Estat": "status"
+    "Estat": "state"
 };
 
 let activeFilters = [];
@@ -72,7 +72,7 @@ export default class TasksView extends Component {
             filter.push(["project_id", "=", parseInt(projectId, 10)]);
         }
         this.props.fetchTasks(TOKEN, filter, projectId, initial);
-        this.props.setFilters(initializeFilters(cols));
+        this.props.setFilters(initializeFilters(cols), [this.props.searchTasks, projectId]);
     }
 
     handleClick(element){
@@ -87,7 +87,7 @@ export default class TasksView extends Component {
             if(this.props.active_project && newBreadcrumb.length == 0){
                 const route = "/projects/" + this.props.active_project.id + "/tasks";
                 newBreadcrumb.push(['Projectes', '/projects']);
-                newBreadcrumb.push([this.props.active_project.title, route]);
+                newBreadcrumb.push([this.props.active_project.name, route]);
             }
         }
         let active_project_id = null;
@@ -120,6 +120,7 @@ export default class TasksView extends Component {
                                 <FilterButton
                                     filters={this.props.filters}
                                     setter={this.props.setFilters}
+                                    adder={this.props.addFilter}
                                     activeFilters={activeFilters}
                                 />
                                 <RefreshButton
@@ -134,6 +135,7 @@ export default class TasksView extends Component {
                             <SearchBox
                                 searchFunction={this.props.searchTasks}
                                 filter_id={active_project_id}
+                                field="name"
                             />
                         }
                     </div>
