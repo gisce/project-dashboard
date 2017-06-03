@@ -78,10 +78,10 @@ export default class UserView extends Component {
     render() {
         let isFetching = this.props.isFetchingTasks || this.props.isFetchingUsers;
         let cols = {
-            "Tasca": "description",
-            "Projecte": "project",
-            "Estat": "status",
-            "Data inici:": "project"
+            "Tasca": "name",
+            "Projecte": "project_id.name",
+            "Estat": "state",
+            "Data inici:": "name"
         };
         let userdata = [];
         let buttons = [];
