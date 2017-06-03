@@ -50,15 +50,17 @@ export function fetchUsers(token, userId, loadTasks, initial = false) {
                           ["state", "in", ["open", "pending"]]
                       ], {
                           transformResponse: [function (data) {
-                              let newData = JSON.parse(data);
-                              tasks_ids = task.parseTaskIds(newData);
+                              let newTaskData = JSON.parse(data);
+                              tasks_ids = task.parseTaskIds(newTaskData);
                               dispatch(receiveUsers(model.parse(newData, tasks_ids), initial));
                           }]
                       });
                   }
-                  results = model.parse(newData, tasks_ids);
               }
-              dispatch(receiveUsers(results), initial);
+              else{
+                  results = model.parse(newData, tasks_ids);
+                  dispatch(receiveUsers(results), initial);
+              }
           }]
         });
     }
