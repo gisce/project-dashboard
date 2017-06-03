@@ -1,5 +1,4 @@
 import {SEARCH_PROJECTS_REQUEST, SEARCH_TASKS_REQUEST, SEARCH_USERS_REQUEST, SEARCH_COMPANIES_REQUEST} from '../constants'
-import {parseJSON, parseTasks, parseProjects, parseUsers, parseCompanies} from '../utils/misc'
 import {receiveProjects} from './projects'
 import {receiveTasks, fetchTasks} from './tasks'
 import {receiveUsers} from './users'
@@ -51,12 +50,12 @@ export function searchCompaniesRequest(initial){
     }
 }
 
-export function searchProjects(valueToSearch, companyId, initial = false){
+export function searchProjects(valueToSearch, field, companyId, initial = false){
     return(dispatch) => {
         dispatch(searchProjectsRequest(initial));
 
         let search_params = [];
-        search_params.push(["name", "ilike", valueToSearch]);
+        search_params.push([field, "ilike", valueToSearch]);
 
         if (companyId) {
             search_params.push(['partner_id', '=', companyId]);
@@ -76,7 +75,7 @@ export function searchProjects(valueToSearch, companyId, initial = false){
     }
 }
 
-export function iSearchTasks(valueToSearch, project_id, userId, initial = false){
+export function iSearchTasks(valueToSearch, field, project_id, userId, initial = false){
     return(dispatch) => {
         /*
         * If search filter is not empty, it must search for a task with a name like
@@ -85,7 +84,7 @@ export function iSearchTasks(valueToSearch, project_id, userId, initial = false)
         dispatch(searchTasksRequest(initial));
         let model = new Task();
         let search_params = [];
-        search_params.push(["name", "ilike", valueToSearch]);
+        search_params.push([field, "ilike", valueToSearch]);
         if (userId) {
             search_params.push(
                 ["user_id", "=", userId],
@@ -97,7 +96,7 @@ export function iSearchTasks(valueToSearch, project_id, userId, initial = false)
             * If project_id is not empty, it must not search the value to search in the whole collection of
             * tasks, it must only fetch the tasks from the project_id.
             * */
-            search_params.push(["project_id", "=", project_id]);
+            search_params.push(["project_id", "=", parseInt(project_id, 10)]);
         }
         model.search(search_params, {
             transformResponse: [function (data) {
@@ -112,12 +111,12 @@ export function iSearchTasks(valueToSearch, project_id, userId, initial = false)
     }
 }
 
-export function searchTasks(valueToSearch, filter_id, initial = false){
-    return iSearchTasks(valueToSearch, filter_id, false, initial);
+export function searchTasks(valueToSearch, field, filter_id, initial = false){
+    return iSearchTasks(valueToSearch, field, filter_id, false, initial);
 }
 
-export function searchUserTasks(valueToSearch, filter_id, initial = false){
-    return iSearchTasks(valueToSearch, false, filter_id, initial);
+export function searchUserTasks(valueToSearch, field, filter_id, initial = false){
+    return iSearchTasks(valueToSearch, field, false, filter_id, initial);
 }
 
 export function searchUsers(valueToSearch, initial = false){
@@ -139,11 +138,11 @@ export function searchUsers(valueToSearch, initial = false){
     }
 }
 
-export function searchCompanies(valueToSearch, initial = false){
+export function searchCompanies(valueToSearch, field, initial = false){
     return(dispatch) => {
         dispatch(searchCompaniesRequest(initial));
         let search_params = [];
-        search_params.push(["name", "ilike", valueToSearch]);
+        search_params.push([field, "ilike", valueToSearch]);
         let model = new Company();
         model.search(search_params, {
             transformResponse: [function (data) {
