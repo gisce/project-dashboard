@@ -11,7 +11,6 @@ import { addFilter } from '../../utils/misc';
 function mapStateToProps(state) {
     return {
         filter_menu_open: state.ui.filter_menu_open,
-        filterItems: state.filter.filters
     };
 }
 
@@ -30,7 +29,7 @@ export default class FilterButton extends Component {
             this.props.closeFilterButtonMenu();
         }
         else {
-            if(Object.keys(this.props.filterItems).length > 0) {
+            if(Object.keys(this.props.filters.filters).length > 0) {
                 this.props.openFilterButtonMenu();
             }
         }
@@ -38,14 +37,15 @@ export default class FilterButton extends Component {
 
     render(){
         let items = [];
-        for(var key in this.props.filterItems){
+        for(var key in this.props.filters.filters){
             const title = key;
-            const value = this.props.filterItems[key];
+            const value = this.props.filters.filters[key];
             items.push(
                 <MenuItem
                     key={key}
                     primaryText={key}
-                    onTouchTap={() => addFilter(title, value, this.props.filters, this.props.setter, this.props.activeFilters)}
+                    onTouchTap={() => addFilter(
+                        title, value, this.props.filters, this.props.setter, this.props.adder, this.props.activeFilters)}
                 />
             );
         }
