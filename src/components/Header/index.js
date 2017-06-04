@@ -13,6 +13,7 @@ import * as projectCreators from '../../actions/projects';
 import * as taskCreators from '../../actions/tasks';
 import * as companyCreators from '../../actions/companies';
 import * as breadcrumbCreators from '../../actions/breadcrumb';
+import * as pagingCreators from '../../actions/paginator';
 
 function mapStateToProps(state) {
     return {
@@ -22,7 +23,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(Object.assign(
-        {}, uiCreators, projectCreators, taskCreators, companyCreators, breadcrumbCreators
+        {}, uiCreators, projectCreators, taskCreators, companyCreators, breadcrumbCreators, pagingCreators
     ), dispatch);
 }
 
@@ -48,6 +49,7 @@ export class Header extends Component {
             this.props.setActiveProject(null);
             this.props.setActiveCompany(null);
             this.props.breadcrumbClear();
+            this.props.setActualPage(1);
             browserHistory.push(route);
             this.handleSwipe();
         }
