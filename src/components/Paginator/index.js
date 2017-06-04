@@ -50,14 +50,14 @@ export default class Paginator extends Component {
         }
         if(actual_page >= 4){
             buttons.push(
-                <PageButton number={actual_page-1}/>
+                <PageButton key={i} number={actual_page-1}/>
             );
             buttons.push(
-                <PageButton number={actual_page} selected={true}/>
+                <PageButton key={i} number={actual_page} selected={true}/>
             );
             if(actual_page < totalPagines) {
                 buttons.push(
-                    <PageButton number={actual_page + 1}/>
+                    <PageButton key={i} number={actual_page + 1}/>
                 );
             }
         }
@@ -66,12 +66,12 @@ export default class Paginator extends Component {
                 if(i <= totalPagines) {
                     if (i == actual_page) {
                         buttons.push(
-                            <PageButton number={i} selected={true}/>
+                            <PageButton key={i} number={i} selected={true}/>
                         );
                     }
                     else {
                         buttons.push(
-                            <PageButton number={i}/>
+                            <PageButton key={i} number={i}/>
                         );
                     }
                 }
