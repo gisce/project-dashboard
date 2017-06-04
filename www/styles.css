@@ -87,3 +87,22 @@
 .chipbutton:hover{
     cursor: hand;
 }
+
+.paginatorContainer{
+    /* top, right, bottom, left */
+    padding: 0px 15px 0px 15px;
+    height: 55px;
+    background-color: #e8e8e8;
+}
+
+.leftPaginatorContainer{
+    margin-top: 18px;
+    position: relative;
+    float: left;
+}
+
+.rightPaginatorContainer{
+    margin-top: 10px;
+    position: relative;
+    float: right;
+}

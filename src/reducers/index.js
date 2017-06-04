@@ -8,6 +8,8 @@ import companies from './companies';
 import ui from './ui';
 import breadcrumb from './breadcrumb';
 import filter from './filter';
+import config from './config';
+import paginator from './paginator';
 
 const appReducer = combineReducers({
     projects,
@@ -18,7 +20,9 @@ const appReducer = combineReducers({
     companies,
     ui,
     breadcrumb,
-    filter
+    filter,
+    config,
+    paginator
 });
 
 const rootReducer = (state, action) => {
