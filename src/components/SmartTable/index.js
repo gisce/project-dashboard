@@ -1,9 +1,25 @@
-import React, { Component } from 'react'
-import {Table, TableBody, TableHeader, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table'
-import FlatButton from 'material-ui/FlatButton'
-import FontIcon from 'material-ui/FontIcon'
+import React, { Component } from 'react';
+import {Table, TableBody, TableHeader, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
+import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
-import Avatar from 'material-ui/Avatar'
+import Avatar from 'material-ui/Avatar';
+import Paginator from '../Paginator';
+import * as configCreators from '../../actions/config';
+import * as pagingCreators from '../../actions/paginator';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+function mapStateToProps(state) {
+        return {
+            items_per_page: state.config.items_per_page,
+            actual_page: state.paginator.actual_page
+        };
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(Object.assign({}, configCreators, pagingCreators), dispatch);
+}
 
 const styles = {
     sortButton: {
@@ -23,12 +39,14 @@ let data = [];
 let asc = true;
 let selectedColumn = null;
 
+@connect(mapStateToProps, mapDispatchToProps)
 export default class SmartTable extends Component {
 
     constructor(props) {
         super(props);
         this.onClick = this.onClick.bind(this);
         this.sort = this.sort.bind(this);
+        this.trimByPage = this.trimByPage.bind(this);
         data = [];
         asc = true;
     }
@@ -84,13 +102,38 @@ export default class SmartTable extends Component {
         return result;
     }
 
+    trimByPage(){
+        let newData = JSON.parse(JSON.stringify(this.props.data));
+        const totalItems = this.props.data.length;
+        const itemsPerPage = this.props.items_per_page;
+        let totalPagines = parseInt(totalItems / itemsPerPage, 10);
+        const actual_page = this.props.actual_page;
+        let itemsThisPage = (actual_page-1) * itemsPerPage+1;
+        if(totalItems % itemsPerPage > 0){
+            totalPagines++;
+        }
+        let limit = (actual_page)*itemsPerPage;
+        if(limit > totalItems){
+            limit = totalItems;
+        }
+        let i = 1;
+        /*let i = 1; i <= totalItems; i++*/
+        for(let elem in this.props.data){
+            if(!(itemsThisPage <= i && i <= limit)){
+                delete newData[elem];
+            }
+            i++;
+        }
+        return newData;
+    }
+
     render(){
         rowContents = [];
         let headers = [];
         let attributes = [];
         let i = 0;
         const columns = this.props.columns;
-        data = this.props.data;
+        data = this.trimByPage();
         for(let col in columns){
             /*
             * Columns titles retrieving
@@ -143,65 +186,70 @@ export default class SmartTable extends Component {
         }
 
         return(
-            <Table style={{ tableLayout: 'auto' }} fixedHeader={false}  onCellClick={this.onClick}>
-                <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                    <TableRow>
-                        {headers}
-                    </TableRow>
-                </TableHeader>
-                <TableBody showRowHover={true} displayRowCheckbox={false} stripedRows={true}>
-                    {
-                        /*
-                        * Row iteration
-                        * */
-                        data.map(element => {
-                            let i = element.id * -1;
-                            let contents = [];
-                            rowContents.push(element);
+            <div>
+                <Table style={{ tableLayout: 'auto' }} fixedHeader={false}  onCellClick={this.onClick}>
+                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                        <TableRow>
+                            {headers}
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody showRowHover={true} displayRowCheckbox={false} stripedRows={true}>
+                        {
                             /*
-                            * Column iteration
+                            * Row iteration
                             * */
-                            attributes.map(att => {
-                                i-=2;
-                                if(att === 'avatar') {
-                                    contents.push(
-                                        <TableRowColumn key={i - 1}>
-                                            <Avatar
-                                                src={String(element[att])}
-                                                size={30}
-                                                style={styles.avatar}
-                                            />
-                                        </TableRowColumn>
-                                    );
-                                }
-                                else if(att === "extras"){
-                                    contents.push(
-                                        <TableRowColumn key={i-2}>
-                                            <IconButton>
-                                                <FontIcon onTouchTap={() => this.props.handleEdit(element)} className="material-icons">mode_edit</FontIcon>
-                                            </IconButton>
-                                            <IconButton>
-                                                <FontIcon onTouchTap={() => this.props.handleDelete(element)} className="material-icons">delete</FontIcon>
-                                            </IconButton>
-                                        </TableRowColumn>
-                                    );
-                                }
-                                else{
-                                    contents.push(
-                                        <TableRowColumn key={i - 1}>{element[att]}</TableRowColumn>
-                                    );
-                                }
-                            });
-                            return(
-                                <TableRow key={element.id}>
-                                    {contents}
-                                </TableRow>
-                            )
-                        })
-                    }
-                </TableBody>
-                <TableFooter/>
-            </Table>
+                            data.map(element => {
+                                let i = element.id * -1;
+                                let contents = [];
+                                rowContents.push(element);
+                                /*
+                                * Column iteration
+                                * */
+                                attributes.map(att => {
+                                    i-=2;
+                                    if(att === 'avatar') {
+                                        contents.push(
+                                            <TableRowColumn key={i - 1}>
+                                                <Avatar
+                                                    src={String(element[att])}
+                                                    size={30}
+                                                    style={styles.avatar}
+                                                />
+                                            </TableRowColumn>
+                                        );
+                                    }
+                                    else if(att === "extras"){
+                                        contents.push(
+                                            <TableRowColumn key={i-2}>
+                                                <IconButton>
+                                                    <FontIcon onTouchTap={() => this.props.handleEdit(element)} className="material-icons">mode_edit</FontIcon>
+                                                </IconButton>
+                                                <IconButton>
+                                                    <FontIcon onTouchTap={() => this.props.handleDelete(element)} className="material-icons">delete</FontIcon>
+                                                </IconButton>
+                                            </TableRowColumn>
+                                        );
+                                    }
+                                    else{
+                                        contents.push(
+                                            <TableRowColumn key={i - 1}>{element[att]}</TableRowColumn>
+                                        );
+                                    }
+                                });
+                                return(
+                                    <TableRow key={element.id}>
+                                        {contents}
+                                    </TableRow>
+                                )
+                            })
+                        }
+                    </TableBody>
+                    <TableFooter/>
+                </Table>
+                <Paginator
+                    totalItems={this.props.data.length}
+                />
+            </div>
         )
     }
 }
