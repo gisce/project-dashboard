@@ -9,7 +9,7 @@ import * as breadcrumbCreators from '../actions/breadcrumb';
 import * as filterCreators from '../actions/filter';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
-import NewButton from './NewButton';
+import LinkButton from './LinkButton';
 import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
@@ -114,7 +114,11 @@ export default class ProjectsView extends Component {
                     {
                         !this.props.isFetching && (
                             <div className="upperButtons">
-                                <NewButton/>
+                                <LinkButton
+                                    icon="note_add"
+                                    label="Nou"
+                                    route="projects/new"
+                                />
                                 <FilterButton
                                     filters={this.props.filters}
                                     setter={this.props.setFilters}
