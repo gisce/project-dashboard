@@ -57,10 +57,8 @@ export function fetchUsers(token, userId, loadTasks, initial = false) {
                       });
                   }
               }
-              else{
-                  results = model.parse(newData, tasks_ids);
-                  dispatch(receiveUsers(results), initial);
-              }
+              results = model.parse(newData, tasks_ids);
+              dispatch(receiveUsers(results), initial);
           }]
         });
     }
