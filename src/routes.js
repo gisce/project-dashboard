@@ -9,17 +9,19 @@ import Users from './components/UsersView';
 import User from './components/UserView';
 import Companies from './components/CompaniesView';
 import NotFound from './components/NotFound';
+import NewProject from './components/NewProject';
 
 export default (
     <Route path="/" component={App}>
-        <Route path="/projects" component={Projects} />
-        <Route path="/projects/:projectId/tasks" component={Tasks} />
-        <Route path="/tasks" component={Tasks} />
-        <Route path="/tasks/:taskId" component={Task} />
-        <Route path="/users" component={Users} />
-        <Route path="/user/:userId" component={User} />
-        <Route path="/companies" component={Companies} />
-        <Route path="/companies/:companyId/projects" component={Projects} />
-        <Route path="*" component={NotFound} />
+            <Route path="/projects" component={Projects} />
+            <Route path="/projects/:projectId/tasks" component={Tasks} />
+            <Route path="/projects/new" component={NewProject}/>
+            <Route path="/tasks" component={Tasks} />
+            <Route path="/tasks/:taskId" component={Task} />
+            <Route path="/users" component={Users} />
+            <Route path="/user/:userId" component={User} />
+            <Route path="/companies" component={Companies} />
+            <Route path="/companies/:companyId/projects" component={Projects} />
+            <Route path="*" component={NotFound} />
     </Route>
 );
