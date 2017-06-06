@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as taskWorkCreators from '../actions/task_work';
 import * as tasksCreators from '../actions/tasks';
 import LoadingIndicator from './LoadingIndicator';
-import NewButton from './NewButton';
+import LinkButton from './LinkButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
@@ -142,7 +142,10 @@ export default class TasksView extends Component {
                     {
                         !this.props.isFetching && (
                             <div className="upperButtons">
-                                <NewButton/>
+                                <LinkButton
+                                    icon="note_add"
+                                    label="Nou"
+                                />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}
                                 />
