@@ -3,14 +3,19 @@ import {browserHistory} from 'react-router';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 
-export default class NewButton extends Component {
+export default class LinkButton extends Component {
     render(){
         return (
             <FlatButton
-                label="Nou"
-                primary={true}
-                icon={<FontIcon className="material-icons">note_add</FontIcon>}
-                onTouchTap={() =>  browserHistory.push(this.props.route)}
+                label={this.props.label}
+                primary={!this.props.primary}
+                icon={<FontIcon className="material-icons">{this.props.icon}</FontIcon>}
+                onTouchTap={() => {
+                        if (this.props.route) {
+                            browserHistory.push(this.props.route)
+                        }
+                    }
+                }
             />
         )
     }
