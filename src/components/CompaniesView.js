@@ -10,7 +10,7 @@ import * as filterCreators from '../actions/filter';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import RefreshButton from './RefreshButton';
-import NewButton from './NewButton';
+import LinkButton from './LinkButton';
 import FilterButton from './FilterButton';
 import SmartTable from './SmartTable';
 import Filter from './Filter';
@@ -95,7 +95,10 @@ export default class CompaniesView extends Component {
                     {
                         !this.props.isFetching && (
                             <div className="upperButtons">
-                                <NewButton/>
+                                <LinkButton
+                                    icon="note_add"
+                                    label="Nou"
+                                />
                                 <FilterButton
                                     filters={this.props.filters}
                                     setter={this.props.setFilters}
