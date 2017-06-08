@@ -23,6 +23,11 @@ export default class Model {
                 console.log("API ERROR", error);
             });
     }
+
+    post(body) {
+        const uri = this.uri + "/" + this.model;
+        return axios.post(uri, body)
+    }
 }
 
 export class Project extends Model {
