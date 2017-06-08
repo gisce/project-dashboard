@@ -116,11 +116,12 @@
 .leftColumn{
     position: relative;
     float: left;
-    width: 50%;
+    width: 30%;
 }
 
 .rightColumn{
     position: relative;
-    float: right;
-    width: 50%;
+    float: left;
+    padding-left: 20px;
+    width: 30%;
 }
