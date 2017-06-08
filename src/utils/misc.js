@@ -54,3 +54,20 @@ export function removeFilter(key, value, adder, activeFilters){
     newFilter[key] = value;
     adder(newFilter);
 }
+
+export function dateFormat(date){
+    let result = new Date(date);
+    result.setDate(result.getDate());
+    result.setTime(result.getTime() + result.getTimezoneOffset()*60*1000);
+    let day = result.getUTCDate(); /* WTF????? getDay returns the day of the WEEK?*/
+    let month = result.getUTCMonth()+1; /*Holy crap*/
+    let year = result.getUTCFullYear(); /*This is the only that makes sense...*/
+    if(day < 10){
+        day = "0"+day;
+    }
+    if(month < 10){
+        month = "0"+month;
+    }
+    return year + "-" + month + "-" + day
+}
+
