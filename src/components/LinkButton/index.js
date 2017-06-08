@@ -11,6 +11,9 @@ export default class LinkButton extends Component {
                 primary={!this.props.primary}
                 icon={<FontIcon className="material-icons">{this.props.icon}</FontIcon>}
                 onTouchTap={() => {
+                        if(this.props.clickFunction){
+                            this.props.clickFunction();
+                        }
                         if (this.props.route) {
                             browserHistory.push(this.props.route)
                         }
