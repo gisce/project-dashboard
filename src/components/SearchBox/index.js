@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { TOKEN } from '../../constants/index';
 import TextField from 'material-ui/TextField';
 import * as actionCreators from '../../actions/search';
 import { connect } from 'react-redux';
@@ -41,10 +42,10 @@ export default class SearchBox extends Component {
 
     searchRequest(e) {
         if(!this.props.filter_id) {
-            this.props.searchFunction(e.target.value, this.props.field, false);
+            this.props.searchFunction(TOKEN, e.target.value, this.props.field, false);
         }
         else{
-            this.props.searchFunction(e.target.value, this.props.field, this.props.filter_id, false);
+            this.props.searchFunction(TOKEN, e.target.value, this.props.field, this.props.filter_id, false);
         }
     }
 }
