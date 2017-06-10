@@ -3,56 +3,62 @@ import {receiveProjects} from './projects'
 import {receiveTasks, fetchTasks} from './tasks'
 import {receiveUsers} from './users'
 import {receiveCompanies} from './companies'
+import {define_token} from '../utils/http_functions';
 import axios from 'axios';
 import {Project, Task, User, Company} from '../models/model'
 
-export function searchProjectsRequest(initial) {
+export function searchProjectsRequest(initial, valueToSearch) {
     const message = (initial)?null:"Projects search requested";
 
     return {
         type:  SEARCH_PROJECTS_REQUEST,
         payload: {
             message,
+            searchText: valueToSearch
         }
     }
 }
 
-export function searchTasksRequest(initial) {
+export function searchTasksRequest(initial, valueToSearch) {
     const message = (initial)?null:"Tasks search requested";
 
     return {
         type:  SEARCH_TASKS_REQUEST,
         payload: {
             message,
+            searchText: valueToSearch
         }
     }
 }
 
-export function searchUsersRequest(initial) {
+export function searchUsersRequest(initial, valueToSearch) {
     const message = (initial)?null:"Users search requested";
 
     return {
         type: SEARCH_USERS_REQUEST,
         payload: {
             message,
+            searchText: valueToSearch
         }
     }
 }
 
-export function searchCompaniesRequest(initial){
+export function searchCompaniesRequest(initial, valueToSearch){
     const message = (initial)?null:"Companies search requested";
 
     return {
         type: SEARCH_COMPANIES_REQUEST,
         payload: {
             message,
+            searchText: valueToSearch
         }
     }
 }
 
-export function searchProjects(valueToSearch, field, companyId, initial = false){
+export function searchProjects(token, valueToSearch, field, companyId, initial = false){
     return(dispatch) => {
-        dispatch(searchProjectsRequest(initial));
+        define_token(token);
+        dispatch(searchProjectsRequest(initial, valueToSearch));
 
         let search_params = [];
         search_params.push([field, "ilike", valueToSearch]);
@@ -81,7 +87,7 @@ export function iSearchTasks(valueToSearch, field, project_id, userId, initial =
         * If search filter is not empty, it must search for a task with a name like
         * the value to search.
         * */
-        dispatch(searchTasksRequest(initial));
+        dispatch(searchTasksRequest(initial, valueToSearch));
         let model = new Task();
         let search_params = [];
         search_params.push([field, "ilike", valueToSearch]);
@@ -111,17 +117,20 @@ export function iSearchTasks(valueToSearch, field, project_id, userId, initial =
     }
 }
 
-export function searchTasks(valueToSearch, field, filter_id, initial = false){
+export function searchTasks(token, valueToSearch, field, filter_id, initial = false){
+    define_token(token);
     return iSearchTasks(valueToSearch, field, filter_id, false, initial);
 }
 
-export function searchUserTasks(valueToSearch, field, filter_id, initial = false){
+export function searchUserTasks(token, valueToSearch, field, filter_id, initial = false){
+    define_token(token);
     return iSearchTasks(valueToSearch, field, false, filter_id, initial);
 }
 
-export function searchUsers(valueToSearch, initial = false){
+export function searchUsers(token, valueToSearch, initial = false){
     return(dispatch) => {
-        dispatch(searchUsersRequest(initial));
+        define_token(token);
+        dispatch(searchUsersRequest(initial, valueToSearch));
         let search_params = [];
         search_params.push(["name", "ilike", valueToSearch]);
         let model = new User();
@@ -138,9 +147,10 @@ export function searchUsers(valueToSearch, initial = false){
     }
 }
 
-export function searchCompanies(valueToSearch, field, initial = false){
+export function searchCompanies(token, valueToSearch, field, initial = false){
     return(dispatch) => {
-        dispatch(searchCompaniesRequest(initial));
+        define_token(token);
+        dispatch(searchCompaniesRequest(initial, valueToSearch));
         let search_params = [];
         search_params.push([field, "ilike", valueToSearch]);
         let model = new Company();
