@@ -1,29 +1,33 @@
 import React, { Component } from 'react';
+import {browserHistory} from 'react-router';
 import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as projectCreators from '../actions/projects';
 import * as searchCreators from '../actions/search';
+import * as uiCreators from '../actions/ui';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
-import AutoComplete from 'material-ui/AutoComplete';
+import Dialog from 'material-ui/Dialog';
+import LoadingIndicator from './LoadingIndicator';
+import FlatButton from 'material-ui/FlatButton';
 import LinkButton from './LinkButton';
+import Many2One from './Many2One';
 import {dateFormat} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
         isFetching: state.projects.isFetching,
-        projects: state.projects
+        projects: state.projects,
+        dialog_open: state.ui.dialog_open
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, searchCreators, projectCreators), dispatch);
+    return bindActionCreators(Object.assign({}, searchCreators, projectCreators, uiCreators), dispatch);
 }
 
 let fields = {};
-
-let projects = [];
 
 let parentProjectSearchText = "";
 
@@ -32,89 +36,108 @@ export default class NewProject extends Component {
     constructor(props){
         super(props);
         this.createProjectCall = this.createProjectCall.bind(this);
-        this.handleUpdateInput = this.handleUpdateInput.bind(this);
-        this.handleNewRequest = this.handleNewRequest.bind(this);
+        this.handleDialog = this.handleDialog.bind(this);
+        parentProjectSearchText = "";
+    }
+
+    updateFields(field, value){
+        fields[field] = value;
+    }
+
+    handleDialog(){
+        if(this.props.dialog_open){
+            this.props.closeDialogRequest();
+        }
+        else{
+            this.props.openDialogRequest();
+        }
     }
 
     createProjectCall(){
-        //this.props.createProject(TOKEN, {'name': 'molta mel'})
-        console.log(JSON.stringify(fields));
+        if(fields.hasOwnProperty("name")) {
+            this.props.createProject(TOKEN, fields);
+            browserHistory.push("/projects");
+        }
+        else{
+            this.props.openDialogRequest();
+        }
     }
 
-    handleUpdateInput(textToSearch){
-        parentProjectSearchText = textToSearch;
-        this.props.searchProjects(TOKEN, textToSearch, "name", false, false)
-    };
-
-    handleNewRequest(){
-        console.log("item clicat");
-    };
-
     render() {
-        projects = [];
-        if(!this.props.isFetching && parentProjectSearchText.length >= 1){
-            if(this.props.projects.data) {
-                for (let i = 0; i < this.props.projects.data.length; i++) {
-                    projects.push(this.props.projects.data[i].name);
-                }
-            }
-        }
+        const actions = [
+          <FlatButton
+            label="D'acord"
+            primary={true}
+            onTouchTap={this.handleDialog}
+          />,
+        ];
         return(
-            <div>
-                <div className="leftContainer">
-                    {
-                        !this.props.isFetching && (
-                            <div>
-                                <div className="title">
-                                    Nou projecte
+            this.props.isFetching ?
+                <LoadingIndicator/>
+                :
+                <div>
+                    <Dialog
+                      actions={actions}
+                      title="Atenció"
+                      modal={false}
+                      open={this.props.dialog_open}
+                      onRequestClose={this.handleDialog}
+                    >
+                      És necessari escriure el nom del projecte.
+                    </Dialog>
+                    <div className="leftContainer">
+                        {
+                            !this.props.isFetching && (
+                                <div>
+                                    <div className="title">
+                                        Nou projecte
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                    }
-                </div>
-                <div className="contents">
-                    <div className="leftColumn">
-                        <TextField
-                            floatingLabelText="Nom del projecte"
-                            onChange={e => fields["name"] = e.target.value}
+                            )
+                        }
+                    </div>
+                    <div className="contents">
+                        <div className="leftColumn">
+                            <TextField
+                                floatingLabelText="Nom del projecte"
+                                onChange={e => fields["name"] = e.target.value}
+                            />
+                            <DatePicker
+                                hintText="Data d'inici"
+                                onChange={(e, date) => fields["date_start"] = dateFormat(date)}
+                            />
+                            <DatePicker
+                                hintText="Finalització prevista"
+                                onChange={(e, date) => fields["date_end"] = dateFormat(date)}
+                            />
+                        </div>
+                        <div className="rightColumn">
+                            <TextField
+                                floatingLabelText="Responsable"
+                                onChange={e => fields["manager"] = {"id": parseInt(e.target.value, 10)}}
+                            />
+                            <br/>
+                            <Many2One
+                                source={this.props.projects.data}
+                                label="Projecte pare"
+                                fieldName="parent_id"
+                                updateFields={this.updateFields}
+                                searchFunction={this.props.searchProjects}
+                            />
+                        </div>
+                    </div>
+                    <div className="lowerButtons">
+                        <LinkButton
+                            label="Cancel·lar"
+                            route="/projects"
                         />
-                        <DatePicker
-                            hintText="Data d'inici"
-                            onChange={(e, date) => fields["date_start"] = dateFormat(date)}
-                        />
-                        <DatePicker
-                            hintText="Finalització prevista"
-                            onChange={(e, date) => fields["date_end"] = dateFormat(date)}
+                        <LinkButton
+                            label="Crear"
+                            clickFunction={this.createProjectCall}
+                            fields={fields}
                         />
                     </div>
-                    <div className="rightColumn">
-                        <TextField
-                            floatingLabelText="Responsable"
-                            onChange={e => fields["manager"] = e.target.value}
-                        />
-                        <br/>
-                        <AutoComplete
-                          hintText="Projecte pare"
-                          searchText={parentProjectSearchText}
-                          onUpdateInput={this.handleUpdateInput}
-                          onNewRequest={this.handleNewRequest}
-                          dataSource={projects}
-                          filter={(searchText, key) => (key.indexOf(searchText) !== -1)}
-                          openOnFocus={true}
-                        />
-                    </div>
                 </div>
-                <div className="lowerButtons">
-                    <LinkButton
-                        label="Cancel·lar"
-                        route="/projects"
-                    />
-                    <LinkButton
-                        label="Crear"
-                        clickFunction={this.createProjectCall}
-                    />
-                </div>
-            </div>
         )
     }
 }
