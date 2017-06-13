@@ -1,4 +1,4 @@
-import {UI_OPEN_MENU, UI_CLOSE_MENU, UI_OPEN_FILTER_BUTTON_MENU, UI_CLOSE_FILTER_BUTTON_MENU} from '../constants'
+import {UI_OPEN_MENU, UI_CLOSE_MENU, UI_OPEN_FILTER_BUTTON_MENU, UI_CLOSE_FILTER_BUTTON_MENU, UI_OPEN_DIALOG, UI_CLOSE_DIALOG} from '../constants'
 
 export function openMenu() {
     const menu_open = true;
@@ -36,6 +36,30 @@ export function closeFilterButtonMenu(){
         type: UI_CLOSE_FILTER_BUTTON_MENU,
         payload: {
             filter_menu_open
+        }
+    }
+}
+
+export function openDialogRequest() {
+    const message = "Opening dialog";
+    const dialog_open = true;
+    return {
+        type: UI_OPEN_DIALOG,
+        payload: {
+            message,
+            dialog_open
+        }
+    }
+}
+
+export function closeDialogRequest() {
+    const message = "Closing dialog";
+    const dialog_open = false;
+    return {
+        type: UI_CLOSE_DIALOG,
+        payload: {
+            message,
+            dialog_open
         }
     }
 }
