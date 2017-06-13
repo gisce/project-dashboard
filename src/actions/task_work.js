@@ -1,4 +1,4 @@
-import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK, UI_OPEN_TASK_WORK_DIALOG, UI_CLOSE_TASK_WORK_DIALOG} from '../constants';
+import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK} from '../constants';
 import {redirectToRoute, getTaskWorks, define_token} from '../utils/http_functions';
 import {fetchTasksRequest, receiveTasks, setActiveTask} from './tasks';
 import axios  from 'axios';
@@ -13,30 +13,6 @@ export function fetchTaskWorkRequest(initial) {
             message,
         },
     };
-}
-
-export function openTaskWorkDialogRequest() {
-    const message = "Opening task work dialog";
-    const dialog_open = true;
-    return {
-        type: UI_OPEN_TASK_WORK_DIALOG,
-        payload: {
-            message,
-            dialog_open
-        }
-    }
-}
-
-export function closeTaskWorkDialogRequest() {
-    const message = "Closing task work dialog";
-    const dialog_open = false;
-    return {
-        type: UI_CLOSE_TASK_WORK_DIALOG,
-        payload: {
-            message,
-            dialog_open
-        }
-    }
 }
 
 export function receiveTaskWork(taskWorks, initial) {
