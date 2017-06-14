@@ -4,7 +4,6 @@ import {receiveTasks, fetchTasks} from './tasks'
 import {receiveUsers} from './users'
 import {receiveCompanies} from './companies'
 import {define_token} from '../utils/http_functions';
-import axios from 'axios';
 import {Project, Task, User, Company} from '../models/model'
 
 export function searchProjectsRequest(initial, valueToSearch) {
@@ -55,7 +54,7 @@ export function searchCompaniesRequest(initial, valueToSearch){
     }
 }
 
-export function searchProjects(token, valueToSearch, field, companyId, initial = false){
+export function searchProjects(token, valueToSearch, field, companyId = false, initial = false){
     return(dispatch) => {
         define_token(token);
         dispatch(searchProjectsRequest(initial, valueToSearch));
@@ -127,12 +126,12 @@ export function searchUserTasks(token, valueToSearch, field, filter_id, initial 
     return iSearchTasks(valueToSearch, field, false, filter_id, initial);
 }
 
-export function searchUsers(token, valueToSearch, initial = false){
+export function searchUsers(token, valueToSearch, field, initial = false){
     return(dispatch) => {
         define_token(token);
         dispatch(searchUsersRequest(initial, valueToSearch));
         let search_params = [];
-        search_params.push(["name", "ilike", valueToSearch]);
+        search_params.push([field, "ilike", valueToSearch]);
         let model = new User();
         model.search(search_params, {
             transformResponse: [function (data) {
