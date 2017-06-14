@@ -1,6 +1,5 @@
 import {FETCH_COMPANIES_REQUEST, RECEIVE_COMPANIES, SET_ACTIVE_COMPANY} from '../constants';
 import {define_token} from '../utils/http_functions';
-import {parseJSON, parseCompanies, parseTasksIds} from '../utils/misc';
 import axios  from 'axios';
 import { Company, Task } from '../models/model';
 
