@@ -1,5 +1,5 @@
 import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK} from '../constants';
-import {redirectToRoute, getTaskWorks, define_token} from '../utils/http_functions';
+import {define_token} from '../utils/http_functions';
 import {fetchTasksRequest, receiveTasks, setActiveTask} from './tasks';
 import axios  from 'axios';
 import { Task, TaskWork } from '../models/model';
