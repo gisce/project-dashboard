@@ -90,7 +90,7 @@ export default class UserView extends Component {
         let user = null;
         if(this.props.tasksLoaded && this.props.userLoaded && !isFetching){
             tasks = this.props.tasks.tasks;
-            user = this.props.users.users[0];
+            user = this.props.users[0];
             userdata.push(
                 <div key="-1">
                     <div style={style.userAvatar}>
