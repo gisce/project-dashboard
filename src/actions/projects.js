@@ -1,8 +1,6 @@
-import {FETCH_PROJECTS_REQUEST, RECEIVE_PROJECTS, SET_ACTIVE_PROJECT} from '../constants';
-import {parseJSON, parseProjects, parseCompanies } from '../utils/misc';
+import {FETCH_PROJECTS_REQUEST, RECEIVE_PROJECTS, SET_ACTIVE_PROJECT, CREATE_PROJECT} from '../constants';
 import { receiveCompanies, setActiveCompany } from './companies';
 import {define_token} from '../utils/http_functions';
-import axios  from 'axios';
 import {Project, Company} from '../models/model'
 
 export function fetchProjectsRequest(initial) {
@@ -33,6 +31,25 @@ export function setActiveProject(active_project) {
         payload: {
             active_project
         }
+    }
+}
+
+export function createProjectRequest(initial) {
+    const message = (initial)?null:"Creating new project";
+    return {
+        type: CREATE_PROJECT,
+        payload: {
+            message
+        }
+    }
+}
+
+export function createProject(token, body, initial = false) {
+    return (dispatch) => {
+        dispatch(createProjectRequest(initial));
+        define_token(token);
+        let model = new Project();
+        model.post(body);
     }
 }
 

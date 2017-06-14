@@ -12,7 +12,7 @@ import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
     return {
-        data: state.users,
+        users: state.users,
         loaded: state.users.loaded,
         isFetching: state.users.isFetching,
         message_text: state.users.message_text,
@@ -54,7 +54,7 @@ export default class UsersView extends Component {
             "Ultima connexió": "name"
         };
         if(this.props.loaded){
-            users = this.props.data.data.users;
+            users = this.props.users.data;
         }
         return(
             <div>
@@ -84,6 +84,7 @@ export default class UsersView extends Component {
                             !this.props.isFetching &&
                             <SearchBox
                                 searchFunction={this.props.searchUsers}
+                                field="name"
                             />
                         }
                     </div>

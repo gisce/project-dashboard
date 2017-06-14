@@ -5,6 +5,7 @@ const initialState = {
     data: null,
     isFetching: false,
     loaded: false,
+    searchText: ""
 };
 
 export default createReducer(initialState, {
@@ -12,15 +13,18 @@ export default createReducer(initialState, {
         Object.assign({}, state, {
             isFetching: true,
             message_text: payload.message,
+            searchText: payload.searchText
         }),
     [SEARCH_TASKS_REQUEST]: (state, payload) =>
         Object.assign({}, state, {
             isFetching: true,
             message_text: payload.message,
+            searchText: payload.searchText
         }),
     [SEARCH_USERS_REQUEST]: (state, payload) =>
         Object.assign({}, state, {
             isFetching: true,
             message_text: payload.message,
+            searchText: payload.searchText
         }),
 });

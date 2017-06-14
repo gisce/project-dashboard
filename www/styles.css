@@ -41,8 +41,14 @@
     font-size: 14px;
 }
 
-.upperButtons{
-
+.lowerButtons{
+    clear: both;
+    position: relative;
+    width: 100%;
+    padding-top: 30px;
+    right: 5px;
+    bottom: 5px;
+    text-align: right;
 }
 
 .searchBox{
@@ -105,4 +111,17 @@
     margin-top: 10px;
     position: relative;
     float: right;
+}
+
+.leftColumn{
+    position: relative;
+    float: left;
+    width: 30%;
+}
+
+.rightColumn{
+    position: relative;
+    float: left;
+    padding-left: 20px;
+    width: 30%;
 }

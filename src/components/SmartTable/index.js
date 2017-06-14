@@ -139,7 +139,7 @@ export default class SmartTable extends Component {
             * Columns titles retrieving
             * */
             let fontIcon = [];
-            if(columns[col] == selectedColumn){
+            if(columns[col] == selectedColumn && columns[col].toLowerCase() !== "avatar"){
                 if(asc){
                     fontIcon.push(
                         <FontIcon
@@ -167,9 +167,11 @@ export default class SmartTable extends Component {
                                 label={col}
                                 icon={fontIcon[0]}
                                 onTouchTap={() => {
-                                    data = this.sort(columns[col]);
-                                    asc = !asc;
-                                    this.props.handleUpdate(data, false);
+                                    if(columns[col].toLowerCase() !== "avatar") {
+                                        data = this.sort(columns[col]);
+                                        asc = !asc;
+                                        this.props.handleUpdate(data, false);
+                                    }
                                 }}
                             />
                         )
