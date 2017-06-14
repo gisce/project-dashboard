@@ -10,7 +10,7 @@ const initialState = {
 export default createReducer(initialState, {
     [RECEIVE_USERS]: (state, payload) =>
         Object.assign({}, state, {
-            data: payload,
+            data: payload.users,
             isFetching: false,
             loaded: true,
             message_text: payload.message,
