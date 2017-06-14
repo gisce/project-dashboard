@@ -19,6 +19,7 @@ function mapStateToProps(state) {
     return {
         isFetching: state.projects.isFetching,
         projects: state.projects,
+        users: state.users,
         dialog_open: state.ui.dialog_open
     };
 }
@@ -112,9 +113,12 @@ export default class NewProject extends Component {
                             />
                         </div>
                         <div className="rightColumn">
-                            <TextField
-                                floatingLabelText="Responsable"
-                                onChange={e => fields["manager"] = {"id": parseInt(e.target.value, 10)}}
+                            <Many2One
+                                source={this.props.users.data}
+                                label="Responsable"
+                                fieldName="manager"
+                                updateFields={this.updateFields}
+                                searchFunction={this.props.searchUsers}
                             />
                             <br/>
                             <Many2One
