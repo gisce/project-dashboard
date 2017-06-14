@@ -1,8 +1,6 @@
 import {FETCH_PROJECTS_REQUEST, RECEIVE_PROJECTS, SET_ACTIVE_PROJECT, CREATE_PROJECT} from '../constants';
-import {parseJSON, parseProjects, parseCompanies } from '../utils/misc';
 import { receiveCompanies, setActiveCompany } from './companies';
 import {define_token} from '../utils/http_functions';
-import axios  from 'axios';
 import {Project, Company} from '../models/model'
 
 export function fetchProjectsRequest(initial) {
