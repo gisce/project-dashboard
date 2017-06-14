@@ -95,10 +95,6 @@ export default class CompaniesView extends Component {
                     {
                         !this.props.isFetching && (
                             <div className="upperButtons">
-                                <LinkButton
-                                    icon="note_add"
-                                    label="Nou"
-                                />
                                 <FilterButton
                                     filters={this.props.filters}
                                     setter={this.props.setFilters}
