@@ -1,4 +1,4 @@
-import {UI_OPEN_MENU, UI_CLOSE_MENU, UI_OPEN_FILTER_BUTTON_MENU, UI_CLOSE_FILTER_BUTTON_MENU, UI_OPEN_DIALOG, UI_CLOSE_DIALOG} from '../constants'
+import {UI_OPEN_MENU, UI_CLOSE_MENU, UI_OPEN_FILTER_BUTTON_MENU, UI_CLOSE_FILTER_BUTTON_MENU, UI_OPEN_DIALOG, UI_OPEN_TOAST, UI_CLOSE_TOAST, UI_CLOSE_DIALOG} from '../constants'
 
 export function openMenu() {
     const menu_open = true;
@@ -60,6 +60,31 @@ export function closeDialogRequest() {
         payload: {
             message,
             dialog_open
+        }
+    }
+}
+
+export function openToastRequest(toast_message){
+    const message = "Opening toast";
+    const toast_open = true;
+    return {
+        type: UI_OPEN_TOAST,
+        payload: {
+            message,
+            toast_open,
+            toast_message
+        }
+    }
+}
+
+export function closeToastRequest(){
+    const message = "Closing toast";
+    const toast_open = false;
+    return {
+        type: UI_CLOSE_TOAST,
+        payload: {
+            message,
+            toast_open
         }
     }
 }
