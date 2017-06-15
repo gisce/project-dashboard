@@ -8,9 +8,8 @@ import * as searchCreators from '../actions/search';
 import * as uiCreators from '../actions/ui';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
-import Dialog from 'material-ui/Dialog';
+import Alert from './Alert';
 import LoadingIndicator from './LoadingIndicator';
-import FlatButton from 'material-ui/FlatButton';
 import LinkButton from './LinkButton';
 import Many2One from './Many2One';
 import {dateFormat} from '../utils/misc';
@@ -37,21 +36,11 @@ export default class NewProject extends Component {
     constructor(props){
         super(props);
         this.createProjectCall = this.createProjectCall.bind(this);
-        this.handleDialog = this.handleDialog.bind(this);
         parentProjectSearchText = "";
     }
 
     updateFields(field, value){
         fields[field] = value;
-    }
-
-    handleDialog(){
-        if(this.props.dialog_open){
-            this.props.closeDialogRequest();
-        }
-        else{
-            this.props.openDialogRequest();
-        }
     }
 
     createProjectCall(){
@@ -61,32 +50,20 @@ export default class NewProject extends Component {
             this.props.openToastRequest("Projecte creat");
         }
         else{
-            this.props.openDialogRequest();
+            this.props.openDialogRequest("Atenció", "És necessari escriure el nom del projecte.");
         }
     }
 
     render() {
-        const actions = [
-          <FlatButton
-            label="D'acord"
-            primary={true}
-            onTouchTap={this.handleDialog}
-          />,
-        ];
         return(
             this.props.isFetching ?
                 <LoadingIndicator/>
                 :
                 <div>
-                    <Dialog
-                      actions={actions}
-                      title="Atenció"
-                      modal={false}
-                      open={this.props.dialog_open}
-                      onRequestClose={this.handleDialog}
-                    >
-                      És necessari escriure el nom del projecte.
-                    </Dialog>
+                    <Alert
+                        title="Atenció"
+                        message="És necessari escriure el nom del projecte."
+                    />
                     <div className="leftContainer">
                         {
                             !this.props.isFetching && (
