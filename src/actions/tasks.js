@@ -1,4 +1,4 @@
-import {FETCH_TASKS_REQUEST, RECEIVE_TASKS, SET_ACTIVE_TASK} from '../constants';
+import {FETCH_TASKS_REQUEST, RECEIVE_TASKS, SET_ACTIVE_TASK, CREATE_TASK} from '../constants';
 import {define_token} from '../utils/http_functions';
 import {setActiveProject, receiveProjects} from './projects';
 import axios  from 'axios';
@@ -32,6 +32,25 @@ export function setActiveTask(active_task) {
         payload: {
             active_task
         }
+    }
+}
+
+export function createTaskRequest(initial) {
+    const message = (initial)?null:"Creating new task";
+    return {
+        type: CREATE_TASK,
+        payload: {
+            message
+        }
+    }
+}
+
+export function createTask(token, body, initial = false) {
+    return (dispatch) => {
+        dispatch(createTaskRequest(initial));
+        define_token(token);
+        let model = new Task();
+        model.post(body);
     }
 }
 
