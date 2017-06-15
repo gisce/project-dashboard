@@ -16,10 +16,8 @@ import {dateFormat} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
-        isFetching: state.projects.isFetching,
         projects: state.projects,
-        users: state.users,
-        dialog_open: state.ui.dialog_open
+        users: state.users
     };
 }
 
@@ -29,14 +27,11 @@ function mapDispatchToProps(dispatch) {
 
 let fields = {};
 
-let parentProjectSearchText = "";
-
 @connect(mapStateToProps, mapDispatchToProps)
 export default class NewProject extends Component {
     constructor(props){
         super(props);
         this.createProjectCall = this.createProjectCall.bind(this);
-        parentProjectSearchText = "";
     }
 
     updateFields(field, value){
@@ -55,71 +50,61 @@ export default class NewProject extends Component {
     }
 
     render() {
+        const isFetching = false;
         return(
-            this.props.isFetching ?
-                <LoadingIndicator/>
-                :
-                <div>
-                    <Alert
-                        title="Atenció"
-                        message="És necessari escriure el nom del projecte."
-                    />
-                    <div className="leftContainer">
-                        {
-                            !this.props.isFetching && (
-                                <div>
-                                    <div className="title">
-                                        Nou projecte
-                                    </div>
-                                </div>
-                            )
-                        }
-                    </div>
-                    <div className="contents">
-                        <div className="leftColumn">
-                            <TextField
-                                floatingLabelText="Nom del projecte"
-                                onChange={e => fields["name"] = e.target.value}
-                            />
-                            <DatePicker
-                                hintText="Data d'inici"
-                                onChange={(e, date) => fields["date_start"] = dateFormat(date)}
-                            />
-                            <DatePicker
-                                hintText="Finalització prevista"
-                                onChange={(e, date) => fields["date_end"] = dateFormat(date)}
-                            />
-                        </div>
-                        <div className="rightColumn">
-                            <Many2One
-                                source={this.props.users.data}
-                                label="Responsable"
-                                fieldName="manager"
-                                updateFields={this.updateFields}
-                                searchFunction={this.props.searchUsers}
-                            />
-                            <br/>
-                            <Many2One
-                                source={this.props.projects.data}
-                                label="Projecte pare"
-                                fieldName="parent_id"
-                                updateFields={this.updateFields}
-                                searchFunction={this.props.searchProjects}
-                            />
+            <div>
+                <div className="leftContainer">
+                    <div>
+                        <div className="title">
+                            Nou projecte
                         </div>
                     </div>
-                    <div className="lowerButtons">
-                        <LinkButton
-                            label="Cancel·lar"
-                            route="/projects"
+                </div>
+                <div className="contents">
+                    <div className="leftColumn">
+                        <TextField
+                            floatingLabelText="Nom del projecte"
+                            onChange={e => fields["name"] = e.target.value}
                         />
-                        <LinkButton
-                            label="Crear"
-                            clickFunction={this.createProjectCall}
-                            fields={fields}
+                        <DatePicker
+                            hintText="Data d'inici"
+                            onChange={(e, date) => fields["date_start"] = dateFormat(date)}
+                        />
+                        <DatePicker
+                            hintText="Finalització prevista"
+                            onChange={(e, date) => fields["date_end"] = dateFormat(date)}
+                        />
+                    </div>
+                    <div className="rightColumn">
+                        <Many2One
+                            source={this.props.users.data}
+                            label="Responsable"
+                            fieldName="manager"
+                            updateFields={this.updateFields}
+                            searchFunction={this.props.searchUsers}
+                        />
+                        <br/>
+                        <Many2One
+                            source={this.props.projects.data}
+                            label="Projecte pare"
+                            fieldName="parent_id"
+                            updateFields={this.updateFields}
+                            searchFunction={this.props.searchProjects}
                         />
                     </div>
                 </div>
+                <div className="lowerButtons">
+                    <LinkButton
+                        label="Cancel·lar"
+                        route="/projects"
+                    />
+                    <LinkButton
+                        label="Crear"
+                        clickFunction={this.createProjectCall}
+                        fields={fields}
+                    />
+                </div>
+            </div>
         )
     }
 }
