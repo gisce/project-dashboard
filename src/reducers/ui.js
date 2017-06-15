@@ -5,8 +5,10 @@ const initialState = {
     menu_open: false,
     filter_menu_open: false,
     dialog_open: false,
+    dialog_message: "",
+    dialog_title: "",
     toast_open: false,
-    toast_message: ""
+    toast_message: "",
 };
 
 export default createReducer(initialState, {
@@ -40,12 +42,16 @@ export default createReducer(initialState, {
         Object.assign({}, state, {
             isFetching: true,
             message_text: payload.message,
-            dialog_open: payload.dialog_open
+            dialog_open: payload.dialog_open,
+            dialog_message: payload.dialog_message,
+            dialog_title: payload.dialog_title
         }),
     [UI_CLOSE_DIALOG]: (state, payload) =>
         Object.assign({}, state, {
             isFetching: true,
             message_text: payload.message,
-            dialog_open: payload.dialog_open
+            dialog_open: payload.dialog_open,
+            dialog_message: "",
+            dialog_title: ""
         }),
 });
