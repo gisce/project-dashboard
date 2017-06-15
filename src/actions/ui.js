@@ -40,14 +40,16 @@ export function closeFilterButtonMenu(){
     }
 }
 
-export function openDialogRequest() {
+export function openDialogRequest(dialog_title, dialog_message) {
     const message = "Opening dialog";
     const dialog_open = true;
     return {
         type: UI_OPEN_DIALOG,
         payload: {
             message,
-            dialog_open
+            dialog_open,
+            dialog_title,
+            dialog_message
         }
     }
 }
