@@ -58,6 +58,7 @@ export default class NewProject extends Component {
         if(fields.hasOwnProperty("name")) {
             this.props.createProject(TOKEN, fields);
             browserHistory.push("/projects");
+            this.props.openToastRequest("Projecte creat");
         }
         else{
             this.props.openDialogRequest();
