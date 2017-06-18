@@ -17,7 +17,8 @@ import {dateFormat} from '../utils/misc';
 function mapStateToProps(state) {
     return {
         projects: state.projects,
-        users: state.users
+        users: state.users,
+        active_project: state.projects.active_project
     };
 }
 
@@ -50,6 +51,12 @@ export default class NewTask extends Component {
     }
 
     render() {
+        let defaultValue = false;
+        if(this.props.active_project){
+            defaultValue = this.props.active_project.name;
+            this.updateFields("project_id", this.props.active_project.id);
+        }
+        console.log(fields);
         return(
             <div>
                 <div className="leftContainer">
@@ -77,6 +84,7 @@ export default class NewTask extends Component {
                             fieldName="project_id"
                             updateFields={this.updateFields}
                             searchFunction={this.props.searchProjects}
+                            defaultValue={defaultValue}
                         />
                         <br/>
                         <Many2One
