@@ -9,6 +9,9 @@ export default class Many2One extends Component {
         this.handleNewRequest = this.handleNewRequest.bind(this);
         this.filter = this.filter.bind(this);
         this.searchText = "";
+        if(this.props.defaultValue){
+            this.searchText = this.props.defaultValue
+        }
         this.dataSource = [];
     }
 

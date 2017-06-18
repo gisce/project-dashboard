@@ -119,6 +119,7 @@ export default class TasksView extends Component {
                                 <LinkButton
                                     icon="note_add"
                                     label="Nou"
+                                    route="/tasks/new"
                                 />
                                 <FilterButton
                                     filters={this.props.filters}

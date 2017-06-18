@@ -33,6 +33,7 @@ const orangeWedge = getMuiTheme({
 /* application components */
 import MainPaper from '../../components/MainPaper';
 import Toast from '../../components/Toast';
+import Alert from '../../components/Alert';
 
 /* global styles for app */
 import './styles/app.scss';
@@ -53,6 +54,7 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
                                 {this.props.children}
                             </MainPaper>
                             <Toast/>
+                            <Alert/>
                         </div>
                     </div>
                 </section>

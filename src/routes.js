@@ -10,6 +10,7 @@ import User from './components/UserView';
 import Companies from './components/CompaniesView';
 import NotFound from './components/NotFound';
 import NewProject from './components/NewProject';
+import NewTask from './components/NewTask';
 
 export default (
     <Route path="/" component={App}>
@@ -17,6 +18,7 @@ export default (
             <Route path="/projects/:projectId/tasks" component={Tasks} />
             <Route path="/projects/new" component={NewProject}/>
             <Route path="/tasks" component={Tasks} />
+            <Route path="/tasks/new" component={NewTask}/>
             <Route path="/tasks/:taskId" component={Task} />
             <Route path="/users" component={Users} />
             <Route path="/user/:userId" component={User} />

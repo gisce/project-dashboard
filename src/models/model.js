@@ -100,6 +100,8 @@ export class Task extends Model {
         let tasks = [];
         for(let i = 0; i<response.items.length;i++){
             let actual = response.items[i];
+            let project_id = "None";
+            let project_name = "No project";
             let delay_hours = actual.delay_hours;
             if(!delay_hours){
                 delay_hours = 0;
@@ -109,12 +111,16 @@ export class Task extends Model {
             for(let j=0; j<actual.work_ids.length;j++){
                 workdones.push(actual.work_ids[j].id);
             }
+            if(actual.project){
+               project_id = actual.project_id.id;
+               project_name = actual.project_id.name;
+            }
             let task = {};
             task = {
                 "id": actual.id,
                 "name": actual.name,
-                "project_id.id": actual.project_id.id,
-                "project_id.name": actual.project_id.name,
+                "project_id.id": project_id,
+                "project_id.name": project_name,
                 "user_id.name": actual.user_id.name,
                 "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
                 "planned_hours": actual.planned_hours,

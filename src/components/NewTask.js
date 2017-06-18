@@ -3,7 +3,7 @@ import {browserHistory} from 'react-router';
 import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as projectCreators from '../actions/projects';
+import * as tasksCreators from '../actions/tasks';
 import * as searchCreators from '../actions/search';
 import * as uiCreators from '../actions/ui';
 import TextField from 'material-ui/TextField';
@@ -17,90 +17,93 @@ import {dateFormat} from '../utils/misc';
 function mapStateToProps(state) {
     return {
         projects: state.projects,
-        users: state.users
+        users: state.users,
+        active_project: state.projects.active_project
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, searchCreators, projectCreators, uiCreators), dispatch);
+    return bindActionCreators(Object.assign({}, searchCreators, tasksCreators, uiCreators), dispatch);
 }
 
 let fields = {};
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class NewProject extends Component {
+export default class NewTask extends Component {
     constructor(props){
         super(props);
-        this.createProjectCall = this.createProjectCall.bind(this);
+        this.createTaskCall = this.createTaskCall.bind(this);
+    }
+
+    createTaskCall(){
+        if(fields.hasOwnProperty("name") && fields.hasOwnProperty("project_id") && fields.hasOwnProperty("planned_hours")) {
+            this.props.createTask(TOKEN, fields);
+            browserHistory.push("/tasks");
+            this.props.openToastRequest("Tasca creada");
+        }
+        else{
+            this.props.openDialogRequest("Atenció", "És necessari escriure el resum de la tasca, el projecte al qual pertany i les hores planificades.");
+        }
     }
 
     updateFields(field, value){
         fields[field] = value;
     }
 
-    createProjectCall(){
-        if(fields.hasOwnProperty("name")) {
-            this.props.createProject(TOKEN, fields);
-            browserHistory.push("/projects");
-            this.props.openToastRequest("Projecte creat");
-        }
-        else{
-            this.props.openDialogRequest("Atenció", "És necessari escriure el nom del projecte.");
-        }
-    }
-
     render() {
-        const isFetching = false;
+        let defaultValue = false;
+        if(this.props.active_project){
+            defaultValue = this.props.active_project.name;
+            this.updateFields("project_id", this.props.active_project.id);
+        }
+        console.log(fields);
         return(
             <div>
                 <div className="leftContainer">
                     <div>
                         <div className="title">
-                            Nou projecte
+                            Nova tasca
                         </div>
                     </div>
                 </div>
                 <div className="contents">
                     <div className="leftColumn">
                         <TextField
-                            floatingLabelText="Nom del projecte"
+                            floatingLabelText="Resum de la tasca"
                             onChange={e => fields["name"] = e.target.value}
                         />
-                        <DatePicker
-                            hintText="Data d'inici"
-                            onChange={(e, date) => fields["date_start"] = dateFormat(date)}
-                        />
-                        <DatePicker
-                            hintText="Finalització prevista"
-                            onChange={(e, date) => fields["date_end"] = dateFormat(date)}
+                        <TextField
+                            floatingLabelText="Hores estimades"
+                            onChange={e => fields["planned_hours"] = parseFloat(e.target.value)}
                         />
                     </div>
                     <div className="rightColumn">
                         <Many2One
-                            source={this.props.users.data}
-                            label="Responsable"
-                            fieldName="manager"
+                            source={this.props.projects.data}
+                            label="Projecte"
+                            fieldName="project_id"
                             updateFields={this.updateFields}
-                            searchFunction={this.props.searchUsers}
+                            searchFunction={this.props.searchProjects}
+                            defaultValue={defaultValue}
                         />
                         <br/>
                         <Many2One
-                            source={this.props.projects.data}
-                            label="Projecte pare"
-                            fieldName="parent_id"
+                            source={this.props.users.data}
+                            label="Responsable"
+                            fieldName="user_id"
                             updateFields={this.updateFields}
-                            searchFunction={this.props.searchProjects}
+                            searchFunction={this.props.searchUsers}
                         />
                     </div>
                 </div>
                 <div className="lowerButtons">
                     <LinkButton
                         label="Cancel·lar"
-                        route="/projects"
+                        route="/tasks"
                     />
                     <LinkButton
                         label="Crear"
-                        clickFunction={this.createProjectCall}
+                        clickFunction={this.createTaskCall}
                         fields={fields}
                     />
                 </div>
