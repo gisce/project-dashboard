@@ -111,7 +111,7 @@ export class Task extends Model {
             for(let j=0; j<actual.work_ids.length;j++){
                 workdones.push(actual.work_ids[j].id);
             }
-            if(actual.project){
+            if(actual.project_id){
                project_id = actual.project_id.id;
                project_name = actual.project_id.name;
             }
