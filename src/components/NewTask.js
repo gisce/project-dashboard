@@ -56,7 +56,6 @@ export default class NewTask extends Component {
             defaultValue = this.props.active_project.name;
             this.updateFields("project_id", this.props.active_project.id);
         }
-        console.log(fields);
         return(
             <div>
                 <div className="leftContainer">
