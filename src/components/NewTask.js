@@ -6,13 +6,10 @@ import { bindActionCreators } from 'redux';
 import * as tasksCreators from '../actions/tasks';
 import * as searchCreators from '../actions/search';
 import * as uiCreators from '../actions/ui';
-import TextField from 'material-ui/TextField';
-import DatePicker from 'material-ui/DatePicker';
-import Alert from './Alert';
-import LoadingIndicator from './LoadingIndicator';
+import * as breadcrumbCreators from '../actions/breadcrumb';
 import LinkButton from './LinkButton';
 import Many2One from './Many2One';
-import {dateFormat} from '../utils/misc';
+import TextField from 'material-ui/TextField';
 
 function mapStateToProps(state) {
     return {
@@ -23,7 +20,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, searchCreators, tasksCreators, uiCreators), dispatch);
+    return bindActionCreators(Object.assign({}, searchCreators, tasksCreators, uiCreators, breadcrumbCreators), dispatch);
 }
 
 let fields = {};
@@ -33,12 +30,14 @@ export default class NewTask extends Component {
     constructor(props){
         super(props);
         this.createTaskCall = this.createTaskCall.bind(this);
+        fields = {};
     }
 
     createTaskCall(){
         if(fields.hasOwnProperty("name") && fields.hasOwnProperty("project_id") && fields.hasOwnProperty("planned_hours")) {
             this.props.createTask(TOKEN, fields);
             browserHistory.push("/tasks");
+            this.props.breadcrumbClear();
             this.props.openToastRequest("Tasca creada");
         }
         else{
@@ -54,7 +53,7 @@ export default class NewTask extends Component {
         let defaultValue = false;
         if(this.props.active_project){
             defaultValue = this.props.active_project.name;
-            this.updateFields("project_id", this.props.active_project.id);
+            this.updateFields("project_id", {"id": parseInt(this.props.active_project.id, 10)});
         }
         return(
             <div>
