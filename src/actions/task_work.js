@@ -27,7 +27,7 @@ export function receiveTaskWork(taskWorks, initial) {
 }
 
 export function createTaskWorkRequest(initial){
-    const message = (initial)?unll:"Creating new task work"
+    const message = (initial)?null:"Creating new task work"
 
     return {
         type: CREATE_TASK_WORK,
