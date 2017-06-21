@@ -32,6 +32,7 @@ export default class NewProject extends Component {
     constructor(props){
         super(props);
         this.createProjectCall = this.createProjectCall.bind(this);
+        fields = {};
     }
 
     updateFields(field, value){
