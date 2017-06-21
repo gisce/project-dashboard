@@ -32,17 +32,18 @@ export default class NewTask extends Component {
     constructor(props){
         super(props);
         this.createWorkdoneCall = this.createWorkdoneCall.bind(this);
-        fields["task_id"] = this.props.params.taskId;
+        fields = {};
+        fields["task_id"] = {"id": parseInt(this.props.params.taskId, 10)};
     }
 
     createWorkdoneCall(){
-        if(fields.hasOwnProperty("project_id") && fields.hasOwnProperty("name")) {
+        if(fields.hasOwnProperty("name")) {
             this.props.createTaskWork(TOKEN, fields);
             browserHistory.push("/tasks/"+this.props.params.taskId);
             this.props.openToastRequest("Workdone creat");
         }
         else{
-            this.props.openDialogRequest("Atenció", "És necessari escriure el resum del treball i el projecte al qual pertany el workdone.");
+            this.props.openDialogRequest("Atenció", "És necessari escriure el resum del treball.");
         }
     }
 
@@ -75,15 +76,7 @@ export default class NewTask extends Component {
                         <DatePicker
                             style={{marginTop: "24px"}}
                             hintText="Data de realització"
-                            onChange={(e, date) => this.updateFields("date", dateFormat(date))}
-                        />
-                        <Many2One
-                            source={this.props.projects.data}
-                            label="Projecte"
-                            fieldName="project_id"
-                            updateFields={this.updateFields}
-                            searchFunction={this.props.searchProjects}
-                            defaultValue={defaultValue}
+                            onChange={(e, date) => this.updateFields("date", dateFormat(date)+" 00:00:00")}
                         />
                     </div>
                     <div className="rightColumn">
