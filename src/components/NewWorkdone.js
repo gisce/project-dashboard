@@ -52,12 +52,6 @@ export default class NewTask extends Component {
     }
 
     render() {
-        let defaultValue = false;
-        if(this.props.active_task){
-            defaultValue = this.props.active_task["project_id.name"];
-            this.updateFields("project_id", this.props.active_task["project_id.id"]);
-        }
-        console.log(fields);
         return(
             <div>
                 <div className="leftContainer">
