@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as taskWorkCreators from '../actions/task_work';
 import * as tasksCreators from '../actions/tasks';
+import * as uiCreators from '../actions/ui';
 import LoadingIndicator from './LoadingIndicator';
 import LinkButton from './LinkButton';
 import RefreshButton from './RefreshButton';
@@ -20,6 +21,7 @@ function mapStateToProps(state) {
         taskWorks: taskWorks,
         tasks: state.tasks.data,
         active_task: state.tasks.active_task,
+        editing_tasks: state.ui.editing,
         loaded: state.taskWorks.loaded,
         isFetching: state.taskWorks.isFetching,
         message_text: state.taskWorks.message_text,
@@ -28,7 +30,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, tasksCreators, taskWorkCreators), dispatch);
+    return bindActionCreators(Object.assign({}, tasksCreators, taskWorkCreators, uiCreators), dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -62,7 +64,11 @@ export default class TasksView extends Component {
     }
 
     handleEdit(element){
-        console.log("Editant workdone amb ID ", element.id);
+        let editing = this.props.editing_tasks;
+        if(editing.indexOf(element.id) == -1){
+            editing.push(element.id);
+        }
+        this.props.editItems(editing);
     }
 
     handleDelete(element){
