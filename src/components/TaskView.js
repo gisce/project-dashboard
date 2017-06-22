@@ -74,6 +74,7 @@ export default class TasksView extends Component {
         let workdones = {};
         let newBreadcrumb = this.props.breadcrumb;
         let continguts = [];
+        let uri = "";
         const cols = {
             "Data": "date",
             "Realitzar per": "user",
@@ -81,6 +82,9 @@ export default class TasksView extends Component {
             "Resum del treball": "work_summary",
             "": "extras",
         };
+        if(this.props.params.taskId){
+            uri = "/tasks/" + this.props.params.taskId + "/new";
+        }
         if(this.props.active_task && this.props.taskWorks) {
             if(newBreadcrumb.length == 0){
                 const route = "/projects/" + this.props.active_task['project_id.id'] + "/tasks";
@@ -98,17 +102,17 @@ export default class TasksView extends Component {
                             floatingLabelText="Hores estimades"
                         />
                         <TextField
-                                   style={{paddingLeft: 10}}
-                                   disabled={true}
-                                   defaultValue={this.props.active_task.delay_hours}
-                                   floatingLabelText="Retard hores"
+                            style={{paddingLeft: 10}}
+                            disabled={true}
+                            defaultValue={this.props.active_task.delay_hours}
+                            floatingLabelText="Retard hores"
                         />
                     </div>
                     <div>
                         <TextField
-                                   disabled={true}
-                                   defaultValue={this.props.active_task.remaining_hours}
-                                   floatingLabelText="Hores restants"
+                            disabled={true}
+                            defaultValue={this.props.active_task.remaining_hours}
+                            floatingLabelText="Hores restants"
                         />
                         <TextField
                             style={{paddingLeft: 10}}
@@ -145,6 +149,7 @@ export default class TasksView extends Component {
                                 <LinkButton
                                     icon="note_add"
                                     label="Nou"
+                                    route={uri}
                                 />
                                 <RefreshButton
                                     refresh={() => this.fetchData(false)}

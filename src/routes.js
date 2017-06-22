@@ -11,6 +11,7 @@ import Companies from './components/CompaniesView';
 import NotFound from './components/NotFound';
 import NewProject from './components/NewProject';
 import NewTask from './components/NewTask';
+import NewWorkdone from './components/NewWorkdone';
 
 export default (
     <Route path="/" component={App}>
@@ -20,6 +21,7 @@ export default (
             <Route path="/tasks" component={Tasks} />
             <Route path="/tasks/new" component={NewTask}/>
             <Route path="/tasks/:taskId" component={Task} />
+            <Route path="/tasks/:taskId/new" component={NewWorkdone} />
             <Route path="/users" component={Users} />
             <Route path="/user/:userId" component={User} />
             <Route path="/companies" component={Companies} />

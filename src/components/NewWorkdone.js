@@ -3,24 +3,26 @@ import {browserHistory} from 'react-router';
 import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as tasksCreators from '../actions/tasks';
+import * as taskWorkCreators from '../actions/task_work';
+import * as projectCreators from '../actions/projects';
 import * as searchCreators from '../actions/search';
 import * as uiCreators from '../actions/ui';
-import * as breadcrumbCreators from '../actions/breadcrumb';
+import TextField from 'material-ui/TextField';
 import LinkButton from './LinkButton';
 import Many2One from './Many2One';
-import TextField from 'material-ui/TextField';
+import DatePicker from 'material-ui/DatePicker';
+import {dateFormat} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
-        projects: state.projects,
+        active_task: state.tasks.active_task,
         users: state.users,
-        active_project: state.projects.active_project
+        projects: state.projects
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, searchCreators, tasksCreators, uiCreators, breadcrumbCreators), dispatch);
+    return bindActionCreators(Object.assign({}, searchCreators, taskWorkCreators, projectCreators, uiCreators), dispatch);
 }
 
 let fields = {};
@@ -29,19 +31,19 @@ let fields = {};
 export default class NewTask extends Component {
     constructor(props){
         super(props);
-        this.createTaskCall = this.createTaskCall.bind(this);
+        this.createWorkdoneCall = this.createWorkdoneCall.bind(this);
         fields = {};
+        fields["task_id"] = {"id": parseInt(this.props.params.taskId, 10)};
     }
 
-    createTaskCall(){
-        if(fields.hasOwnProperty("name") && fields.hasOwnProperty("project_id") && fields.hasOwnProperty("planned_hours")) {
-            this.props.createTask(TOKEN, fields);
-            browserHistory.push("/tasks");
-            this.props.breadcrumbClear();
-            this.props.openToastRequest("Tasca creada");
+    createWorkdoneCall(){
+        if(fields.hasOwnProperty("name")) {
+            this.props.createTaskWork(TOKEN, fields);
+            browserHistory.push("/tasks/"+this.props.params.taskId);
+            this.props.openToastRequest("Workdone creat");
         }
         else{
-            this.props.openDialogRequest("Atenció", "És necessari escriure el resum de la tasca, el projecte al qual pertany i les hores planificades.");
+            this.props.openDialogRequest("Atenció", "És necessari escriure el resum del treball.");
         }
     }
 
@@ -50,44 +52,35 @@ export default class NewTask extends Component {
     }
 
     render() {
-        let defaultValue = false;
-        if(this.props.active_project){
-            defaultValue = this.props.active_project.name;
-            this.updateFields("project_id", {"id": parseInt(this.props.active_project.id, 10)});
-        }
         return(
             <div>
                 <div className="leftContainer">
                     <div>
                         <div className="title">
-                            Nova tasca
+                            Nou workdone
                         </div>
                     </div>
                 </div>
                 <div className="contents">
                     <div className="leftColumn">
                         <TextField
-                            floatingLabelText="Resum de la tasca"
-                            onChange={e => fields["name"] = e.target.value}
+                            floatingLabelText="Resum del treball"
+                            onChange={e =>  this.updateFields("name", e.target.value)}
                         />
-                        <TextField
-                            floatingLabelText="Hores estimades"
-                            onChange={e => fields["planned_hours"] = parseFloat(e.target.value)}
+                        <DatePicker
+                            style={{marginTop: "24px"}}
+                            hintText="Data de realització"
+                            onChange={(e, date) => this.updateFields("date", dateFormat(date)+" 00:00:00")}
                         />
                     </div>
                     <div className="rightColumn">
-                        <Many2One
-                            source={this.props.projects.data}
-                            label="Projecte"
-                            fieldName="project_id"
-                            updateFields={this.updateFields}
-                            searchFunction={this.props.searchProjects}
-                            defaultValue={defaultValue}
+                        <TextField
+                            floatingLabelText="Temps dedicat"
+                            onChange={e => this.updateFields("hours", parseFloat(e.target.value))}
                         />
-                        <br/>
                         <Many2One
                             source={this.props.users.data}
-                            label="Responsable"
+                            label="Realitzat per"
                             fieldName="user_id"
                             updateFields={this.updateFields}
                             searchFunction={this.props.searchUsers}
@@ -101,7 +94,7 @@ export default class NewTask extends Component {
                     />
                     <LinkButton
                         label="Crear"
-                        clickFunction={this.createTaskCall}
+                        clickFunction={this.createWorkdoneCall}
                         fields={fields}
                     />
                 </div>

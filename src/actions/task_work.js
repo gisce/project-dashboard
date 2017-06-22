@@ -1,8 +1,8 @@
-import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK} from '../constants';
-import {define_token} from '../utils/http_functions';
-import {fetchTasksRequest, receiveTasks, setActiveTask} from './tasks';
-import axios  from 'axios';
-import { Task, TaskWork } from '../models/model';
+import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK, CREATE_TASK_WORK} from "../constants";
+import {define_token} from "../utils/http_functions";
+import {fetchTasksRequest, receiveTasks, setActiveTask} from "./tasks";
+import axios from "axios";
+import {Task, TaskWork} from "../models/model";
 
 export function fetchTaskWorkRequest(initial) {
     const message = (initial)?null:"Refreshing task work list";
@@ -24,6 +24,26 @@ export function receiveTaskWork(taskWorks, initial) {
             message,
         },
     };
+}
+
+export function createTaskWorkRequest(initial){
+    const message = (initial)?null:"Creating new task work"
+
+    return {
+        type: CREATE_TASK_WORK,
+        payload: {
+            message
+        }
+    }
+}
+
+export function createTaskWork(token, body, initial = false){
+    return(dispatch) => {
+        dispatch(createTaskWorkRequest(initial));
+        define_token(token);
+        let model = new TaskWork();
+        model.post(body);
+    }
 }
 
 export function fetchTaskWorks(token, task_id, active_task, initial = false) {
