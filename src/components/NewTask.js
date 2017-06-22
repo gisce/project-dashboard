@@ -33,6 +33,10 @@ export default class NewTask extends Component {
         fields = {};
     }
 
+    componentDidMount(){
+        this.props.editItems([]);
+    }
+
     createTaskCall(){
         if(fields.hasOwnProperty("name") && fields.hasOwnProperty("project_id") && fields.hasOwnProperty("planned_hours")) {
             this.props.createTask(TOKEN, fields);
