@@ -4,21 +4,25 @@ import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import Avatar from 'material-ui/Avatar';
+import TextField from 'material-ui/TextField';
 import Paginator from '../Paginator';
 import * as configCreators from '../../actions/config';
 import * as pagingCreators from '../../actions/paginator';
+import * as uiCreators from '../../actions/ui';
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 function mapStateToProps(state) {
         return {
             items_per_page: state.config.items_per_page,
-            actual_page: state.paginator.actual_page
+            actual_page: state.paginator.actual_page,
+            editables: state.ui.editing,
         };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, configCreators, pagingCreators), dispatch);
+    return bindActionCreators(Object.assign({}, configCreators, pagingCreators, uiCreators), dispatch);
 }
 
 const styles = {
@@ -36,6 +40,7 @@ const styles = {
 
 let rowContents;
 let data = [];
+let editables = [];
 let asc = true;
 let selectedColumn = null;
 
@@ -53,6 +58,9 @@ export default class SmartTable extends Component {
 
     onClick(row, column, event) {
         this.props.handleClick(rowContents[row]);
+        /*We need to force a re-render to rewrite table cells that are editable
+        * after click handling*/
+        this.forceUpdate();
     }
 
     sort(value) {
@@ -134,6 +142,9 @@ export default class SmartTable extends Component {
         let i = 0;
         const columns = this.props.columns;
         data = this.trimByPage();
+        if(this.props.editables){
+            editables = this.props.editables;
+        }
         for(let col in columns){
             /*
             * Columns titles retrieving
@@ -189,7 +200,7 @@ export default class SmartTable extends Component {
 
         return(
             <div>
-                <Table style={{ tableLayout: 'auto' }} fixedHeader={false}  onCellClick={this.onClick}>
+                <Table style={{ tableLayout: 'auto' }} fixedHeader={false}  selectable={false} onCellClick={this.onClick}>
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             {headers}
@@ -234,7 +245,19 @@ export default class SmartTable extends Component {
                                     }
                                     else{
                                         contents.push(
-                                            <TableRowColumn key={i - 1}>{element[att]}</TableRowColumn>
+                                            /*We must check if this field is in edit mode*/
+                                            <TableRowColumn key={i - 1}>
+                                                {
+                                                    editables.indexOf(element["id"]) == -1 ?
+                                                        element[att]
+                                                    :
+                                                    <TextField
+                                                        style={{width: '140px'}}
+                                                        hintText={"Escrigui aqui el nou valor"}
+                                                        defaultValue={element[att]}
+                                                    />
+                                                }
+                                            </TableRowColumn>
                                         );
                                     }
                                 });
