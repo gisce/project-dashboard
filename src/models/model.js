@@ -26,7 +26,12 @@ export default class Model {
 
     post(body) {
         const uri = this.uri + "/" + this.model;
-        return axios.post(uri, body)
+        return axios.post(uri, body);
+    }
+
+    patch(id, body){
+        const uri = this.uri + "/" + this.model + "/"+id;
+        return axios.patch(uri, body);
     }
 }
 
