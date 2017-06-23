@@ -43,6 +43,7 @@ export default class TasksView extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handlePatch = this.handlePatch.bind(this);
     }
 
     componentDidMount() {
@@ -71,6 +72,16 @@ export default class TasksView extends Component {
         this.props.editItems(editing);
     }
 
+    handlePatch(id, body){
+        let editing = this.props.editing_tasks;
+        const index = editing.indexOf(id);
+        if (index > -1) {
+            editing.splice(index, 1);
+        }
+        this.props.editItems(editing);
+        this.props.patchTaskWork(TOKEN, id, body);
+    }
+
     handleDelete(element){
         console.log("Petició per esborrar workdone amb ID ", element.id);
     }
@@ -83,9 +94,9 @@ export default class TasksView extends Component {
         let uri = "";
         const cols = {
             "Data": "date",
-            "Realitzar per": "user",
+            "Realitzar per": "user_id.name",
             "Temps dedicat": "hours",
-            "Resum del treball": "work_summary",
+            "Resum del treball": "name",
             "": "extras",
         };
         if(this.props.params.taskId){
@@ -180,6 +191,7 @@ export default class TasksView extends Component {
                             handleEdit={this.handleEdit}
                             handleDelete={this.handleDelete}
                             handleUpdate={this.props.receiveTaskWork}
+                            handlePatch={this.handlePatch}
                             columns={cols}
                             data={workdones}
                         />
