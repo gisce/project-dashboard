@@ -41,6 +41,8 @@ const styles = {
 let rowContents;
 let data = [];
 let editables = [];
+let attributes = [];
+let values = {};
 let asc = true;
 let selectedColumn = null;
 
@@ -52,7 +54,9 @@ export default class SmartTable extends Component {
         this.onClick = this.onClick.bind(this);
         this.sort = this.sort.bind(this);
         this.trimByPage = this.trimByPage.bind(this);
+        this.updateValues = this.updateValues.bind(this);
         data = [];
+        attributes = [];
         asc = true;
     }
 
@@ -77,6 +81,17 @@ export default class SmartTable extends Component {
         let right  = arr.slice(middle, arr.length);
 
         return this.merge(this.mergeSort(left, value), this.mergeSort(right, value), value);
+    }
+
+    updateValues(id){
+        attributes.map(att =>{
+            if(this.refs[att+"_"+id]) {
+                values[att] = this.refs[att+"_"+id].getValue();
+            }
+        });
+        console.log("ID: ", id,", VALEUS TO UPDATE: ", JSON.stringify(values));
+        /*values handling*/
+        this.props.handlePatch(id, values);
     }
 
     merge(left, right, value)
@@ -138,9 +153,9 @@ export default class SmartTable extends Component {
     render(){
         rowContents = [];
         let headers = [];
-        let attributes = [];
         let i = 0;
         const columns = this.props.columns;
+        attributes = [];
         data = this.trimByPage();
         if(this.props.editables){
             editables = this.props.editables;
@@ -235,7 +250,14 @@ export default class SmartTable extends Component {
                                         contents.push(
                                             <TableRowColumn key={i-2}>
                                                 <IconButton>
-                                                    <FontIcon onTouchTap={() => this.props.handleEdit(element)} className="material-icons">mode_edit</FontIcon>
+                                                    {
+                                                        editables.indexOf(element["id"]) == -1 ?
+                                                            <FontIcon onTouchTap={() => this.props.handleEdit(element)}
+                                                                      className="material-icons">mode_edit</FontIcon>
+                                                            :
+                                                            <FontIcon onTouchTap={() => this.updateValues(element["id"])}
+                                                                      className="material-icons">save</FontIcon>
+                                                    }
                                                 </IconButton>
                                                 <IconButton>
                                                     <FontIcon onTouchTap={() => this.props.handleDelete(element)} className="material-icons">delete</FontIcon>
@@ -251,7 +273,7 @@ export default class SmartTable extends Component {
                                                     editables.indexOf(element["id"]) == -1 ?
                                                         element[att]
                                                     :
-                                                    <TextField
+                                                    <TextField ref={att+"_"+element["id"]}
                                                         style={{width: '140px'}}
                                                         hintText={"Escrigui aqui el nou valor"}
                                                         defaultValue={element[att]}
