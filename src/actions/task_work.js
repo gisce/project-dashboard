@@ -1,4 +1,4 @@
-import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK, CREATE_TASK_WORK} from "../constants";
+import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK, CREATE_TASK_WORK, PATCH_TASK_WORK} from "../constants";
 import {define_token} from "../utils/http_functions";
 import {fetchTasksRequest, receiveTasks, setActiveTask} from "./tasks";
 import axios from "axios";
@@ -27,10 +27,21 @@ export function receiveTaskWork(taskWorks, initial) {
 }
 
 export function createTaskWorkRequest(initial){
-    const message = (initial)?null:"Creating new task work"
+    const message = (initial)?null:"Creating new task work";
 
     return {
         type: CREATE_TASK_WORK,
+        payload: {
+            message
+        }
+    }
+}
+
+export function patchTaskWorkRequest(initial = false){
+    const message = (initial)?null:"Patching task work";
+
+    return {
+        type: PATCH_TASK_WORK,
         payload: {
             message
         }
@@ -43,6 +54,15 @@ export function createTaskWork(token, body, initial = false){
         define_token(token);
         let model = new TaskWork();
         model.post(body);
+    }
+}
+
+export function patchTaskWork(token, id, body, initial = false){
+    return(dispatch) => {
+        dispatch(patchTaskWorkRequest(initial));
+        define_token(token);
+        let model = new TaskWork();
+        model.patch(id, body);
     }
 }
 
