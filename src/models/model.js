@@ -80,13 +80,13 @@ export class TaskWork extends Model {
             let workdone = {
                 "id": actual.id,
                 "hours": actual.hours,
-                "user": actual.user_id.name,
-                "work_summary": actual.name,
-                "task": actual.task_id.name,
-                "task_id": actual.task_id.id,
+                "user_id.name": actual.user_id.name,
+                "name": actual.name,
+                "task_id.name": actual.task_id.name,
+                "task_id.id": actual.task_id.id,
                 "date": actual.date,
-                "project": actual.project_id.name,
-                "project_id": actual.project_id.id
+                "project_id.name": actual.project_id.name,
+                "project_id.id": actual.project_id.id
             };
             workdones.push(workdone);
         }
