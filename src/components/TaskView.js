@@ -11,6 +11,7 @@ import LinkButton from './LinkButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
+import {sleep} from '../utils/misc';
 
 function mapStateToProps(state) {
     let taskWorks = null;
@@ -51,13 +52,13 @@ export default class TasksView extends Component {
     }
 
     fetchData(initial = true) {
-        if(!this.props.active_task){
+        // if(!this.props.active_task){
             let task_id = this.props.params.taskId;
             this.props.fetchTaskWorks(TOKEN, task_id, true, false);
-        }
-        else{
-            this.props.fetchTaskWorks(TOKEN, this.props.active_task.id, false, false);
-        }
+        // }
+        // else{
+        //     this.props.fetchTaskWorks(TOKEN, this.props.active_task.id, false, false);
+        // }
     }
 
     handleClick(element){
@@ -80,10 +81,17 @@ export default class TasksView extends Component {
         }
         this.props.editItems(editing);
         this.props.patchTaskWork(TOKEN, id, body);
+        sleep(1000);
+        //Fetch data again to make changes visible
+        this.fetchData(false);
     }
 
-    handleDelete(element){
-        console.log("Petició per esborrar workdone amb ID ", element.id);
+    handleDelete(id){
+        this.props.deleteTaskWork(TOKEN, id);
+        sleep(1000);
+        //Fetch data again to make changes visible
+        this.fetchData(false);
+        this.props.openToastRequest("Workdone eliminat");
     }
 
     render() {
@@ -115,7 +123,7 @@ export default class TasksView extends Component {
                     <div>
                         <TextField
                             disabled={true}
-                            defaultValue={this.props.active_task.estimated_hours}
+                            defaultValue={this.props.active_task.planned_hours}
                             floatingLabelText="Hores estimades"
                         />
                         <TextField
@@ -134,7 +142,7 @@ export default class TasksView extends Component {
                         <TextField
                             style={{paddingLeft: 10}}
                             disabled={true}
-                            defaultValue={this.props.active_task.dedicated_hours}
+                            defaultValue={this.props.active_task.effective_hours}
                             floatingLabelText="Hores dedicades"
                         />
                     </div>
