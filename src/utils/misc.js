@@ -61,3 +61,29 @@ export function dateFormat(date){
     return local.toJSON().slice(0, 10);
 }
 
+export function getFieldType(field){
+    let result = "text";
+    switch(field){
+        case "user_id.name":
+            result = "many2one";
+            break;
+        case "hours":
+            result =  "float";
+            break;
+        case "date":
+            result = "date";
+    }
+    return result;
+}
+
+export function convertToDate(str){
+    const parts = str.split("-");
+    return new Date(parts[0],parts[1]-1,parts[2].split(' ')[0]);
+}
+
+export function sleep(miliseconds) {
+   var currentTime = new Date().getTime();
+
+   while (currentTime + miliseconds >= new Date().getTime()) {
+   }
+}
