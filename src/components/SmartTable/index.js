@@ -6,10 +6,11 @@ import IconButton from 'material-ui/IconButton';
 import Avatar from 'material-ui/Avatar';
 import TextField from 'material-ui/TextField';
 import Paginator from '../Paginator';
+import { getFieldType, dateFormat, convertToDate } from '../../utils/misc';
 import * as configCreators from '../../actions/config';
 import * as pagingCreators from '../../actions/paginator';
 import * as uiCreators from '../../actions/ui';
-
+import DatePicker from 'material-ui/DatePicker';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -86,7 +87,12 @@ export default class SmartTable extends Component {
     updateValues(id){
         attributes.map(att =>{
             if(this.refs[att+"_"+id]) {
-                values[att] = this.refs[att+"_"+id].getValue();
+                if(att == "hours"){
+                    values[att] = parseFloat(this.refs[att+"_"+id].getValue());
+                }
+                else{
+                    values[att] = this.refs[att+"_"+id].getValue();
+                }
             }
         });
         console.log("ID: ", id,", VALEUS TO UPDATE: ", JSON.stringify(values));
@@ -140,7 +146,6 @@ export default class SmartTable extends Component {
             limit = totalItems;
         }
         let i = 1;
-        /*let i = 1; i <= totalItems; i++*/
         for(let elem in this.props.data){
             if(!(itemsThisPage <= i && i <= limit)){
                 delete newData[elem];
@@ -148,6 +153,36 @@ export default class SmartTable extends Component {
             i++;
         }
         return newData;
+    }
+
+    getField(field, element){
+        const type = getFieldType(field);
+        let result = (
+            <div></div>
+        );
+        switch(type){
+            case "text":
+            case "float":
+                result = (
+                    <TextField
+                        ref={field+"_"+element["id"]}
+                        style={{width: '140px'}}
+                        hintText={"Escrigui aqui el nou valor"}
+                        defaultValue={element[field]}
+                    />
+                );
+                break;
+            case "date":
+                result = (
+                    <DatePicker
+                        style={{width: '140px'}}
+                        hintText="Introdueixi la nova data"
+                        defaultDate={convertToDate(element[field])}
+                        onChange={(e, date) => {values[field] = dateFormat(date)+" 00:00:00"}}
+                    />
+                );
+        }
+        return result;
     }
 
     render(){
@@ -260,7 +295,7 @@ export default class SmartTable extends Component {
                                                     }
                                                 </IconButton>
                                                 <IconButton>
-                                                    <FontIcon onTouchTap={() => this.props.handleDelete(element)} className="material-icons">delete</FontIcon>
+                                                    <FontIcon onTouchTap={() => this.props.handleDelete(element["id"])} className="material-icons">delete</FontIcon>
                                                 </IconButton>
                                             </TableRowColumn>
                                         );
@@ -273,11 +308,7 @@ export default class SmartTable extends Component {
                                                     editables.indexOf(element["id"]) == -1 ?
                                                         element[att]
                                                     :
-                                                    <TextField ref={att+"_"+element["id"]}
-                                                        style={{width: '140px'}}
-                                                        hintText={"Escrigui aqui el nou valor"}
-                                                        defaultValue={element[att]}
-                                                    />
+                                                    this.getField(att, element)
                                                 }
                                             </TableRowColumn>
                                         );
