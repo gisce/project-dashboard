@@ -51,6 +51,7 @@ export default class Many2One extends Component {
         }
         return (
             <AutoComplete
+                menuStyle={{maxHeight:"30vh"}}
                 floatingLabelText={this.props.label}
                 hintText="Escriu per cercar"
                 searchText={this.searchText}
