@@ -6,11 +6,13 @@ import { bindActionCreators } from 'redux';
 import * as taskWorkCreators from '../actions/task_work';
 import * as tasksCreators from '../actions/tasks';
 import * as uiCreators from '../actions/ui';
+import * as searchCreators from '../actions/search';
 import LoadingIndicator from './LoadingIndicator';
 import LinkButton from './LinkButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
+import Many2One from './Many2One';
 import {sleep} from '../utils/misc';
 
 function mapStateToProps(state) {
@@ -21,6 +23,7 @@ function mapStateToProps(state) {
     return {
         taskWorks: taskWorks,
         tasks: state.tasks.data,
+        users: state.users,
         active_task: state.tasks.active_task,
         editing_tasks: state.ui.editing,
         loaded: state.taskWorks.loaded,
@@ -31,8 +34,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, tasksCreators, taskWorkCreators, uiCreators), dispatch);
+    return bindActionCreators(Object.assign({}, tasksCreators, taskWorkCreators, uiCreators, searchCreators), dispatch);
 }
+
+let fields = {};
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class TasksView extends Component {
@@ -45,6 +50,7 @@ export default class TasksView extends Component {
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handlePatch = this.handlePatch.bind(this);
+        fields = {};
     }
 
     componentDidMount() {
@@ -79,6 +85,7 @@ export default class TasksView extends Component {
         if (index > -1) {
             editing.splice(index, 1);
         }
+        body["user_id"] = fields["user_id"];
         this.props.editItems(editing);
         this.props.patchTaskWork(TOKEN, id, body);
         sleep(1000);
@@ -94,8 +101,13 @@ export default class TasksView extends Component {
         this.props.openToastRequest("Workdone eliminat");
     }
 
+    updateFields(field, value){
+        fields[field] = value;
+    }
+
     render() {
         let title = 'Tasca';
+        let many2ones = {};
         let workdones = {};
         let newBreadcrumb = this.props.breadcrumb;
         let continguts = [];
@@ -107,6 +119,15 @@ export default class TasksView extends Component {
             "Resum del treball": "name",
             "": "extras",
         };
+        many2ones["user_id.name"] = (
+            <Many2One
+                source={this.props.users.data}
+                label={false}
+                fieldName="user_id"
+                updateFields={this.updateFields}
+                searchFunction={this.props.searchUsers}
+            />
+        );
         if(this.props.params.taskId){
             uri = "/tasks/" + this.props.params.taskId + "/new";
         }
@@ -201,6 +222,7 @@ export default class TasksView extends Component {
                             handleUpdate={this.props.receiveTaskWork}
                             handlePatch={this.handlePatch}
                             columns={cols}
+                            many2ones={many2ones}
                             data={workdones}
                         />
                     }
