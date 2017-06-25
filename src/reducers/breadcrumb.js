@@ -6,7 +6,7 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    [BREADCRUMB_CLEAR]: (state, payload) =>
+    [BREADCRUMB_CLEAR]: (state) =>
         Object.assign({}, state, {
             breadcrumb_data: [],
         }),
