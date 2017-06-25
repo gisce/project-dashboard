@@ -40,8 +40,12 @@ export default class NewTask extends Component {
     createTaskCall(){
         if(fields.hasOwnProperty("name") && fields.hasOwnProperty("project_id") && fields.hasOwnProperty("planned_hours")) {
             this.props.createTask(TOKEN, fields);
-            browserHistory.push("/tasks");
-            this.props.breadcrumbClear();
+            if(this.props.active_project){
+                browserHistory.push("/projects/"+ this.props.active_project.id + "/tasks");
+            }
+            else{
+                browserHistory.push("/tasks");
+            }
             this.props.openToastRequest("Tasca creada");
         }
         else{
@@ -54,8 +58,10 @@ export default class NewTask extends Component {
     }
 
     render() {
+        let uri = "/tasks";
         let defaultValue = false;
         if(this.props.active_project){
+            uri = "/projects/"+ this.props.active_project.id + "/tasks";
             defaultValue = this.props.active_project.name;
             this.updateFields("project_id", {"id": parseInt(this.props.active_project.id, 10)});
         }
@@ -101,7 +107,7 @@ export default class NewTask extends Component {
                 <div className="lowerButtons">
                     <LinkButton
                         label="Cancel·lar"
-                        route="/tasks"
+                        route={uri}
                     />
                     <LinkButton
                         label="Crear"
