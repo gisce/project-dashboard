@@ -102,7 +102,6 @@ export default class NewProject extends Component {
                     <LinkButton
                         label="Crear"
                         clickFunction={this.createProjectCall}
-                        fields={fields}
                     />
                 </div>
             </div>
