@@ -90,7 +90,7 @@ export default class NewTask extends Component {
                 <div className="lowerButtons">
                     <LinkButton
                         label="Cancel·lar"
-                        route="/tasks"
+                        route={"/tasks/"+this.props.params.taskId}
                     />
                     <LinkButton
                         label="Crear"

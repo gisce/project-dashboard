@@ -5,11 +5,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as taskWorkCreators from '../actions/task_work';
 import * as tasksCreators from '../actions/tasks';
+import * as uiCreators from '../actions/ui';
+import * as searchCreators from '../actions/search';
 import LoadingIndicator from './LoadingIndicator';
 import LinkButton from './LinkButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
+import Many2One from './Many2One';
+import {sleep} from '../utils/misc';
 
 function mapStateToProps(state) {
     let taskWorks = null;
@@ -19,7 +23,9 @@ function mapStateToProps(state) {
     return {
         taskWorks: taskWorks,
         tasks: state.tasks.data,
+        users: state.users,
         active_task: state.tasks.active_task,
+        editing_tasks: state.ui.editing,
         loaded: state.taskWorks.loaded,
         isFetching: state.taskWorks.isFetching,
         message_text: state.taskWorks.message_text,
@@ -28,8 +34,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, tasksCreators, taskWorkCreators), dispatch);
+    return bindActionCreators(Object.assign({}, tasksCreators, taskWorkCreators, uiCreators, searchCreators), dispatch);
 }
+
+let fields = {};
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class TasksView extends Component {
@@ -41,6 +49,8 @@ export default class TasksView extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handlePatch = this.handlePatch.bind(this);
+        fields = {};
     }
 
     componentDidMount() {
@@ -48,13 +58,13 @@ export default class TasksView extends Component {
     }
 
     fetchData(initial = true) {
-        if(!this.props.active_task){
+        // if(!this.props.active_task){
             let task_id = this.props.params.taskId;
             this.props.fetchTaskWorks(TOKEN, task_id, true, false);
-        }
-        else{
-            this.props.fetchTaskWorks(TOKEN, this.props.active_task.id, false, false);
-        }
+        // }
+        // else{
+        //     this.props.fetchTaskWorks(TOKEN, this.props.active_task.id, false, false);
+        // }
     }
 
     handleClick(element){
@@ -62,26 +72,62 @@ export default class TasksView extends Component {
     }
 
     handleEdit(element){
-        console.log("Editant workdone amb ID ", element.id);
+        let editing = this.props.editing_tasks;
+        if(editing.indexOf(element.id) == -1){
+            editing.push(element.id);
+        }
+        this.props.editItems(editing);
     }
 
-    handleDelete(element){
-        console.log("Petició per esborrar workdone amb ID ", element.id);
+    handlePatch(id, body){
+        let editing = this.props.editing_tasks;
+        const index = editing.indexOf(id);
+        if (index > -1) {
+            editing.splice(index, 1);
+        }
+        body["user_id"] = fields["user_id"];
+        this.props.editItems(editing);
+        this.props.patchTaskWork(TOKEN, id, body);
+        sleep(1000);
+        //Fetch data again to make changes visible
+        this.fetchData(false);
+    }
+
+    handleDelete(id){
+        this.props.deleteTaskWork(TOKEN, id);
+        sleep(1000);
+        //Fetch data again to make changes visible
+        this.fetchData(false);
+        this.props.openToastRequest("Workdone eliminat");
+    }
+
+    updateFields(field, value){
+        fields[field] = value;
     }
 
     render() {
         let title = 'Tasca';
+        let many2ones = {};
         let workdones = {};
         let newBreadcrumb = this.props.breadcrumb;
         let continguts = [];
         let uri = "";
         const cols = {
             "Data": "date",
-            "Realitzar per": "user",
+            "Realitzar per": "user_id.name",
             "Temps dedicat": "hours",
-            "Resum del treball": "work_summary",
+            "Resum del treball": "name",
             "": "extras",
         };
+        many2ones["user_id.name"] = (
+            <Many2One
+                source={this.props.users.data}
+                label={false}
+                fieldName="user_id"
+                updateFields={this.updateFields}
+                searchFunction={this.props.searchUsers}
+            />
+        );
         if(this.props.params.taskId){
             uri = "/tasks/" + this.props.params.taskId + "/new";
         }
@@ -98,7 +144,7 @@ export default class TasksView extends Component {
                     <div>
                         <TextField
                             disabled={true}
-                            defaultValue={this.props.active_task.estimated_hours}
+                            defaultValue={this.props.active_task.planned_hours}
                             floatingLabelText="Hores estimades"
                         />
                         <TextField
@@ -117,7 +163,7 @@ export default class TasksView extends Component {
                         <TextField
                             style={{paddingLeft: 10}}
                             disabled={true}
-                            defaultValue={this.props.active_task.dedicated_hours}
+                            defaultValue={this.props.active_task.effective_hours}
                             floatingLabelText="Hores dedicades"
                         />
                     </div>
@@ -174,7 +220,9 @@ export default class TasksView extends Component {
                             handleEdit={this.handleEdit}
                             handleDelete={this.handleDelete}
                             handleUpdate={this.props.receiveTaskWork}
+                            handlePatch={this.handlePatch}
                             columns={cols}
+                            many2ones={many2ones}
                             data={workdones}
                         />
                     }

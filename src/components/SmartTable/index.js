@@ -4,21 +4,26 @@ import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
 import Avatar from 'material-ui/Avatar';
+import TextField from 'material-ui/TextField';
 import Paginator from '../Paginator';
+import { getFieldType, dateFormat, convertToDate } from '../../utils/misc';
 import * as configCreators from '../../actions/config';
 import * as pagingCreators from '../../actions/paginator';
+import * as uiCreators from '../../actions/ui';
+import DatePicker from 'material-ui/DatePicker';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 function mapStateToProps(state) {
         return {
             items_per_page: state.config.items_per_page,
-            actual_page: state.paginator.actual_page
+            actual_page: state.paginator.actual_page,
+            editables: state.ui.editing,
         };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, configCreators, pagingCreators), dispatch);
+    return bindActionCreators(Object.assign({}, configCreators, pagingCreators, uiCreators), dispatch);
 }
 
 const styles = {
@@ -36,6 +41,9 @@ const styles = {
 
 let rowContents;
 let data = [];
+let editables = [];
+let attributes = [];
+let values = {};
 let asc = true;
 let selectedColumn = null;
 
@@ -47,12 +55,18 @@ export default class SmartTable extends Component {
         this.onClick = this.onClick.bind(this);
         this.sort = this.sort.bind(this);
         this.trimByPage = this.trimByPage.bind(this);
+        this.updateValues = this.updateValues.bind(this);
+        this.getField = this.getField.bind(this);
         data = [];
+        attributes = [];
         asc = true;
     }
 
     onClick(row, column, event) {
         this.props.handleClick(rowContents[row]);
+        /*We need to force a re-render to rewrite table cells that are editable
+        * after click handling*/
+        this.forceUpdate();
     }
 
     sort(value) {
@@ -69,6 +83,22 @@ export default class SmartTable extends Component {
         let right  = arr.slice(middle, arr.length);
 
         return this.merge(this.mergeSort(left, value), this.mergeSort(right, value), value);
+    }
+
+    updateValues(id){
+        attributes.map(att =>{
+            if(this.refs[att+"_"+id]) {
+                if(att == "hours"){
+                    values[att] = parseFloat(this.refs[att+"_"+id].getValue());
+                }
+                else{
+                    values[att] = this.refs[att+"_"+id].getValue();
+                }
+            }
+        });
+        console.log("ID: ", id,", VALEUS TO UPDATE: ", JSON.stringify(values));
+        /*values handling*/
+        this.props.handlePatch(id, values);
     }
 
     merge(left, right, value)
@@ -117,7 +147,6 @@ export default class SmartTable extends Component {
             limit = totalItems;
         }
         let i = 1;
-        /*let i = 1; i <= totalItems; i++*/
         for(let elem in this.props.data){
             if(!(itemsThisPage <= i && i <= limit)){
                 delete newData[elem];
@@ -127,13 +156,52 @@ export default class SmartTable extends Component {
         return newData;
     }
 
+    getField(field, element){
+        const type = getFieldType(field);
+        let result = (
+            <div></div>
+        );
+        switch(type){
+            case "text":
+            case "float":
+                result = (
+                    <TextField
+                        ref={field+"_"+element["id"]}
+                        style={{width: '140px'}}
+                        hintText={"Escrigui aqui el nou valor"}
+                        defaultValue={element[field]}
+                    />
+                );
+                break;
+            case "date":
+                result = (
+                    <DatePicker
+                        style={{width: '140px'}}
+                        hintText="Introdueixi la nova data"
+                        defaultDate={convertToDate(element[field])}
+                        onChange={(e, date) => {values[field] = dateFormat(date)+" 00:00:00"}}
+                    />
+                );
+                break;
+            case "many2one":
+                const many2ones = this.props.many2ones;
+                result = many2ones[field];
+                break;
+
+        }
+        return result;
+    }
+
     render(){
         rowContents = [];
         let headers = [];
-        let attributes = [];
         let i = 0;
         const columns = this.props.columns;
+        attributes = [];
         data = this.trimByPage();
+        if(this.props.editables){
+            editables = this.props.editables;
+        }
         for(let col in columns){
             /*
             * Columns titles retrieving
@@ -189,7 +257,7 @@ export default class SmartTable extends Component {
 
         return(
             <div>
-                <Table style={{ tableLayout: 'auto' }} fixedHeader={false}  onCellClick={this.onClick}>
+                <Table style={{ tableLayout: 'auto' }} fixedHeader={false}  selectable={false} onCellClick={this.onClick}>
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             {headers}
@@ -224,17 +292,32 @@ export default class SmartTable extends Component {
                                         contents.push(
                                             <TableRowColumn key={i-2}>
                                                 <IconButton>
-                                                    <FontIcon onTouchTap={() => this.props.handleEdit(element)} className="material-icons">mode_edit</FontIcon>
+                                                    {
+                                                        editables.indexOf(element["id"]) == -1 ?
+                                                            <FontIcon onTouchTap={() => this.props.handleEdit(element)}
+                                                                      className="material-icons">mode_edit</FontIcon>
+                                                            :
+                                                            <FontIcon onTouchTap={() => this.updateValues(element["id"])}
+                                                                      className="material-icons">save</FontIcon>
+                                                    }
                                                 </IconButton>
                                                 <IconButton>
-                                                    <FontIcon onTouchTap={() => this.props.handleDelete(element)} className="material-icons">delete</FontIcon>
+                                                    <FontIcon onTouchTap={() => this.props.handleDelete(element["id"])} className="material-icons">delete</FontIcon>
                                                 </IconButton>
                                             </TableRowColumn>
                                         );
                                     }
                                     else{
                                         contents.push(
-                                            <TableRowColumn key={i - 1}>{element[att]}</TableRowColumn>
+                                            /*We must check if this field is in edit mode*/
+                                            <TableRowColumn key={i - 1}>
+                                                {
+                                                    editables.indexOf(element["id"]) == -1 ?
+                                                        element[att]
+                                                    :
+                                                    this.getField(att, element)
+                                                }
+                                            </TableRowColumn>
                                         );
                                     }
                                 });

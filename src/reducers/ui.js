@@ -1,4 +1,4 @@
-import { UI_OPEN_MENU, UI_CLOSE_MENU, UI_OPEN_FILTER_BUTTON_MENU, UI_CLOSE_FILTER_BUTTON_MENU, UI_OPEN_DIALOG, UI_OPEN_TOAST, UI_CLOSE_DIALOG, UI_CLOSE_TOAST } from '../constants';
+import { UI_OPEN_MENU, UI_CLOSE_MENU, UI_OPEN_FILTER_BUTTON_MENU, UI_CLOSE_FILTER_BUTTON_MENU, UI_OPEN_DIALOG, UI_OPEN_TOAST, UI_CLOSE_DIALOG, UI_CLOSE_TOAST, UI_NEW_EDIT_ITEM } from '../constants';
 import { createReducer } from '../utils/misc';
 
 const initialState = {
@@ -9,6 +9,7 @@ const initialState = {
     dialog_title: "",
     toast_open: false,
     toast_message: "",
+    editing: []
 };
 
 export default createReducer(initialState, {
@@ -54,4 +55,9 @@ export default createReducer(initialState, {
             dialog_message: "",
             dialog_title: ""
         }),
+    [UI_NEW_EDIT_ITEM]: (state, payload) =>
+        Object.assign({}, state, {
+            message_text: payload.message,
+            editing: payload.editing
+        })
 });

@@ -1,4 +1,4 @@
-import {UI_OPEN_MENU, UI_CLOSE_MENU, UI_OPEN_FILTER_BUTTON_MENU, UI_CLOSE_FILTER_BUTTON_MENU, UI_OPEN_DIALOG, UI_OPEN_TOAST, UI_CLOSE_TOAST, UI_CLOSE_DIALOG} from '../constants'
+import {UI_OPEN_MENU, UI_CLOSE_MENU, UI_OPEN_FILTER_BUTTON_MENU, UI_CLOSE_FILTER_BUTTON_MENU, UI_OPEN_DIALOG, UI_OPEN_TOAST, UI_CLOSE_TOAST, UI_CLOSE_DIALOG, UI_NEW_EDIT_ITEM} from '../constants'
 
 export function openMenu() {
     const menu_open = true;
@@ -87,6 +87,18 @@ export function closeToastRequest(){
         payload: {
             message,
             toast_open
+        }
+    }
+}
+
+export function editItems(editing, initial){
+    const message = (initial)?null:"Editing task work";
+
+    return {
+        type: UI_NEW_EDIT_ITEM,
+        payload: {
+            editing,
+            message
         }
     }
 }
