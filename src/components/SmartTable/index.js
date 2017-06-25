@@ -56,6 +56,7 @@ export default class SmartTable extends Component {
         this.sort = this.sort.bind(this);
         this.trimByPage = this.trimByPage.bind(this);
         this.updateValues = this.updateValues.bind(this);
+        this.getField = this.getField.bind(this);
         data = [];
         attributes = [];
         asc = true;
@@ -181,6 +182,12 @@ export default class SmartTable extends Component {
                         onChange={(e, date) => {values[field] = dateFormat(date)+" 00:00:00"}}
                     />
                 );
+                break;
+            case "many2one":
+                const many2ones = this.props.many2ones;
+                result = many2ones[field];
+                break;
+
         }
         return result;
     }
