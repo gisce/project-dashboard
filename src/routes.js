@@ -2,6 +2,7 @@ import React from 'react';
 import { Route } from 'react-router';
 
 import { App } from './containers/App';
+import Login from './components/Login';
 import Projects from './components/ProjectsView';
 import Tasks from './components/TasksView';
 import Task from './components/TaskView';
@@ -15,17 +16,18 @@ import NewWorkdone from './components/NewWorkdone';
 
 export default (
     <Route path="/" component={App}>
-            <Route path="/projects" component={Projects} />
-            <Route path="/projects/:projectId/tasks" component={Tasks} />
-            <Route path="/projects/new" component={NewProject}/>
-            <Route path="/tasks" component={Tasks} />
-            <Route path="/tasks/new" component={NewTask}/>
-            <Route path="/tasks/:taskId" component={Task} />
-            <Route path="/tasks/:taskId/new" component={NewWorkdone} />
-            <Route path="/users" component={Users} />
-            <Route path="/user/:userId" component={User} />
-            <Route path="/companies" component={Companies} />
-            <Route path="/companies/:companyId/projects" component={Projects} />
-            <Route path="*" component={NotFound} />
+        <Route path="/login" component={Login} />
+        <Route path="/projects" component={Projects} />
+        <Route path="/projects/:projectId/tasks" component={Tasks} />
+        <Route path="/projects/new" component={NewProject}/>
+        <Route path="/tasks" component={Tasks} />
+        <Route path="/tasks/new" component={NewTask}/>
+        <Route path="/tasks/:taskId" component={Task} />
+        <Route path="/tasks/:taskId/new" component={NewWorkdone} />
+        <Route path="/users" component={Users} />
+        <Route path="/user/:userId" component={User} />
+        <Route path="/companies" component={Companies} />
+        <Route path="/companies/:companyId/projects" component={Projects} />
+        <Route path="*" component={NotFound} />
     </Route>
 );
