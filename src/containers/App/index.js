@@ -31,7 +31,6 @@ const orangeWedge = getMuiTheme({
 });
 
 /* application components */
-import MainPaper from '../../components/MainPaper';
 import Toast from '../../components/Toast';
 import Alert from '../../components/Alert';
 
@@ -49,14 +48,10 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
                 <section>
                     <Header />
                     <div className="container">
-                        <div className="mainPaperContainer">
-                            <MainPaper>
-                                {this.props.children}
-                            </MainPaper>
-                            <Toast/>
-                            <Alert/>
-                        </div>
+                        {this.props.children}
                     </div>
+                    <Toast/>
+                    <Alert/>
                 </section>
             </MuiThemeProvider>
         );
