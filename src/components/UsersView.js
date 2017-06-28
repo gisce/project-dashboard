@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import MainPaper from './MainPaper';
 import {browserHistory} from 'react-router';
 import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
@@ -48,60 +49,62 @@ export default class UsersView extends Component {
     render() {
         let users = {};
         let cols = {
-            "Avatar": "avatar",
-            "Nom": "name",
-            "Usuari": "login",
-            "Ultima connexió": "name"
+            "Avatar": ["avatar", {width: "130px"}],
+            "Nom": ["name", {width: "130px"}],
+            "Usuari": ["login", {width: "130px"}],
+            "Ultima connexió": ["name", {width: "130px"}]
         };
         if(this.props.loaded){
             users = this.props.users.data;
         }
         return(
-            <div>
-                <div className="leftContainer">
-                    {
-                        !this.props.isFetching && (
-                            <div>
-                                <div className="title">
-                                    Usuaris
-                                </div>
-                            </div>
-                        )
-                    }
-                </div>
-                <div className="rightContainer">
-                    {
-                        !this.props.isFetching && (
-                            <div className="upperButtons">
-                                <RefreshButton
-                                    refresh={() => this.fetchData(false)}
-                                />
-                            </div>
-                        )
-                    }
-                    <div className="searchBox">
+            <div className="mainPaperContainer">
+                <MainPaper>
+                    <div className="leftContainer">
                         {
-                            !this.props.isFetching &&
-                            <SearchBox
-                                searchFunction={this.props.searchUsers}
-                                field="name"
+                            !this.props.isFetching && (
+                                <div>
+                                    <div className="title">
+                                        Usuaris
+                                    </div>
+                                </div>
+                            )
+                        }
+                    </div>
+                    <div className="rightContainer">
+                        {
+                            !this.props.isFetching && (
+                                <div className="upperButtons">
+                                    <RefreshButton
+                                        refresh={() => this.fetchData(false)}
+                                    />
+                                </div>
+                            )
+                        }
+                        <div className="searchBox">
+                            {
+                                !this.props.isFetching &&
+                                <SearchBox
+                                    searchFunction={this.props.searchUsers}
+                                    field="name"
+                                />
+                            }
+                        </div>
+                    </div>
+                    <div className="tableContainer" style={{paddingTop: 50 }}>
+                        {
+                            this.props.isFetching || !this.props.loaded ?
+                                <LoadingIndicator/>
+                            :
+                            <SmartTable
+                                handleClick={this.handleClick}
+                                handleUpdate={this.props.receiveUsers}
+                                columns={cols}
+                                data={users}
                             />
                         }
                     </div>
-                </div>
-                <div className="tableContainer" style={{paddingTop: 50 }}>
-                    {
-                        this.props.isFetching || !this.props.loaded ?
-                            <LoadingIndicator/>
-                        :
-                        <SmartTable
-                            handleClick={this.handleClick}
-                            handleUpdate={this.props.receiveUsers}
-                            columns={cols}
-                            data={users}
-                        />
-                    }
-                </div>
+                </MainPaper>
             </div>
         )
     }
