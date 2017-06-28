@@ -10,8 +10,26 @@
 
 .mainPaperContainer{
     width: 70%;
-    padding-left: 15%;
-    padding-right: 15%;
+    min-width: 840px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 80px;
+    padding-bottom: 30px;
+}
+
+.mainPaperSecondaryContainer{
+    width: 580px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 80px;
+    padding-bottom: 30px;
+}
+
+.mainPaperContainer_login{
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
     padding-top: 80px;
     padding-bottom: 30px;
 }
@@ -115,13 +133,16 @@
 
 .leftColumn{
     position: relative;
+    width: 50%;
     float: left;
-    width: 30%;
 }
 
 .rightColumn{
     position: relative;
-    float: left;
-    padding-left: 20px;
-    width: 30%;
+    width: 50%;
+    float: right;
+}
+
+.login_avatar{
+    background-color: rgb(255, 64, 129);
 }
