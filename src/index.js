@@ -12,7 +12,7 @@ const store = configureStore();
 ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
-            <Redirect from="/" to="/projects" />
+            <Redirect from="/" to="/login" />
             {routes}
         </Router>
     </Provider>,
