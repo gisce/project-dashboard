@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import MainPaper from './MainPaper';
 import {browserHistory} from 'react-router';
-import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as taskWorkCreators from '../actions/task_work';
@@ -16,6 +15,7 @@ import {dateFormat} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
+        token: state.auth.token,
         active_task: state.tasks.active_task,
         users: state.users,
         projects: state.projects
@@ -39,7 +39,7 @@ export default class NewTask extends Component {
 
     createWorkdoneCall(){
         if(fields.hasOwnProperty("name")) {
-            this.props.createTaskWork(TOKEN, fields);
+            this.props.createTaskWork(this.props.token, fields);
             browserHistory.push("/tasks/"+this.props.params.taskId);
             this.props.openToastRequest("Workdone creat");
         }
