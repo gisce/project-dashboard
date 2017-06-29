@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import MainPaper from './MainPaper';
-import { TOKEN } from '../constants/index';
 import TextField from 'material-ui/TextField';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -22,6 +21,7 @@ function mapStateToProps(state) {
         taskWorks = state.taskWorks.data.taskWorks
     }
     return {
+        token: state.auth.token,
         taskWorks: taskWorks,
         tasks: state.tasks.data,
         users: state.users,
@@ -61,10 +61,10 @@ export default class TasksView extends Component {
     fetchData(initial = true) {
         // if(!this.props.active_task){
             let task_id = this.props.params.taskId;
-            this.props.fetchTaskWorks(TOKEN, task_id, true, false);
+            this.props.fetchTaskWorks(this.props.token, task_id, true, false);
         // }
         // else{
-        //     this.props.fetchTaskWorks(TOKEN, this.props.active_task.id, false, false);
+        //     this.props.fetchTaskWorks(this.props.token, this.props.active_task.id, false, false);
         // }
     }
 
@@ -88,14 +88,14 @@ export default class TasksView extends Component {
         }
         body["user_id"] = fields["user_id"];
         this.props.editItems(editing);
-        this.props.patchTaskWork(TOKEN, id, body);
+        this.props.patchTaskWork(this.props.token, id, body);
         sleep(1000);
         //Fetch data again to make changes visible
         this.fetchData(false);
     }
 
     handleDelete(id){
-        this.props.deleteTaskWork(TOKEN, id);
+        this.props.deleteTaskWork(this.props.token, id);
         sleep(1000);
         //Fetch data again to make changes visible
         this.fetchData(false);
@@ -114,7 +114,7 @@ export default class TasksView extends Component {
         let continguts = [];
         let uri = "";
         const cols = {
-            "Data": ["date", {width: "130px"}],
+            "Data": ["date", {width: "140px"}],
             "Realitzar per": ["user_id.name", {width: "100px"}],
             "Temps dedicat": ["hours", {width: "90px"}],
             "Resum del treball": ["name", {width: "200px"}],
