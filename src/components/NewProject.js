@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import MainPaper from './MainPaper';
 import {browserHistory} from 'react-router';
-import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as projectCreators from '../actions/projects';
@@ -17,6 +16,7 @@ import {dateFormat} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
+        token: state.auth.token,
         projects: state.projects,
         users: state.users
     };
@@ -42,7 +42,7 @@ export default class NewProject extends Component {
 
     createProjectCall(){
         if(fields.hasOwnProperty("name")) {
-            this.props.createProject(TOKEN, fields);
+            this.props.createProject(this.props.token, fields);
             browserHistory.push("/projects");
             this.props.openToastRequest("Projecte creat");
         }
