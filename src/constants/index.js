@@ -3,9 +3,10 @@ import React from 'react';
 import {debug} from './debug';
 export const DEBUG = (debug)?debug:false;
 
-export const TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6ImFkbWluIiwicGFzc3dvcmQiOiJhZG1pbiJ9.woh6RaTFrT4ANXK6e_BgUayaP3RFE2bmndBSJLEGQrI";
-
 export const VERSION = "0.0.0";
+
+export const BASIC_AUTH_REQUEST = 'BASIC_AUTH_REQUEST';
+export const BASIC_AUTH_RESPONSE = 'BASIC_AUTH_RESPONSE';
 
 export const UI_OPEN_MENU = 'UI_OPEN_MENU';
 export const UI_CLOSE_MENU = 'UI_CLOSE_MENU';
