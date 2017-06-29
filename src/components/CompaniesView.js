@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import MainPaper from './MainPaper';
 import {browserHistory} from 'react-router';
-import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as companiesCreators from '../actions/companies';
@@ -19,6 +18,7 @@ import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
+        token: state.auth.token,
         data: state.companies,
         loaded: state.companies.loaded,
         isFetching: state.companies.isFetching,
@@ -60,7 +60,7 @@ export default class CompaniesView extends Component {
     }
 
     fetchData(initial = true) {
-        this.props.fetchCompanies(TOKEN, null, false, initial);
+        this.props.fetchCompanies(this.props.token, null, false, initial);
         this.props.setFilters(initializeFilters(cols), [this.props.searchCompanies, false]);
     }
 
