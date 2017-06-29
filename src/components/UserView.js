@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import MainPaper from './MainPaper';
 import {browserHistory} from 'react-router';
-import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as tasksCreators from '../actions/tasks';
@@ -15,6 +14,7 @@ import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
     return {
+        token: state.auth.token,
         tasks: state.tasks.data,
         users: state.users.data,
         tasksLoaded: state.tasks.loaded,
@@ -67,8 +67,8 @@ export default class UserView extends Component {
             ["user_id", "=", parseInt(this.props.params.userId, 10)],
             ["state", "in", ["open", "pending"]]
         ];
-        this.props.fetchTasks(TOKEN, taskFilter, false, false);
-        this.props.fetchUsers(TOKEN, this.props.params.userId, true, initial);
+        this.props.fetchTasks(this.props.token, taskFilter, false, false);
+        this.props.fetchUsers(this.props.token, this.props.params.userId, true, initial);
     }
 
     handleClick(element){
