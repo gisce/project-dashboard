@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import AutoComplete from 'material-ui/AutoComplete';
-import { TOKEN } from '../../constants/index';
 
+function mapStateToProps(state) {
+    return {
+        token: state.auth.token
+    };
+}
+
+@connect(mapStateToProps)
 export default class Many2One extends Component {
     constructor(props){
         super(props);
@@ -21,7 +28,7 @@ export default class Many2One extends Component {
 
     handleUpdateInput(textToSearch){
         this.searchText = textToSearch;
-        this.props.searchFunction(TOKEN, textToSearch, "name")
+        this.props.searchFunction(this.props.token, textToSearch, "name")
     };
 
     handleNewRequest(item){
@@ -53,7 +60,7 @@ export default class Many2One extends Component {
             <AutoComplete
                 menuStyle={{maxHeight:"30vh"}}
                 floatingLabelText={this.props.label}
-                hintText="Escriu per cercar"
+                hintText="Cerca"
                 searchText={this.searchText}
                 onUpdateInput={this.handleUpdateInput}
                 onNewRequest={this.handleNewRequest}
