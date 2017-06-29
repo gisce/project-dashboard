@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import MainPaper from './MainPaper';
 import {browserHistory} from 'react-router';
-import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as projectCreators from '../actions/projects';
@@ -19,6 +18,7 @@ import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
+        token: state.auth.token,
         data: state.projects,
         loaded: state.projects.loaded,
         isFetching: state.projects.isFetching,
@@ -70,7 +70,7 @@ export default class ProjectsView extends Component {
             companyId = this.props.params.companyId;
             filter.push(["partner_id", "=", parseInt(this.props.params.companyId, 10)]);
         }
-        this.props.fetchProjects(TOKEN, filter, companyId, initial);
+        this.props.fetchProjects(this.props.token, filter, companyId, initial);
         this.props.setFilters(initializeFilters(cols), [this.props.searchProjects, companyId]);
     }
 
