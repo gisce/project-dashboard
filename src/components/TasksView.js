@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import MainPaper from './MainPaper';
 import {browserHistory} from 'react-router';
-import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as tasksCreators from '../actions/tasks';
@@ -20,6 +19,7 @@ import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
+        token: state.auth.token,
         data: state.tasks,
         active_project: state.projects.active_project,
         projects: state.projects.data,
@@ -72,7 +72,7 @@ export default class TasksView extends Component {
             projectId = this.props.params.projectId;
             filter.push(["project_id", "=", parseInt(projectId, 10)]);
         }
-        this.props.fetchTasks(TOKEN, filter, projectId, initial);
+        this.props.fetchTasks(this.props.token, filter, projectId, initial);
         this.props.setFilters(initializeFilters(cols), [this.props.searchTasks, projectId]);
     }
 
