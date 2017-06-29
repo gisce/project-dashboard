@@ -14,20 +14,23 @@ import NewProject from './components/NewProject';
 import NewTask from './components/NewTask';
 import NewWorkdone from './components/NewWorkdone';
 
+import { requireNoAuthentication } from './components/NotAuthenticatedComponent';
+import { requireAuthentication } from './components/AuthenticatedComponent';
+
 export default (
     <Route path="/" component={App}>
-        <Route path="/login" component={Login} />
-        <Route path="/projects" component={Projects} />
-        <Route path="/projects/:projectId/tasks" component={Tasks} />
-        <Route path="/projects/new" component={NewProject}/>
-        <Route path="/tasks" component={Tasks} />
-        <Route path="/tasks/new" component={NewTask}/>
-        <Route path="/tasks/:taskId" component={Task} />
-        <Route path="/tasks/:taskId/new" component={NewWorkdone} />
-        <Route path="/users" component={Users} />
-        <Route path="/user/:userId" component={User} />
-        <Route path="/companies" component={Companies} />
-        <Route path="/companies/:companyId/projects" component={Projects} />
-        <Route path="*" component={NotFound} />
+        <Route path="/login" component={requireNoAuthentication(Login)} />
+        <Route path="/projects" component={requireAuthentication(Projects)} />
+        <Route path="/projects/:projectId/tasks" component={requireAuthentication(Tasks)} />
+        <Route path="/projects/new" component={requireAuthentication(NewProject)}/>
+        <Route path="/tasks" component={requireAuthentication(Tasks)} />
+        <Route path="/tasks/new" component={requireAuthentication(NewTask)}/>
+        <Route path="/tasks/:taskId" component={requireAuthentication(Task)} />
+        <Route path="/tasks/:taskId/new" component={requireAuthentication(NewWorkdone)} />
+        <Route path="/users" component={requireAuthentication(Users)} />
+        <Route path="/user/:userId" component={requireAuthentication(User)} />
+        <Route path="/companies" component={requireAuthentication(Companies)} />
+        <Route path="/companies/:companyId/projects" component={requireAuthentication(Projects)} />
+        <Route path="*" component={requireAuthentication(NotFound)} />
     </Route>
 );
