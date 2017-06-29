@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import auth from './auth';
 import projects from './projects';
 import tasks from './tasks';
 import taskWorks from './task_work';
@@ -12,6 +13,7 @@ import config from './config';
 import paginator from './paginator';
 
 const appReducer = combineReducers({
+    auth,
     projects,
     tasks,
     taskWorks,
