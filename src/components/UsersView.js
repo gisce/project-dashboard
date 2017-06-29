@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import MainPaper from './MainPaper';
 import {browserHistory} from 'react-router';
-import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as usersCreators from '../actions/users';
@@ -13,6 +12,7 @@ import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
     return {
+        token: state.auth.token,
         users: state.users,
         loaded: state.users.loaded,
         isFetching: state.users.isFetching,
@@ -39,7 +39,7 @@ export default class UsersView extends Component {
     }
 
     fetchData(initial = true) {
-        this.props.fetchUsers(TOKEN, null, false, initial);
+        this.props.fetchUsers(this.props.token, null, false, initial);
     }
 
     handleClick(element){
