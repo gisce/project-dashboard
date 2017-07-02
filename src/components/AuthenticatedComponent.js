@@ -36,7 +36,15 @@ export function requireAuthentication(Component) {
         }
 
         checkAuth(props = this.props) {
-            if (!props.isAuthenticated) {
+            const token = localStorage.getItem('token');
+            const stateToken = this.props.token;
+            if(token && !stateToken){
+                this.props.setToken(token);
+                this.setState({
+                    loaded: true,
+                });
+            }
+            else if (!props.isAuthenticated) {
                 browserHistory.push('/login');
             } else {
                 this.setState({
