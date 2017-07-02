@@ -1,5 +1,20 @@
-import {BASIC_AUTH_REQUEST, BASIC_AUTH_RESPONSE} from '../constants'
+import {BASIC_AUTH_REQUEST, BASIC_AUTH_RESPONSE, SET_TOKEN, LOGOUT, BASIC_AUTH_ERROR} from '../constants'
 import axios  from 'axios';
+
+export function setToken(token) {
+    return {
+        type: SET_TOKEN,
+        payload: {
+            token: token
+        }
+    }
+}
+
+export function logOut(){
+    return {
+        type: LOGOUT
+    }
+}
 
 export function basicAuthRequest() {
     return {
@@ -16,6 +31,15 @@ export function basicAuthResponse(result) {
         payload: {
             isAuthenticated: result["isAuthenticated"],
             token: result["token"]
+        }
+    }
+}
+
+export function basicAuthError(){
+    return {
+        type: BASIC_AUTH_ERROR,
+        payload: {
+            error: "Usuari o contrassenya incorrectes."
         }
     }
 }
@@ -41,6 +65,9 @@ export function basicAuth(user, password) {
                     result["isAuthenticated"] = true;
                 }
                 dispatch(basicAuthResponse(result));
+            })
+            .catch(function (error) {
+                dispatch(basicAuthError());
             });
     }
 }
