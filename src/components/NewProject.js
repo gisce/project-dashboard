@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import MainPaper from './MainPaper';
 import {browserHistory} from 'react-router';
-import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as projectCreators from '../actions/projects';
@@ -16,6 +16,7 @@ import {dateFormat} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
+        token: state.auth.token,
         projects: state.projects,
         users: state.users
     };
@@ -41,7 +42,7 @@ export default class NewProject extends Component {
 
     createProjectCall(){
         if(fields.hasOwnProperty("name")) {
-            this.props.createProject(TOKEN, fields);
+            this.props.createProject(this.props.token, fields);
             browserHistory.push("/projects");
             this.props.openToastRequest("Projecte creat");
         }
@@ -53,57 +54,59 @@ export default class NewProject extends Component {
     render() {
         const isFetching = false;
         return(
-            <div>
-                <div className="leftContainer">
-                    <div>
-                        <div className="title">
-                            Nou projecte
+            <div className="mainPaperSecondaryContainer">
+                <MainPaper>
+                    <div className="leftContainer">
+                        <div>
+                            <div className="title">
+                                Nou projecte
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="contents">
-                    <div className="leftColumn">
-                        <TextField
-                            floatingLabelText="Nom del projecte"
-                            onChange={e => fields["name"] = e.target.value}
+                    <div className="contents">
+                        <div className="leftColumn">
+                            <TextField
+                                floatingLabelText="Nom del projecte"
+                                onChange={e => fields["name"] = e.target.value}
+                            />
+                            <DatePicker
+                                hintText="Data d'inici"
+                                onChange={(e, date) => fields["date_start"] = dateFormat(date)}
+                            />
+                            <DatePicker
+                                hintText="Finalització prevista"
+                                onChange={(e, date) => fields["date_end"] = dateFormat(date)}
+                            />
+                        </div>
+                        <div className="rightColumn">
+                            <Many2One
+                                source={this.props.users.data}
+                                label="Responsable"
+                                fieldName="manager"
+                                updateFields={this.updateFields}
+                                searchFunction={this.props.searchUsers}
+                            />
+                            <br/>
+                            <Many2One
+                                source={this.props.projects.data}
+                                label="Projecte pare"
+                                fieldName="parent_id"
+                                updateFields={this.updateFields}
+                                searchFunction={this.props.searchProjects}
+                            />
+                        </div>
+                    </div>
+                    <div className="lowerButtons">
+                        <LinkButton
+                            label="Cancel·lar"
+                            route="/projects"
                         />
-                        <DatePicker
-                            hintText="Data d'inici"
-                            onChange={(e, date) => fields["date_start"] = dateFormat(date)}
-                        />
-                        <DatePicker
-                            hintText="Finalització prevista"
-                            onChange={(e, date) => fields["date_end"] = dateFormat(date)}
+                        <LinkButton
+                            label="Crear"
+                            clickFunction={this.createProjectCall}
                         />
                     </div>
-                    <div className="rightColumn">
-                        <Many2One
-                            source={this.props.users.data}
-                            label="Responsable"
-                            fieldName="manager"
-                            updateFields={this.updateFields}
-                            searchFunction={this.props.searchUsers}
-                        />
-                        <br/>
-                        <Many2One
-                            source={this.props.projects.data}
-                            label="Projecte pare"
-                            fieldName="parent_id"
-                            updateFields={this.updateFields}
-                            searchFunction={this.props.searchProjects}
-                        />
-                    </div>
-                </div>
-                <div className="lowerButtons">
-                    <LinkButton
-                        label="Cancel·lar"
-                        route="/projects"
-                    />
-                    <LinkButton
-                        label="Crear"
-                        clickFunction={this.createProjectCall}
-                    />
-                </div>
+                </MainPaper>
             </div>
         )
     }

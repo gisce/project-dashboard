@@ -9,6 +9,7 @@ import IconButton from 'material-ui/IconButton';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as uiCreators from '../../actions/ui';
+import * as authCreators from '../../actions/auth';
 import * as projectCreators from '../../actions/projects';
 import * as taskCreators from '../../actions/tasks';
 import * as companyCreators from '../../actions/companies';
@@ -23,7 +24,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(Object.assign(
-        {}, uiCreators, projectCreators, taskCreators, companyCreators, breadcrumbCreators, pagingCreators
+        {}, uiCreators, authCreators, projectCreators, taskCreators, companyCreators, breadcrumbCreators, pagingCreators
     ), dispatch);
 }
 
@@ -41,6 +42,7 @@ export class Header extends Component {
         super(props);
         this.handleSwipe = this.handleSwipe.bind(this);
         this.redirect = this.redirect.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     redirect(route){
@@ -62,6 +64,14 @@ export class Header extends Component {
         else{
             this.props.openMenu();
         }
+    }
+
+    logout(){
+        console.log("MEEEL");
+        localStorage.removeItem("token");
+        this.props.logOut();
+        browserHistory.push('/login');
+        this.handleSwipe();
     }
 
     render(){
@@ -86,6 +96,7 @@ export class Header extends Component {
                     <MenuItem primaryText="Usuaris" onTouchTap={this.redirect("/users")} leftIcon={<FontIcon className="material-icons">account_circle</FontIcon>} />
                     <MenuItem primaryText="Empreses" onTouchTap={this.redirect("/companies")} leftIcon={<FontIcon className="material-icons">business_center</FontIcon>} />
                     <MenuItem primaryText="Configuració" leftIcon={<FontIcon className="material-icons">settings</FontIcon>}/>
+                    <MenuItem primaryText="Sortir" onTouchTap={this.logout} leftIcon={<FontIcon className="material-icons">exit_to_app</FontIcon>}/>
                 </Drawer>
                 <AppBar onLeftIconButtonTouchTap={this.handleSwipe} style={style.appBar}
                     title="Project-Dashboard"

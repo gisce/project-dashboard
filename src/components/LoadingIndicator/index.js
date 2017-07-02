@@ -5,7 +5,7 @@ export default class LoadingIndicator extends Component {
     render(){
         return (
             <div className="loading">
-                <CircularProgress size={100} thickness={4}/>
+                <CircularProgress size={this.props.size || 100} thickness={4}/>
             </div>
         )
     }

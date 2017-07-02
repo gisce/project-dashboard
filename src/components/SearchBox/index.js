@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { TOKEN } from '../../constants/index';
 import TextField from 'material-ui/TextField';
 import * as actionCreators from '../../actions/search';
 import { connect } from 'react-redux';
@@ -7,6 +6,7 @@ import { bindActionCreators } from 'redux';
 
 function mapStateToProps(state) {
         return {
+            token: state.auth.token,
             data: state.projects,
             token: null,
             loaded: state.projects.loaded,
@@ -42,10 +42,10 @@ export default class SearchBox extends Component {
 
     searchRequest(e) {
         if(!this.props.filter_id) {
-            this.props.searchFunction(TOKEN, e.target.value, this.props.field, false);
+            this.props.searchFunction(this.props.token, e.target.value, this.props.field, false);
         }
         else{
-            this.props.searchFunction(TOKEN, e.target.value, this.props.field, this.props.filter_id, false);
+            this.props.searchFunction(this.props.token, e.target.value, this.props.field, this.props.filter_id, false);
         }
     }
 }

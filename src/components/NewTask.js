@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import MainPaper from './MainPaper';
 import {browserHistory} from 'react-router';
-import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as tasksCreators from '../actions/tasks';
@@ -13,6 +13,7 @@ import TextField from 'material-ui/TextField';
 
 function mapStateToProps(state) {
     return {
+        token: state.auth.token,
         projects: state.projects,
         users: state.users,
         active_project: state.projects.active_project
@@ -39,7 +40,7 @@ export default class NewTask extends Component {
 
     createTaskCall(){
         if(fields.hasOwnProperty("name") && fields.hasOwnProperty("project_id") && fields.hasOwnProperty("planned_hours")) {
-            this.props.createTask(TOKEN, fields);
+            this.props.createTask(this.props.token, fields);
             if(this.props.active_project){
                 browserHistory.push("/projects/"+ this.props.active_project.id + "/tasks");
             }
@@ -66,55 +67,57 @@ export default class NewTask extends Component {
             this.updateFields("project_id", {"id": parseInt(this.props.active_project.id, 10)});
         }
         return(
-            <div>
-                <div className="leftContainer">
-                    <div>
-                        <div className="title">
-                            Nova tasca
+            <div className="mainPaperSecondaryContainer">
+                <MainPaper>
+                    <div className="leftContainer">
+                        <div>
+                            <div className="title">
+                                Nova tasca
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="contents">
-                    <div className="leftColumn">
-                        <TextField
-                            floatingLabelText="Resum de la tasca"
-                            onChange={e => fields["name"] = e.target.value}
+                    <div className="contents">
+                        <div className="leftColumn">
+                            <TextField
+                                floatingLabelText="Resum de la tasca"
+                                onChange={e => fields["name"] = e.target.value}
+                            />
+                            <TextField
+                                floatingLabelText="Hores estimades"
+                                onChange={e => fields["planned_hours"] = parseFloat(e.target.value)}
+                            />
+                        </div>
+                        <div className="rightColumn">
+                            <Many2One
+                                source={this.props.projects.data}
+                                label="Projecte"
+                                fieldName="project_id"
+                                updateFields={this.updateFields}
+                                searchFunction={this.props.searchProjects}
+                                defaultValue={defaultValue}
+                            />
+                            <br/>
+                            <Many2One
+                                source={this.props.users.data}
+                                label="Responsable"
+                                fieldName="user_id"
+                                updateFields={this.updateFields}
+                                searchFunction={this.props.searchUsers}
+                            />
+                        </div>
+                    </div>
+                    <div className="lowerButtons">
+                        <LinkButton
+                            label="Cancel·lar"
+                            route={uri}
                         />
-                        <TextField
-                            floatingLabelText="Hores estimades"
-                            onChange={e => fields["planned_hours"] = parseFloat(e.target.value)}
+                        <LinkButton
+                            label="Crear"
+                            clickFunction={this.createTaskCall}
+                            fields={fields}
                         />
                     </div>
-                    <div className="rightColumn">
-                        <Many2One
-                            source={this.props.projects.data}
-                            label="Projecte"
-                            fieldName="project_id"
-                            updateFields={this.updateFields}
-                            searchFunction={this.props.searchProjects}
-                            defaultValue={defaultValue}
-                        />
-                        <br/>
-                        <Many2One
-                            source={this.props.users.data}
-                            label="Responsable"
-                            fieldName="user_id"
-                            updateFields={this.updateFields}
-                            searchFunction={this.props.searchUsers}
-                        />
-                    </div>
-                </div>
-                <div className="lowerButtons">
-                    <LinkButton
-                        label="Cancel·lar"
-                        route={uri}
-                    />
-                    <LinkButton
-                        label="Crear"
-                        clickFunction={this.createTaskCall}
-                        fields={fields}
-                    />
-                </div>
+                </MainPaper>
             </div>
         )
     }

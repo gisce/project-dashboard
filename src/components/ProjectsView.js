@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import MainPaper from './MainPaper';
 import {browserHistory} from 'react-router';
-import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as projectCreators from '../actions/projects';
@@ -18,6 +18,7 @@ import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
+        token: state.auth.token,
         data: state.projects,
         loaded: state.projects.loaded,
         isFetching: state.projects.isFetching,
@@ -39,10 +40,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 const cols = {
-    "Avatar": 'avatar',
-    "Títol": 'name',
-    "Responsable": 'manager.name',
-    "Estat": 'state'
+    "Avatar": ['avatar', {width: "50px"}],
+    "Títol": ['name', {width: "300px"}],
+    "Responsable": ['manager.name', {width: "80px"}],
+    "Estat": ['state', {width: "80px"}]
 };
 
 let activeFilters = [];
@@ -69,7 +70,7 @@ export default class ProjectsView extends Component {
             companyId = this.props.params.companyId;
             filter.push(["partner_id", "=", parseInt(this.props.params.companyId, 10)]);
         }
-        this.props.fetchProjects(TOKEN, filter, companyId, initial);
+        this.props.fetchProjects(this.props.token, filter, companyId, initial);
         this.props.setFilters(initializeFilters(cols), [this.props.searchProjects, companyId]);
     }
 
@@ -93,71 +94,73 @@ export default class ProjectsView extends Component {
             newBreadcrumb.push([this.props.active_company.name, route]);
         }
         return(
-            <div>
-                <div className="leftContainer">
-                    {
-                        !this.props.isFetching && (
-                            <div>
-                                <div className="title">
-                                    Projectes
+            <div className="mainPaperContainer">
+                <MainPaper>
+                    <div className="leftContainer">
+                        {
+                            !this.props.isFetching && (
+                                <div>
+                                    <div className="title">
+                                        Projectes
+                                    </div>
+                                    <div className="breadcrumb">
+                                        <Breadcrumb
+                                            data={newBreadcrumb}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="breadcrumb">
-                                    <Breadcrumb
-                                        data={newBreadcrumb}
+                            )
+                        }
+                    </div>
+                    <div className="rightContainer">
+                        {
+                            !this.props.isFetching && (
+                                <div className="upperButtons">
+                                    <LinkButton
+                                        icon="note_add"
+                                        label="Nou"
+                                        route="projects/new"
+                                    />
+                                    <FilterButton
+                                        filters={this.props.filters}
+                                        setter={this.props.setFilters}
+                                        adder={this.props.addFilter}
+                                        activeFilters={activeFilters}
+                                    />
+                                    <RefreshButton
+                                        refresh={() => this.fetchData(false)}
                                     />
                                 </div>
-                            </div>
-                        )
-                    }
-                </div>
-                <div className="rightContainer">
-                    {
-                        !this.props.isFetching && (
-                            <div className="upperButtons">
-                                <LinkButton
-                                    icon="note_add"
-                                    label="Nou"
-                                    route="projects/new"
+                            )
+                        }
+                        <div className="searchBox">
+                            {
+                                !this.props.isFetching &&
+                                <SearchBox
+                                    searchFunction={this.props.searchProjects}
+                                    filter_id={companyId}
+                                    field="name"
                                 />
-                                <FilterButton
-                                    filters={this.props.filters}
-                                    setter={this.props.setFilters}
-                                    adder={this.props.addFilter}
-                                    activeFilters={activeFilters}
-                                />
-                                <RefreshButton
-                                    refresh={() => this.fetchData(false)}
-                                />
-                            </div>
-                        )
-                    }
-                    <div className="searchBox">
+                            }
+                        </div>
+                    </div>
+                    <div className="filters">
+                        {activeFilters}
+                    </div>
+                    <div className="tableContainer" style={{paddingTop: 30 }}>
                         {
-                            !this.props.isFetching &&
-                            <SearchBox
-                                searchFunction={this.props.searchProjects}
-                                filter_id={companyId}
-                                field="name"
+                            this.props.isFetching || !this.props.loaded ?
+                                <LoadingIndicator/>
+                            :
+                            <SmartTable
+                                handleClick={this.handleClick}
+                                columns={cols}
+                                data={projects}
+                                handleUpdate={this.props.receiveProjects}
                             />
                         }
                     </div>
-                </div>
-                <div className="filters">
-                    {activeFilters}
-                </div>
-                <div className="tableContainer" style={{paddingTop: 30 }}>
-                    {
-                        this.props.isFetching || !this.props.loaded ?
-                            <LoadingIndicator/>
-                        :
-                        <SmartTable
-                            handleClick={this.handleClick}
-                            columns={cols}
-                            data={projects}
-                            handleUpdate={this.props.receiveProjects}
-                        />
-                    }
-                </div>
+                </MainPaper>
             </div>
         )
     }

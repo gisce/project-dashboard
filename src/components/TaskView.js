@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TOKEN } from '../constants/index';
+import MainPaper from './MainPaper';
 import TextField from 'material-ui/TextField';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -21,6 +21,7 @@ function mapStateToProps(state) {
         taskWorks = state.taskWorks.data.taskWorks
     }
     return {
+        token: state.auth.token,
         taskWorks: taskWorks,
         tasks: state.tasks.data,
         users: state.users,
@@ -60,10 +61,10 @@ export default class TasksView extends Component {
     fetchData(initial = true) {
         // if(!this.props.active_task){
             let task_id = this.props.params.taskId;
-            this.props.fetchTaskWorks(TOKEN, task_id, true, false);
+            this.props.fetchTaskWorks(this.props.token, task_id, true, false);
         // }
         // else{
-        //     this.props.fetchTaskWorks(TOKEN, this.props.active_task.id, false, false);
+        //     this.props.fetchTaskWorks(this.props.token, this.props.active_task.id, false, false);
         // }
     }
 
@@ -87,14 +88,14 @@ export default class TasksView extends Component {
         }
         body["user_id"] = fields["user_id"];
         this.props.editItems(editing);
-        this.props.patchTaskWork(TOKEN, id, body);
+        this.props.patchTaskWork(this.props.token, id, body);
         sleep(1000);
         //Fetch data again to make changes visible
         this.fetchData(false);
     }
 
     handleDelete(id){
-        this.props.deleteTaskWork(TOKEN, id);
+        this.props.deleteTaskWork(this.props.token, id);
         sleep(1000);
         //Fetch data again to make changes visible
         this.fetchData(false);
@@ -113,11 +114,11 @@ export default class TasksView extends Component {
         let continguts = [];
         let uri = "";
         const cols = {
-            "Data": "date",
-            "Realitzar per": "user_id.name",
-            "Temps dedicat": "hours",
-            "Resum del treball": "name",
-            "": "extras",
+            "Data": ["date", {width: "140px"}],
+            "Realitzar per": ["user_id.name", {width: "100px"}],
+            "Temps dedicat": ["hours", {width: "90px"}],
+            "Resum del treball": ["name", {width: "200px"}],
+            "": ["extras", {width: "100px", textAlign: "right"}],
         };
         many2ones["user_id.name"] = (
             <Many2One
@@ -171,62 +172,64 @@ export default class TasksView extends Component {
             );
         }
         return(
-            <div>
-                <div className="leftContainer">
-                    {
-                        !this.props.isFetching && (
-                            <div>
-                                <div className="title">
-                                    {title}
+            <div className="mainPaperContainer">
+                <MainPaper>
+                    <div className="leftContainer">
+                        {
+                            !this.props.isFetching && (
+                                <div>
+                                    <div className="title">
+                                        {title}
+                                    </div>
+                                    <div className="breadcrumb">
+                                        <Breadcrumb
+                                            data={newBreadcrumb}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="breadcrumb">
-                                    <Breadcrumb
-                                        data={newBreadcrumb}
+                            )
+                        }
+                    </div>
+                    <div className="rightContainer">
+                        {
+                            !this.props.isFetching && (
+                                <div className="upperButtons">
+                                    <LinkButton
+                                        icon="note_add"
+                                        label="Nou"
+                                        route={uri}
+                                    />
+                                    <RefreshButton
+                                        refresh={() => this.fetchData(false)}
                                     />
                                 </div>
-                            </div>
-                        )
-                    }
-                </div>
-                <div className="rightContainer">
-                    {
-                        !this.props.isFetching && (
-                            <div className="upperButtons">
-                                <LinkButton
-                                    icon="note_add"
-                                    label="Nou"
-                                    route={uri}
-                                />
-                                <RefreshButton
-                                    refresh={() => this.fetchData(false)}
-                                />
-                            </div>
-                        )
-                    }
-                </div>
-                <div className="contents">
-                    {
-                        !this.props.isFetching &&
-                        continguts
-                    }
-                </div>
-                <div className="tableContainer" style={{paddingTop: 20 }}>
-                    {
-                        this.props.isFetching || !this.props.active_task || !this.props.taskWorks ?
-                            <LoadingIndicator/>
-                        :
-                        <SmartTable
-                            handleClick={this.handleClick}
-                            handleEdit={this.handleEdit}
-                            handleDelete={this.handleDelete}
-                            handleUpdate={this.props.receiveTaskWork}
-                            handlePatch={this.handlePatch}
-                            columns={cols}
-                            many2ones={many2ones}
-                            data={workdones}
-                        />
-                    }
-                </div>
+                            )
+                        }
+                    </div>
+                    <div className="contents">
+                        {
+                            !this.props.isFetching &&
+                            continguts
+                        }
+                    </div>
+                    <div className="tableContainer" style={{paddingTop: 20 }}>
+                        {
+                            this.props.isFetching || !this.props.active_task || !this.props.taskWorks ?
+                                <LoadingIndicator/>
+                            :
+                            <SmartTable
+                                handleClick={this.handleClick}
+                                handleEdit={this.handleEdit}
+                                handleDelete={this.handleDelete}
+                                handleUpdate={this.props.receiveTaskWork}
+                                handlePatch={this.handlePatch}
+                                columns={cols}
+                                many2ones={many2ones}
+                                data={workdones}
+                            />
+                        }
+                    </div>
+                </MainPaper>
             </div>
         )
     }

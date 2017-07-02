@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import MainPaper from './MainPaper';
 import {browserHistory} from 'react-router';
-import { TOKEN } from '../constants/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as tasksCreators from '../actions/tasks';
@@ -14,6 +14,7 @@ import SmartTable from './SmartTable';
 
 function mapStateToProps(state) {
     return {
+        token: state.auth.token,
         tasks: state.tasks.data,
         users: state.users.data,
         tasksLoaded: state.tasks.loaded,
@@ -66,8 +67,8 @@ export default class UserView extends Component {
             ["user_id", "=", parseInt(this.props.params.userId, 10)],
             ["state", "in", ["open", "pending"]]
         ];
-        this.props.fetchTasks(TOKEN, taskFilter, false, false);
-        this.props.fetchUsers(TOKEN, this.props.params.userId, true, initial);
+        this.props.fetchTasks(this.props.token, taskFilter, false, false);
+        this.props.fetchUsers(this.props.token, this.props.params.userId, true, initial);
     }
 
     handleClick(element){
@@ -78,10 +79,10 @@ export default class UserView extends Component {
     render() {
         let isFetching = this.props.isFetchingTasks || this.props.isFetchingUsers;
         let cols = {
-            "Tasca": "name",
-            "Projecte": "project_id.name",
-            "Estat": "state",
-            "Data inici:": "name"
+            "Tasca": ["name", {width: "250px"}],
+            "Projecte": ["project_id.name", {width: "250px"}],
+            "Estat": ["state", {width: "50px"}],
+            "Data inici": ["name", {width: "130px"}]
         };
         let userdata = [];
         let buttons = [];
@@ -121,49 +122,51 @@ export default class UserView extends Component {
             );
         }
         return(
-            <div>
-                <div className="leftContainer">
-                    {
-                        !isFetching && (
-                            <div>
-                                <div className="title">
-                                    {userdata}
+            <div className="mainPaperContainer">
+                <MainPaper>
+                    <div className="leftContainer">
+                        {
+                            !isFetching && (
+                                <div>
+                                    <div className="title">
+                                        {userdata}
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                    }
-                </div>
-                <div className="rightContainer">
-                    {
-                        !isFetching && (
-                            <div className="upperButtons">
-                                {buttons}
-                                <RefreshButton
-                                    refresh={() => this.fetchData(false)}
-                                />
-                            </div>
-                        )
-                    }
-                </div>
-                <div className="contents">
-                    {
-                        !isFetching &&
-                        <div>Tasques actives o pendents on l'usuari treballa actualment:</div>
-                    }
-                </div>
-                <div className="tableContainer" style={{paddingTop: 20 }}>
-                    {
-                        !this.props.tasksLoaded || !this.props.userLoaded || isFetching ?
-                            <LoadingIndicator/>
-                        :
-                        <SmartTable
-                            handleClick={this.handleClick}
-                            handleUpdate={this.props.receiveTasks}
-                            columns={cols}
-                            data={tasks}
-                        />
-                    }
-                </div>
+                            )
+                        }
+                    </div>
+                    <div className="rightContainer">
+                        {
+                            !isFetching && (
+                                <div className="upperButtons">
+                                    {buttons}
+                                    <RefreshButton
+                                        refresh={() => this.fetchData(false)}
+                                    />
+                                </div>
+                            )
+                        }
+                    </div>
+                    <div className="contents">
+                        {
+                            !isFetching &&
+                            <div>Tasques actives o pendents on l'usuari treballa actualment:</div>
+                        }
+                    </div>
+                    <div className="tableContainer" style={{paddingTop: 20 }}>
+                        {
+                            !this.props.tasksLoaded || !this.props.userLoaded || isFetching ?
+                                <LoadingIndicator/>
+                            :
+                            <SmartTable
+                                handleClick={this.handleClick}
+                                handleUpdate={this.props.receiveTasks}
+                                columns={cols}
+                                data={tasks}
+                            />
+                        }
+                    </div>
+                </MainPaper>
             </div>
         )
     }

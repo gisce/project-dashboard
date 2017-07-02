@@ -36,6 +36,12 @@ const styles = {
     },
     avatar: {
         margin: 5
+    },
+    tableRow: {
+        paddingLeft: "45px"
+    },
+    tableRowAvatar: {
+        paddingLeft: "48px"
     }
 };
 
@@ -167,7 +173,6 @@ export default class SmartTable extends Component {
                 result = (
                     <TextField
                         ref={field+"_"+element["id"]}
-                        style={{width: '140px'}}
                         hintText={"Escrigui aqui el nou valor"}
                         defaultValue={element[field]}
                     />
@@ -176,7 +181,6 @@ export default class SmartTable extends Component {
             case "date":
                 result = (
                     <DatePicker
-                        style={{width: '140px'}}
                         hintText="Introdueixi la nova data"
                         defaultDate={convertToDate(element[field])}
                         onChange={(e, date) => {values[field] = dateFormat(date)+" 00:00:00"}}
@@ -207,7 +211,7 @@ export default class SmartTable extends Component {
             * Columns titles retrieving
             * */
             let fontIcon = [];
-            if(columns[col] == selectedColumn && columns[col].toLowerCase() !== "avatar"){
+            if(columns[col][0] == selectedColumn && columns[col][0].toLowerCase() !== "avatar"){
                 if(asc){
                     fontIcon.push(
                         <FontIcon
@@ -227,7 +231,10 @@ export default class SmartTable extends Component {
                 );
             }
             headers.push(
-                <TableHeaderColumn key={i}>
+                <TableHeaderColumn
+                    style={columns[col][1]}
+                    key={i}
+                >
                     {
                         col.length > 0 && (
                             <FlatButton
@@ -235,8 +242,8 @@ export default class SmartTable extends Component {
                                 label={col}
                                 icon={fontIcon[0]}
                                 onTouchTap={() => {
-                                    if(columns[col].toLowerCase() !== "avatar") {
-                                        data = this.sort(columns[col]);
+                                    if(columns[col][0].toLowerCase() !== "avatar") {
+                                        data = this.sort(columns[col][0]);
                                         asc = !asc;
                                         this.props.handleUpdate(data, false);
                                     }
@@ -246,7 +253,7 @@ export default class SmartTable extends Component {
                     }
                 </TableHeaderColumn>
             );
-            attributes.push(columns[col]);
+            attributes.push(columns[col][0]);
             i++;
         }
         if(data.length == 0){
@@ -257,7 +264,7 @@ export default class SmartTable extends Component {
 
         return(
             <div>
-                <Table style={{ tableLayout: 'auto' }} fixedHeader={false}  selectable={false} onCellClick={this.onClick}>
+                <Table fixedHeader={false} selectable={false} onCellClick={this.onClick}>
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             {headers}
@@ -279,7 +286,10 @@ export default class SmartTable extends Component {
                                     i-=2;
                                     if(att === 'avatar') {
                                         contents.push(
-                                            <TableRowColumn key={i - 1}>
+                                            <TableRowColumn
+                                                key={i - 1}
+                                                style={styles.tableRowAvatar}
+                                            >
                                                 <Avatar
                                                     src={String(element[att])}
                                                     size={30}
@@ -310,7 +320,10 @@ export default class SmartTable extends Component {
                                     else{
                                         contents.push(
                                             /*We must check if this field is in edit mode*/
-                                            <TableRowColumn key={i - 1}>
+                                            <TableRowColumn
+                                                key={i - 1}
+                                                style={styles.tableRow}
+                                            >
                                                 {
                                                     editables.indexOf(element["id"]) == -1 ?
                                                         element[att]
