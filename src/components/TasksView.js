@@ -4,6 +4,7 @@ import {browserHistory} from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as tasksCreators from '../actions/tasks';
+import * as projectCreators from '../actions/projects';
 import * as searchCreators from '../actions/search';
 import * as breadcrumbCreators from '../actions/breadcrumb';
 import * as filterCreators from '../actions/filter';
@@ -14,7 +15,9 @@ import FilterButton from './FilterButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
-import Filter from './Filter';
+import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
+import TextField from 'material-ui/TextField';
 import {initializeFilters} from '../utils/misc';
 
 function mapStateToProps(state) {
@@ -27,7 +30,8 @@ function mapStateToProps(state) {
         isFetching: state.tasks.isFetching,
         message_text: state.tasks.message_text,
         breadcrumb: state.breadcrumb.breadcrumb_data,
-        filters: state.filter
+        filters: state.filter,
+        editing: state.projects.editing
     };
 }
 
@@ -37,7 +41,8 @@ function mapDispatchToProps(dispatch) {
         tasksCreators,
         searchCreators,
         breadcrumbCreators,
-        filterCreators
+        filterCreators,
+        projectCreators
     ), dispatch);
 }
 
@@ -50,6 +55,7 @@ const cols = {
 };
 
 let activeFilters = [];
+let fields = {};
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class TasksView extends Component {
@@ -59,6 +65,7 @@ export default class TasksView extends Component {
             message_text: null
         };
         this.handleClick = this.handleClick.bind(this);
+        this.editProjectName = this.editProjectName.bind(this);
     }
 
     componentDidMount() {
@@ -80,6 +87,16 @@ export default class TasksView extends Component {
         this.props.setActiveTask(element);
         browserHistory.push("/tasks/" + element.id);
     }
+
+    editProjectName(){
+        if(!this.props.editing){
+             this.props.editProject(true);
+        }
+        else{
+            this.props.editProject(false);
+        }
+    }
+
     render() {
         let tasks = {};
         let newBreadcrumb = this.props.breadcrumb;
@@ -92,8 +109,10 @@ export default class TasksView extends Component {
             }
         }
         let active_project_id = null;
+        let taskName = "Tasques";
         if(this.props.active_project) {
             active_project_id = this.props.active_project.id;
+            taskName = this.props.active_project.name;
         }
         return(
             <div className="mainPaperContainer">
@@ -103,7 +122,31 @@ export default class TasksView extends Component {
                             !this.props.isFetching && (
                                 <div>
                                     <div className="title">
-                                        Tasques
+                                        {this.props.editing ?
+                                            <TextField
+                                                defaultValue={taskName}
+                                                onChange={e => fields["name"] = e.target.value}
+                                            />
+                                            :
+                                            taskName}
+                                        {
+                                            this.props.active_project && (
+                                                <IconButton
+                                                    style={{top: 5, left: 5}}
+                                                    onTouchTap={this.editProjectName}
+                                                >
+                                                    <FontIcon
+                                                      className="material-icons">
+                                                        {
+                                                            !this.props.editing ?
+                                                                "mode_edit"
+                                                                :
+                                                                "save"
+                                                        }
+                                                    </FontIcon>
+                                                </IconButton>
+                                            )
+                                        }
                                     </div>
                                     <div className="breadcrumb">
                                         <Breadcrumb
@@ -148,6 +191,12 @@ export default class TasksView extends Component {
                     </div>
                     <div className="filters">
                         {activeFilters}
+                    </div>
+                    <div className="contents">
+                        {
+                            (!this.props.isFetching && this.props.active_project) &&
+                            ('Tasques del projecte "' + taskName + '":')
+                        }
                     </div>
                     <div className="tableContainer" style={{paddingTop: 50 }}>
                         {
