@@ -7,6 +7,9 @@ export const VERSION = "0.0.0";
 
 export const BASIC_AUTH_REQUEST = 'BASIC_AUTH_REQUEST';
 export const BASIC_AUTH_RESPONSE = 'BASIC_AUTH_RESPONSE';
+export const BASIC_AUTH_ERROR = 'BASIC_AUTH_ERROR';
+export const SET_TOKEN = 'SET_TOKEN';
+export const LOGOUT = 'LOGOUT';
 
 export const UI_OPEN_MENU = 'UI_OPEN_MENU';
 export const UI_CLOSE_MENU = 'UI_CLOSE_MENU';
