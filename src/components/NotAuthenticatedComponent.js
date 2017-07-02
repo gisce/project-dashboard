@@ -40,6 +40,10 @@ export function requireNoAuthentication(Component) {
                 browserHistory.push('/projects');
             } else {
                 const token = localStorage.getItem('token');
+                const stateToken = this.props.token;
+                if(token && !stateToken){
+                    this.props.setToken(token);
+                }
                 if (token) {
                     const valid = validate_token(token);
                     if (valid) {
