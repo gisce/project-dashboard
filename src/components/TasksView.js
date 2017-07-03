@@ -66,15 +66,15 @@ export default class TasksView extends Component {
         };
         this.handleClick = this.handleClick.bind(this);
         this.editProjectName = this.editProjectName.bind(this);
+        this.updateBreadcrumb = this.updateBreadcrumb.bind(this);
     }
 
     componentDidMount() {
         this.fetchData(true);
     }
 
-    fetchData(initial = true) {
+    fetchData(initial = true, projectId = false) {
         let filter = [];
-        let projectId = false;
         if(this.props.params.projectId) {
             projectId = this.props.params.projectId;
             filter.push(["project_id", "=", parseInt(projectId, 10)]);
@@ -94,7 +94,21 @@ export default class TasksView extends Component {
         }
         else{
             this.props.editProject(false);
+            const body = {
+                "name": fields["name"]
+            };
+            this.props.patchProject(this.props.token, this.props.active_project.id, body);
+            this.props.breadcrumbClear();
+            this.fetchData(true, this.props.active_project.id);
         }
+    }
+
+    updateBreadcrumb(){
+        let newBreadcrumb = [];
+        const route = "/projects/" + this.props.active_project.id + "/tasks";
+        newBreadcrumb.push(['Projectes', '/projects']);
+        newBreadcrumb.push([this.props.active_project.name, route]);
+        return newBreadcrumb;
     }
 
     render() {
@@ -103,9 +117,7 @@ export default class TasksView extends Component {
         if(this.props.loaded){
             tasks = this.props.data.data.tasks;
             if(this.props.active_project && newBreadcrumb.length == 0){
-                const route = "/projects/" + this.props.active_project.id + "/tasks";
-                newBreadcrumb.push(['Projectes', '/projects']);
-                newBreadcrumb.push([this.props.active_project.name, route]);
+                newBreadcrumb = this.updateBreadcrumb()
             }
         }
         let active_project_id = null;
@@ -132,7 +144,7 @@ export default class TasksView extends Component {
                                         {
                                             this.props.active_project && (
                                                 <IconButton
-                                                    style={{top: 5, left: 5}}
+                                                    style={{top: 3, left: 3}}
                                                     onTouchTap={this.editProjectName}
                                                 >
                                                     <FontIcon
