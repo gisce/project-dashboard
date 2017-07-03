@@ -16,7 +16,7 @@ export default class Filter extends Component {
                     label={this.props.field}
                     searchFunction={this.props.searchFunction[0]}
                     filter_id={this.props.searchFunction[1]}
-                    field={this.props.value}
+                    field={this.props.value[0]}
                 />
                 <FontIcon onClick={() => this.props.removeFilter()} color={grey700} className="material-icons chipButton">cancel</FontIcon>
             </div>
