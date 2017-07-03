@@ -1,8 +1,5 @@
 import React from 'react';
 
-import {debug} from './debug';
-export const DEBUG = (debug)?debug:false;
-
 export const VERSION = "0.0.0";
 
 export const BASIC_AUTH_REQUEST = 'BASIC_AUTH_REQUEST';
