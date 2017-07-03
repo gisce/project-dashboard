@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import TextField from 'material-ui/TextField';
-import * as actionCreators from '../../actions/search';
+import * as searchCreators from '../../actions/search';
+import * as paginatorSearch from '../../actions/paginator';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -15,7 +16,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(actionCreators, dispatch);
+    return bindActionCreators(Object.assign({}, searchCreators, paginatorSearch), dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -40,6 +41,7 @@ export default class SearchBox extends Component {
     }
 
     searchRequest(e) {
+        this.props.setActualPage(1);
         if(!this.props.filter_id) {
             this.props.searchFunction(this.props.token, e.target.value, this.props.field, false);
         }
