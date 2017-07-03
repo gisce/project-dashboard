@@ -8,7 +8,6 @@ function mapStateToProps(state) {
         return {
             token: state.auth.token,
             data: state.projects,
-            token: null,
             loaded: state.projects.loaded,
             isFetching: state.projects.isFetching,
             message_text: state.projects.message_text,
