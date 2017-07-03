@@ -82,14 +82,10 @@ export class TaskWork extends Model {
         let workdones = [];
         for(let i = 0; i <response.items.length;i++){
             let actual = response.items[i];
-            let user = actual.user_id;
-            if(user){
-                user = user.name;
-            }
             let workdone = {
                 "id": actual.id,
                 "hours": actual.hours,
-                "user_id.name": actual,
+                "user_id.name": actual.user_id.name,
                 "name": actual.name,
                 "task_id.name": actual.task_id.name,
                 "task_id.id": actual.task_id.id,
