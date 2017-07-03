@@ -48,7 +48,7 @@ export default class Paginator extends Component {
                 singlePage = true;
             }
         }
-        if(actual_page >= 4){
+        if(actual_page >= 4 && actual_page != totalPagines){
             buttons.push(
                 <PageButton key={i} number={actual_page-1}/>
             );
@@ -91,7 +91,7 @@ export default class Paginator extends Component {
                                 <PreviousButton/>
                             }
                             {
-                                actual_page >= 4 &&
+                                (actual_page >= 4 && actual_page != totalPagines) &&
                                     <span>
                                         <PageButton number={1}/>
                                         {separator}
