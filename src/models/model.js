@@ -82,10 +82,14 @@ export class TaskWork extends Model {
         let workdones = [];
         for(let i = 0; i <response.items.length;i++){
             let actual = response.items[i];
+            let user = actual.user_id;
+            if(user){
+                user = user.name;
+            }
             let workdone = {
                 "id": actual.id,
                 "hours": actual.hours,
-                "user_id.name": actual.user_id.name,
+                "user_id.name": actual,
                 "name": actual.name,
                 "task_id.name": actual.task_id.name,
                 "task_id.id": actual.task_id.id,
@@ -113,6 +117,10 @@ export class Task extends Model {
             let project_id = "None";
             let project_name = "No project";
             let delay_hours = actual.delay_hours;
+            let user = actual.user_id;
+            if(user){
+                user = user.name;
+            }
             if(!delay_hours){
                 delay_hours = 0;
             }
@@ -131,7 +139,7 @@ export class Task extends Model {
                 "name": actual.name,
                 "project_id.id": project_id,
                 "project_id.name": project_name,
-                "user_id.name": actual.user_id.name,
+                "user_id.name": user,
                 "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
                 "planned_hours": actual.planned_hours,
                 "effective_hours": actual.effective_hours,
