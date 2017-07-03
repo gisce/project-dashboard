@@ -1,4 +1,4 @@
-import {FETCH_PROJECTS_REQUEST, RECEIVE_PROJECTS, SET_ACTIVE_PROJECT, CREATE_PROJECT} from '../constants';
+import {FETCH_PROJECTS_REQUEST, RECEIVE_PROJECTS, SET_ACTIVE_PROJECT, CREATE_PROJECT, EDIT_PROJECT, PATCH_PROJECT} from '../constants';
 import { receiveCompanies, setActiveCompany } from './companies';
 import {define_token} from '../utils/http_functions';
 import {Project, Company} from '../models/model'
@@ -50,6 +50,35 @@ export function createProject(token, body, initial = false) {
         define_token(token);
         let model = new Project();
         model.post(body);
+    }
+}
+
+export function editProject(isEditing){
+    return {
+        type: EDIT_PROJECT,
+        payload: {
+            editing: isEditing
+        }
+    }
+}
+
+export function patchProjectRequest(initial = false){
+    const message = (initial)?null:"Patching project";
+
+    return {
+        type: PATCH_PROJECT,
+        payload: {
+            message
+        }
+    }
+}
+
+export function patchProject(token, id, body, initial = false){
+    return(dispatch) => {
+        dispatch(patchProjectRequest(initial));
+        define_token(token);
+        let model = new Project();
+        model.patch(id, body);
     }
 }
 
