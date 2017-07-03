@@ -8,7 +8,7 @@ module.exports = {
     ],
     output: {
         path: path.join(__dirname, '/www/dist'),
-        publicPath: 'http://localhost:8080/',
+        publicPath: 'http://erp-ti.gisce.lan:8080/',
         filename: 'bundle.js'
     },
     module: {

@@ -47,7 +47,7 @@ export function basicAuthError(){
 export function basicAuth(user, password) {
     return (dispatch) => {
         dispatch(basicAuthRequest());
-        const uri = "http://localhost:5000/token";
+        const uri = "http://erp-ti.gisce.lan:5000/token";
         const body = {
             auth: {
                 username: user,

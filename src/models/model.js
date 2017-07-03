@@ -6,7 +6,7 @@ export default class Model {
 
     constructor() {
         this.model = null;
-        this.uri = "http://localhost:5000";
+        this.uri = "http://erp-ti.gisce.lan:5000";
         this.schema = [];
     }
 
