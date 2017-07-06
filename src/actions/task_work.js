@@ -97,7 +97,7 @@ export function patchTaskWork(token, id, body, initial = false){
         let model = new TaskWork();
         model.patch(id, body, {
             transformResponse: [function (){
-                dispatch(patchTaskWorkResponse());
+                dispatch(patchTaskWorkResponse(initial));
             }]
         });
     }
@@ -110,7 +110,7 @@ export function deleteTaskWork(token, id, initial = false){
         let model = new TaskWork();
         model.delete(id, {
             transformResponse: [function (){
-                dispatch(deleteTaskWorkResponse());
+                dispatch(deleteTaskWorkResponse(initial));
             }]
         });
     }
