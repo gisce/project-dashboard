@@ -13,7 +13,6 @@ import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
 import Many2One from './Many2One';
-import {sleep} from '../utils/misc';
 
 function mapStateToProps(state) {
     let taskWorks = null;
