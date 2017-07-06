@@ -80,10 +80,3 @@ export function convertToDate(str){
     const parts = str.split("-");
     return new Date(parts[0],parts[1]-1,parts[2].split(' ')[0]);
 }
-
-export function sleep(miliseconds) {
-   var currentTime = new Date().getTime();
-
-   while (currentTime + miliseconds >= new Date().getTime()) {
-   }
-}

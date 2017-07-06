@@ -14,7 +14,7 @@ export default class Model {
         return [];
     }
 
-    search(search_filters, configuration) {
+    search(search_filters, configuration = {}) {
         const search_uri = this.uri + "/" + this.model + "?filter=" + JSON.stringify(search_filters)
             + "&schema=" + this.schema.join(",");
         return axios.get(search_uri, configuration)
@@ -29,14 +29,14 @@ export default class Model {
         return axios.post(uri, body);
     }
 
-    patch(id, body){
+    patch(id, body, configuration = {}){
         const uri = this.uri + "/" + this.model + "/"+id;
-        return axios.patch(uri, body);
+        return axios.patch(uri, body, configuration);
     }
 
-    delete(id){
+    delete(id, configuration = {}){
         const uri = this.uri + "/" + this.model + "/" + id;
-        return axios.delete(uri);
+        return axios.delete(uri, configuration);
     }
 }
 

@@ -1,4 +1,4 @@
-import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK, CREATE_TASK_WORK, PATCH_TASK_WORK, DELETE_TASK_WORK} from "../constants";
+import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK, CREATE_TASK_WORK, PATCH_TASK_WORK_REQUEST, PATCH_TASK_WORK_RESPONSE, DELETE_TASK_WORK_REQUEST, DELETE_TASK_WORK_RESPONSE} from "../constants";
 import {define_token} from "../utils/http_functions";
 import {fetchTasksRequest, receiveTasks, setActiveTask} from "./tasks";
 import axios from "axios";
@@ -41,7 +41,18 @@ export function patchTaskWorkRequest(initial = false){
     const message = (initial)?null:"Patching task work";
 
     return {
-        type: PATCH_TASK_WORK,
+        type: PATCH_TASK_WORK_REQUEST,
+        payload: {
+            message
+        }
+    }
+}
+
+export function patchTaskWorkResponse(initial = false){
+    const message = (initial)?null:"Task work patched.";
+
+    return {
+        type: PATCH_TASK_WORK_RESPONSE,
         payload: {
             message
         }
@@ -52,7 +63,18 @@ export function deleteTaskWorkRequest(initial = false){
     const message = (initial)?null:"Dropping task work";
 
     return {
-        type: DELETE_TASK_WORK,
+        type: DELETE_TASK_WORK_REQUEST,
+        payload: {
+            message
+        }
+    }
+}
+
+export function deleteTaskWorkResponse(initial = false){
+    const message = (initial)?null:"Task work dropped.";
+
+    return {
+        type: DELETE_TASK_WORK_RESPONSE,
         payload: {
             message
         }
@@ -73,7 +95,11 @@ export function patchTaskWork(token, id, body, initial = false){
         dispatch(patchTaskWorkRequest(initial));
         define_token(token);
         let model = new TaskWork();
-        model.patch(id, body);
+        model.patch(id, body, {
+            transformResponse: [function (){
+                dispatch(patchTaskWorkResponse(initial));
+            }]
+        });
     }
 }
 
@@ -82,7 +108,11 @@ export function deleteTaskWork(token, id, initial = false){
         dispatch(deleteTaskWorkRequest(initial));
         define_token(token);
         let model = new TaskWork();
-        model.delete(id);
+        model.delete(id, {
+            transformResponse: [function (){
+                dispatch(deleteTaskWorkResponse(initial));
+            }]
+        });
     }
 }
 

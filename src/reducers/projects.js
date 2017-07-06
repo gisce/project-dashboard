@@ -1,4 +1,4 @@
-import { RECEIVE_PROJECTS, FETCH_PROJECTS_REQUEST, SET_ACTIVE_PROJECT, CREATE_PROJECT, EDIT_PROJECT } from '../constants';
+import { RECEIVE_PROJECTS, FETCH_PROJECTS_REQUEST, SET_ACTIVE_PROJECT, CREATE_PROJECT, EDIT_PROJECT, PATCH_PROJECT_REQUEST, PATCH_PROJECT_RESPONSE } from '../constants';
 import { createReducer } from '../utils/misc';
 
 const initialState = {
@@ -34,5 +34,13 @@ export default createReducer(initialState, {
     [EDIT_PROJECT]: (state, payload) =>
         Object.assign({}, state, {
             editing: payload.editing
-        })
+        }),
+    [PATCH_PROJECT_REQUEST]: (state, payload) =>
+        Object.assign({}, state, {
+            message_text: payload.message
+        }),
+    [PATCH_PROJECT_RESPONSE]: (state, payload) =>
+        Object.assign({}, state, {
+            message_text: payload.message
+        }),
 });

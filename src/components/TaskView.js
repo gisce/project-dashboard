@@ -13,7 +13,6 @@ import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
 import Many2One from './Many2One';
-import {sleep} from '../utils/misc';
 
 function mapStateToProps(state) {
     let taskWorks = null;
@@ -89,14 +88,12 @@ export default class TasksView extends Component {
         body["user_id"] = fields["user_id"];
         this.props.editItems(editing);
         this.props.patchTaskWork(this.props.token, id, body);
-        sleep(1000);
         //Fetch data again to make changes visible
         this.fetchData(false);
     }
 
     handleDelete(id){
         this.props.deleteTaskWork(this.props.token, id);
-        sleep(1000);
         //Fetch data again to make changes visible
         this.fetchData(false);
         this.props.openToastRequest("Workdone eliminat");

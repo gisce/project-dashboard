@@ -18,7 +18,8 @@ import * as pagingCreators from '../../actions/paginator';
 
 function mapStateToProps(state) {
     return {
-        menu_open: state.ui.menu_open
+        menu_open: state.ui.menu_open,
+        isAuthenticated: state.auth.isAuthenticated
     };
 }
 
@@ -58,16 +59,17 @@ export class Header extends Component {
     }
 
     handleSwipe() {
-        if(this.props.menu_open){
-            this.props.closeMenu();
-        }
-        else{
-            this.props.openMenu();
+        if(this.props.isAuthenticated) {
+            if (this.props.menu_open) {
+                this.props.closeMenu();
+            }
+            else {
+                this.props.openMenu();
+            }
         }
     }
 
     logout(){
-        console.log("MEEEL");
         localStorage.removeItem("token");
         this.props.logOut();
         browserHistory.push('/login');
