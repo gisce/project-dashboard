@@ -24,9 +24,9 @@ export default class Model {
             });
     }
 
-    post(body) {
+    post(body, configuration = {}) {
         const uri = this.uri + "/" + this.model;
-        return axios.post(uri, body);
+        return axios.post(uri, body, configuration);
     }
 
     patch(id, body, configuration = {}){
