@@ -1,4 +1,4 @@
-import { RECEIVE_TASKS, FETCH_TASKS_REQUEST, SET_ACTIVE_TASK, CREATE_TASK } from '../constants';
+import { RECEIVE_TASKS, FETCH_TASKS_REQUEST, SET_ACTIVE_TASK, CREATE_TASK_WORK_REQUEST, CREATE_TASK_WORK_RESPONSE } from '../constants';
 import { createReducer } from '../utils/misc';
 
 const initialState = {
@@ -26,7 +26,11 @@ export default createReducer(initialState, {
         Object.assign({}, state, {
             active_task: payload.active_task
         }),
-    [CREATE_TASK]: (state, payload) =>
+    [CREATE_TASK_WORK_REQUEST]: (state, payload) =>
+        Object.assign({}, state, {
+            message_text: payload.message
+        }),
+    [CREATE_TASK_WORK_RESPONSE]: (state, payload) =>
         Object.assign({}, state, {
             message_text: payload.message
         })
