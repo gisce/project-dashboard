@@ -1,4 +1,4 @@
-import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK, CREATE_TASK_WORK, PATCH_TASK_WORK_REQUEST, PATCH_TASK_WORK_RESPONSE, DELETE_TASK_WORK_REQUEST, DELETE_TASK_WORK_RESPONSE} from "../constants";
+import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK, CREATE_TASK_WORK_REQUEST, CREATE_TASK_WORK_RESPONSE, PATCH_TASK_WORK_REQUEST, PATCH_TASK_WORK_RESPONSE, DELETE_TASK_WORK_REQUEST, DELETE_TASK_WORK_RESPONSE} from "../constants";
 import {define_token} from "../utils/http_functions";
 import {fetchTasksRequest, receiveTasks, setActiveTask} from "./tasks";
 import axios from "axios";
@@ -30,7 +30,18 @@ export function createTaskWorkRequest(initial){
     const message = (initial)?null:"Creating new task work";
 
     return {
-        type: CREATE_TASK_WORK,
+        type: CREATE_TASK_WORK_REQUEST,
+        payload: {
+            message
+        }
+    }
+}
+
+export function createTaskWorkResponse(initial){
+    const message = (initial)?null:"Task work created.";
+
+    return {
+        type: CREATE_TASK_WORK_RESPONSE,
         payload: {
             message
         }
@@ -81,16 +92,21 @@ export function deleteTaskWorkResponse(initial = false){
     }
 }
 
-export function createTaskWork(token, body, initial = false){
+export function createTaskWork(token, body, reload_function, initial = false){
     return(dispatch) => {
         dispatch(createTaskWorkRequest(initial));
         define_token(token);
         let model = new TaskWork();
-        model.post(body);
+        model.post(body, {
+            transformResponse: [function (){
+                dispatch(createTaskWorkResponse(initial));
+                reload_function(false);
+            }]
+        });
     }
 }
 
-export function patchTaskWork(token, id, body, initial = false){
+export function patchTaskWork(token, id, body, reload_function, initial = false){
     return(dispatch) => {
         dispatch(patchTaskWorkRequest(initial));
         define_token(token);
@@ -98,12 +114,13 @@ export function patchTaskWork(token, id, body, initial = false){
         model.patch(id, body, {
             transformResponse: [function (){
                 dispatch(patchTaskWorkResponse(initial));
+                reload_function(false);
             }]
         });
     }
 }
 
-export function deleteTaskWork(token, id, initial = false){
+export function deleteTaskWork(token, id, reload_function, initial = false){
     return(dispatch) => {
         dispatch(deleteTaskWorkRequest(initial));
         define_token(token);
@@ -111,6 +128,7 @@ export function deleteTaskWork(token, id, initial = false){
         model.delete(id, {
             transformResponse: [function (){
                 dispatch(deleteTaskWorkResponse(initial));
+                reload_function(false);
             }]
         });
     }
