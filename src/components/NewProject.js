@@ -40,10 +40,13 @@ export default class NewProject extends Component {
         fields[field] = value;
     }
 
+    reload(){
+        browserHistory.push("/projects");
+    }
+
     createProjectCall(){
         if(fields.hasOwnProperty("name")) {
-            this.props.createProject(this.props.token, fields);
-            browserHistory.push("/projects");
+            this.props.createProject(this.props.token, this.reload, fields);
             this.props.openToastRequest("Projecte creat");
         }
         else{
