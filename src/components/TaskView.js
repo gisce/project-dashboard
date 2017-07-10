@@ -50,6 +50,7 @@ export default class TasksView extends Component {
         this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handlePatch = this.handlePatch.bind(this);
+        this.fetchData = this.fetchData.bind(this);
         fields = {};
     }
 
@@ -87,15 +88,11 @@ export default class TasksView extends Component {
         }
         body["user_id"] = fields["user_id"];
         this.props.editItems(editing);
-        this.props.patchTaskWork(this.props.token, id, body);
-        //Fetch data again to make changes visible
-        this.fetchData(false);
+        this.props.patchTaskWork(this.props.token, id, body, this.fetchData);
     }
 
     handleDelete(id){
-        this.props.deleteTaskWork(this.props.token, id);
-        //Fetch data again to make changes visible
-        this.fetchData(false);
+        this.props.deleteTaskWork(this.props.token, id, this.fetchData);
         this.props.openToastRequest("Workdone eliminat");
     }
 
