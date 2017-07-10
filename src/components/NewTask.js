@@ -31,6 +31,7 @@ export default class NewTask extends Component {
     constructor(props){
         super(props);
         this.createTaskCall = this.createTaskCall.bind(this);
+        this.reload = this.reload.bind(this);
         fields = {};
     }
 
@@ -38,15 +39,18 @@ export default class NewTask extends Component {
         this.props.editItems([]);
     }
 
+    reload(){
+        if(this.props.active_project){
+            browserHistory.push("/projects/"+ this.props.active_project.id + "/tasks");
+        }
+        else{
+            browserHistory.push("/tasks");
+        }
+    }
+
     createTaskCall(){
         if(fields.hasOwnProperty("name") && fields.hasOwnProperty("project_id") && fields.hasOwnProperty("planned_hours")) {
-            this.props.createTask(this.props.token, fields);
-            if(this.props.active_project){
-                browserHistory.push("/projects/"+ this.props.active_project.id + "/tasks");
-            }
-            else{
-                browserHistory.push("/tasks");
-            }
+            this.props.createTask(this.props.token, fields, this.reload);
             this.props.openToastRequest("Tasca creada");
         }
         else{
