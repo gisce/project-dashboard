@@ -67,6 +67,7 @@ export default class TasksView extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.editProjectName = this.editProjectName.bind(this);
         this.updateBreadcrumb = this.updateBreadcrumb.bind(this);
+        this.updateData = this.updateData.bind(this);
     }
 
     componentDidMount() {
@@ -88,6 +89,11 @@ export default class TasksView extends Component {
         browserHistory.push("/tasks/" + element.id);
     }
 
+    updateData(){
+        this.props.breadcrumbClear();
+        this.fetchData(true, this.props.active_project.id);
+    }
+
     editProjectName(){
         if(!this.props.editing){
              this.props.editProject(true);
@@ -97,9 +103,7 @@ export default class TasksView extends Component {
             const body = {
                 "name": fields["name"]
             };
-            this.props.patchProject(this.props.token, this.props.active_project.id, body);
-            this.props.breadcrumbClear();
-            this.fetchData(true, this.props.active_project.id);
+            this.props.patchProject(this.props.token, this.props.active_project.id, body, this.updateData);
         }
     }
 

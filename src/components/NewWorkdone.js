@@ -33,14 +33,18 @@ export default class NewTask extends Component {
     constructor(props){
         super(props);
         this.createWorkdoneCall = this.createWorkdoneCall.bind(this);
+        this.reload = this.reload.bind(this);
         fields = {};
         fields["task_id"] = {"id": parseInt(this.props.params.taskId, 10)};
     }
 
+    reload(){
+        browserHistory.push("/tasks/"+this.props.params.taskId);
+    }
+
     createWorkdoneCall(){
         if(fields.hasOwnProperty("name")) {
-            this.props.createTaskWork(this.props.token, fields);
-            browserHistory.push("/tasks/"+this.props.params.taskId);
+            this.props.createTaskWork(this.props.token, fields, this.reload);
             this.props.openToastRequest("Workdone creat");
         }
         else{

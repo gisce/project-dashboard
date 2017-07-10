@@ -1,4 +1,4 @@
-import {FETCH_PROJECTS_REQUEST, RECEIVE_PROJECTS, SET_ACTIVE_PROJECT, CREATE_PROJECT, EDIT_PROJECT, PATCH_PROJECT_REQUEST, PATCH_PROJECT_RESPONSE} from '../constants';
+import {FETCH_PROJECTS_REQUEST, RECEIVE_PROJECTS, SET_ACTIVE_PROJECT, CREATE_PROJECT_REQUEST, CREATE_PROJECT_RESPONSE, EDIT_PROJECT, PATCH_PROJECT_REQUEST, PATCH_PROJECT_RESPONSE} from '../constants';
 import { receiveCompanies, setActiveCompany } from './companies';
 import {define_token} from '../utils/http_functions';
 import {Project, Company} from '../models/model'
@@ -37,19 +37,34 @@ export function setActiveProject(active_project) {
 export function createProjectRequest(initial) {
     const message = (initial)?null:"Creating new project";
     return {
-        type: CREATE_PROJECT,
+        type: CREATE_PROJECT_REQUEST,
         payload: {
             message
         }
     }
 }
 
-export function createProject(token, body, initial = false) {
+export function createProjectResponse(initial) {
+    const message = (initial)?null:"Project created.";
+    return {
+        type: CREATE_PROJECT_RESPONSE,
+        payload: {
+            message
+        }
+    }
+}
+
+export function createProject(token, body, reload_function, initial = false) {
     return (dispatch) => {
         dispatch(createProjectRequest(initial));
         define_token(token);
         let model = new Project();
-        model.post(body);
+        model.post(body, {
+            transformResponse: [function (){
+                dispatch(createProjectResponse(initial));
+                reload_function(false);
+            }]
+        });
     }
 }
 
@@ -84,7 +99,7 @@ export function patchProjectResponse(initial = false){
     }
 }
 
-export function patchProject(token, id, body, initial = false){
+export function patchProject(token, id, body, reload_function, initial = false){
     return(dispatch) => {
         dispatch(patchProjectRequest(initial));
         define_token(token);
@@ -92,6 +107,7 @@ export function patchProject(token, id, body, initial = false){
         model.patch(id, body, {
             transformResponse: [function (){
                 dispatch(patchProjectResponse(initial));
+                reload_function();
             }]
         });
     }
