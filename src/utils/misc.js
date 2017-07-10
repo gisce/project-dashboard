@@ -80,3 +80,53 @@ export function convertToDate(str){
     const parts = str.split("-");
     return new Date(parts[0],parts[1]-1,parts[2].split(' ')[0]);
 }
+
+export function errorAdd(err){
+    let res = [];
+    res.push('error');
+    res.push(err);
+    return res;
+}
+
+export function timeFormat(time, mode){
+    let res = [];
+    try {
+        if(String(time).length === 0){
+            res = errorAdd('ERROR: el temps no pot estar buit.')
+        }
+        else if (mode === 'float') {
+            /*
+            * String time converted to float
+            * */
+            if (time.indexOf(':') != -1) {
+                const hours = parseFloat(time.split(':')[0]);
+                const minutes = parseFloat(time.split(':')[1]) / 0.60;
+                if(parseFloat(time.split(':')[1]) >= 60){
+                    res = errorAdd('ERROR: els minuts no poden ser iguals o superiors a 60.');
+                }
+                else if(hours  && minutes){
+                    res.push('ok');
+                    res.push(parseFloat(hours + '.' + minutes));
+                }
+                else{
+                    res = errorAdd('ERROR: Format desconegut.');
+                }
+            }
+            else{
+                res.push('ok');
+                res.push(parseFloat(time));
+            }
+
+        }
+        else if (mode === 'string') {
+            /*
+            * Float time converted to string
+            * */
+            const hours = Math.trunc(time);
+        }
+    }
+    catch(err){
+        res = errorAdd(err.message);
+    }
+    return res;
+}
