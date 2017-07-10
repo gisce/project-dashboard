@@ -11,7 +11,7 @@ import TextField from 'material-ui/TextField';
 import LinkButton from './LinkButton';
 import Many2One from './Many2One';
 import DatePicker from 'material-ui/DatePicker';
-import {dateFormat} from '../utils/misc';
+import {dateFormat, timeFormat} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
@@ -34,6 +34,7 @@ export default class NewTask extends Component {
         super(props);
         this.createWorkdoneCall = this.createWorkdoneCall.bind(this);
         this.reload = this.reload.bind(this);
+        this.handleTimeFormat = this.handleTimeFormat.bind(this);
         fields = {};
         fields["task_id"] = {"id": parseInt(this.props.params.taskId, 10)};
     }
@@ -54,6 +55,16 @@ export default class NewTask extends Component {
 
     updateFields(field, value){
         fields[field] = value;
+    }
+
+    handleTimeFormat(time){
+        const res = timeFormat(time, 'float');
+        if(res[0] === 'ok'){
+            this.updateFields("hours", res[1]);
+        }
+        else{
+            this.updateFields("hours", 0);
+        }
     }
 
     render() {
@@ -82,7 +93,7 @@ export default class NewTask extends Component {
                         <div className="rightColumn">
                             <TextField
                                 floatingLabelText="Temps dedicat"
-                                onChange={e => this.updateFields("hours", parseFloat(e.target.value))}
+                                onChange={e => this.handleTimeFormat(e.target.value)}
                             />
                             <br/>
                             <Many2One
