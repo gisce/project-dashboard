@@ -1,4 +1,4 @@
-import {UI_OPEN_MENU, UI_CLOSE_MENU, UI_OPEN_FILTER_BUTTON_MENU, UI_CLOSE_FILTER_BUTTON_MENU, UI_OPEN_DIALOG, UI_OPEN_TOAST, UI_CLOSE_TOAST, UI_CLOSE_DIALOG, UI_NEW_EDIT_ITEM} from '../constants'
+import {UI_OPEN_MENU, UI_CLOSE_MENU, UI_OPEN_FILTER_BUTTON_MENU, UI_CLOSE_FILTER_BUTTON_MENU, UI_OPEN_DIALOG, UI_OPEN_TOAST, UI_CLOSE_TOAST, UI_CLOSE_DIALOG, UI_NEW_EDIT_ITEM, UI_SET_FIELDS_ERROR} from '../constants'
 
 export function openMenu() {
     const menu_open = true;
@@ -99,6 +99,15 @@ export function editItems(editing, initial){
         payload: {
             editing,
             message
+        }
+    }
+}
+
+export function setFieldsErrors(errors){
+    return {
+        type: UI_SET_FIELDS_ERROR,
+        payload: {
+            errors
         }
     }
 }
