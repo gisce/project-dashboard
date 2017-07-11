@@ -6,7 +6,7 @@ import IconButton from 'material-ui/IconButton';
 import Avatar from 'material-ui/Avatar';
 import TextField from 'material-ui/TextField';
 import Paginator from '../Paginator';
-import { getFieldType, dateFormat, convertToDate } from '../../utils/misc';
+import { getFieldType, dateFormat, convertToDate, timeFormat } from '../../utils/misc';
 import * as configCreators from '../../actions/config';
 import * as pagingCreators from '../../actions/paginator';
 import * as uiCreators from '../../actions/ui';
@@ -19,6 +19,7 @@ function mapStateToProps(state) {
             items_per_page: state.config.items_per_page,
             actual_page: state.paginator.actual_page,
             editables: state.ui.editing,
+            fields_errors: state.ui.fields_errors
         };
 }
 
@@ -49,6 +50,8 @@ let rowContents;
 let data = [];
 let editables = [];
 let attributes = [];
+let error = [];
+let floatTime = null;
 let values = {};
 let asc = true;
 let selectedColumn = null;
@@ -63,6 +66,7 @@ export default class SmartTable extends Component {
         this.trimByPage = this.trimByPage.bind(this);
         this.updateValues = this.updateValues.bind(this);
         this.getField = this.getField.bind(this);
+        this.handleTimeFormat = this.handleTimeFormat.bind(this);
         data = [];
         attributes = [];
         asc = true;
@@ -92,19 +96,23 @@ export default class SmartTable extends Component {
     }
 
     updateValues(id){
-        attributes.map(att =>{
-            if(this.refs[att+"_"+id]) {
-                if(att == "hours"){
-                    values[att] = parseFloat(this.refs[att+"_"+id].getValue());
+        if(error.length > 0){
+            this.props.openDialogRequest("Error", error[0]);
+        }
+        else {
+            attributes.map(att => {
+                if (this.refs[att + "_" + id]) {
+                    if (att === "hours") {
+                        values[att] = parseFloat(floatTime);
+                    }
+                    else {
+                        values[att] = this.refs[att + "_" + id].getValue();
+                    }
                 }
-                else{
-                    values[att] = this.refs[att+"_"+id].getValue();
-                }
-            }
-        });
-        console.log("ID: ", id,", VALEUS TO UPDATE: ", JSON.stringify(values));
-        /*values handling*/
-        this.props.handlePatch(id, values);
+            });
+            /*values handling*/
+            this.props.handlePatch(id, values);
+        }
     }
 
     merge(left, right, value)
@@ -169,7 +177,6 @@ export default class SmartTable extends Component {
         );
         switch(type){
             case "text":
-            case "float":
                 result = (
                     <TextField
                         ref={field+"_"+element["id"]}
@@ -191,9 +198,37 @@ export default class SmartTable extends Component {
                 const many2ones = this.props.many2ones;
                 result = many2ones[field];
                 break;
+            case "hours":
+                result = (
+                    <TextField
+                        ref={field+"_"+element["id"]}
+                        hintText="Temps dedicat"
+                        defaultValue={timeFormat(element[field], 'string')}
+                        onChange={e => this.handleTimeFormat(e.target.value)}
+                        errorText={
+                            (this.props.fields_errors && "time" in this.props.fields_errors) ? (
+                                this.props.fields_errors['time']
+                            )
+                                :
+                            ''
+                        }
+                    />
+                );
+                break;
 
         }
         return result;
+    }
+
+    handleTimeFormat(time){
+        const res = timeFormat(time, 'float');
+        error = [];
+        if(res[0] === 'error'){
+            error.push(res[1]);
+        }
+        else if(res[0] === 'ok'){
+            floatTime = res[1];
+        }
     }
 
     render(){
@@ -326,7 +361,12 @@ export default class SmartTable extends Component {
                                             >
                                                 {
                                                     editables.indexOf(element["id"]) == -1 ?
-                                                        element[att]
+                                                        (
+                                                            att === "hours" ?
+                                                                timeFormat(element[att], 'string')
+                                                            :
+                                                                element[att]
+                                                        )
                                                     :
                                                     this.getField(att, element)
                                                 }
