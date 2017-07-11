@@ -69,3 +69,5 @@ export const UI_OPEN_TOAST = 'UI_OPEN_TOAST';
 export const UI_CLOSE_TOAST = 'UI_CLOSE_TOAST';
 
 export const UI_NEW_EDIT_ITEM = 'UI_NEW_EDIT_ITEM';
+
+export const UI_SET_FIELDS_ERROR = 'UI_SET_FIELDS_ERROR';
