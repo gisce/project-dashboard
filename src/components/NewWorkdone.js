@@ -11,14 +11,15 @@ import TextField from 'material-ui/TextField';
 import LinkButton from './LinkButton';
 import Many2One from './Many2One';
 import DatePicker from 'material-ui/DatePicker';
-import {dateFormat} from '../utils/misc';
+import {dateFormat, timeFormat} from '../utils/misc';
 
 function mapStateToProps(state) {
     return {
         token: state.auth.token,
         active_task: state.tasks.active_task,
         users: state.users,
-        projects: state.projects
+        projects: state.projects,
+        fields_errors: state.ui.fields_errors
     };
 }
 
@@ -27,6 +28,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 let fields = {};
+let error = [];
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class NewTask extends Component {
@@ -34,6 +36,7 @@ export default class NewTask extends Component {
         super(props);
         this.createWorkdoneCall = this.createWorkdoneCall.bind(this);
         this.reload = this.reload.bind(this);
+        this.handleTimeFormat = this.handleTimeFormat.bind(this);
         fields = {};
         fields["task_id"] = {"id": parseInt(this.props.params.taskId, 10)};
     }
@@ -43,17 +46,35 @@ export default class NewTask extends Component {
     }
 
     createWorkdoneCall(){
-        if(fields.hasOwnProperty("name")) {
+        let errors_dict = {};
+        if(error.length > 0){
+            errors_dict['time'] =  error[0];
+        }
+        if(!fields.hasOwnProperty("name")){
+            errors_dict['treball'] = 'Camp obligatori';
+        }
+        else{
+            this.props.setFieldsErrors({});
             this.props.createTaskWork(this.props.token, fields, this.reload);
             this.props.openToastRequest("Workdone creat");
         }
-        else{
-            this.props.openDialogRequest("Atenció", "És necessari escriure el resum del treball.");
-        }
+        this.props.setFieldsErrors(errors_dict);
     }
 
     updateFields(field, value){
         fields[field] = value;
+    }
+
+    handleTimeFormat(time){
+        const res = timeFormat(time, 'float');
+        error = [];
+        if(res[0] === 'ok'){
+            this.updateFields("hours", res[1]);
+        }
+        else{
+            this.updateFields("hours", 0);
+            error.push(res[1]);
+        }
     }
 
     render() {
@@ -72,6 +93,13 @@ export default class NewTask extends Component {
                             <TextField
                                 floatingLabelText="Resum del treball"
                                 onChange={e =>  this.updateFields("name", e.target.value)}
+                                errorText={
+                                    (this.props.fields_errors && "treball" in this.props.fields_errors) ? (
+                                        this.props.fields_errors['treball']
+                                    )
+                                        :
+                                    ''
+                                }
                             />
                             <DatePicker
                                 style={{marginTop: "24px"}}
@@ -82,7 +110,14 @@ export default class NewTask extends Component {
                         <div className="rightColumn">
                             <TextField
                                 floatingLabelText="Temps dedicat"
-                                onChange={e => this.updateFields("hours", parseFloat(e.target.value))}
+                                onChange={e => this.handleTimeFormat(e.target.value)}
+                                errorText={
+                                    (this.props.fields_errors && "time" in this.props.fields_errors) ? (
+                                        this.props.fields_errors['time']
+                                    )
+                                        :
+                                    ''
+                                }
                             />
                             <br/>
                             <Many2One

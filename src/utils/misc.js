@@ -68,10 +68,11 @@ export function getFieldType(field){
             result = "many2one";
             break;
         case "hours":
-            result =  "float";
+            result =  "hours";
             break;
         case "date":
             result = "date";
+            break;
     }
     return result;
 }
@@ -79,4 +80,68 @@ export function getFieldType(field){
 export function convertToDate(str){
     const parts = str.split("-");
     return new Date(parts[0],parts[1]-1,parts[2].split(' ')[0]);
+}
+
+export function errorAdd(err){
+    let res = [];
+    res.push('error');
+    res.push(err);
+    return res;
+}
+
+export function timeFormat(time, mode){
+    let res = [];
+    try {
+        if (mode === 'float') {
+            /*
+            * String time converted to float
+            * */
+            time = String(time);
+            if (time.indexOf(':') != -1) {
+                const hours = parseFloat(time.split(':')[0]);
+                const minutes = parseFloat(time.split(':')[1]) / 0.60;
+                if(parseFloat(time.split(':')[1]) >= 60){
+                    res = errorAdd('Els minuts no poden ser iguals o superiors a 60');
+                }
+                else if((hours && minutes) || (hours === 0 && minutes)){
+                    res.push('ok');
+                    res.push(parseFloat(hours + '.' + minutes));
+                }
+                else{
+                    res = errorAdd("Format d'hora desconegut");
+                }
+            }
+            else if(/^\d+$/.test(time)){
+                /*
+                * Checking that time haves only numbers
+                * */
+                res.push('ok');
+                res.push(parseFloat(time));
+            }
+            else if(time.length > 0){
+                res = errorAdd("Format d'hora desconegut");
+            }
+
+        }
+        else if (mode === 'string') {
+            /*
+            * Float time converted to string
+            * */
+            time = parseFloat(time);
+            let hours = Math.trunc(time);
+            let minutes = ((time - hours) * 0.60) * 100;
+            if(minutes < 10){
+                minutes = "0"+Math.trunc(minutes);
+            }
+            minutes = Math.round(minutes);
+            if(minutes === 0){
+                minutes = "00"
+            }
+            res.push(String(hours)+":"+String(minutes));
+        }
+    }
+    catch(err){
+        res = errorAdd(err.message);
+    }
+    return res;
 }
