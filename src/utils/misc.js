@@ -103,7 +103,7 @@ export function timeFormat(time, mode){
                 if(parseFloat(time.split(':')[1]) >= 60){
                     res = errorAdd('Els minuts no poden ser iguals o superiors a 60');
                 }
-                else if(hours && minutes){
+                else if((hours && minutes) || (hours === 0 && minutes)){
                     res.push('ok');
                     res.push(parseFloat(hours + '.' + minutes));
                 }
