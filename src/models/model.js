@@ -57,11 +57,15 @@ export class Project extends Model {
             for(let j=0; j<actual.tasks.length; j++){
                 tasks.push(actual.tasks[j].id);
             }
+            let email = "";
+            if(actual.manager.address_id){
+                email = actual.manager.address_id.email;
+            }
             let project = {
                 "id": actual.id,
                 "name": actual.name,
                 "manager.name": actual.manager.name,
-                "avatar": getGravatarLink(actual.manager.address_id.email),
+                "avatar": getGravatarLink(email),
                 "state": actual.state,
                 "tasks": tasks
             };
@@ -129,6 +133,10 @@ export class Task extends Model {
                project_id = actual.project_id.id;
                project_name = actual.project_id.name;
             }
+            let email = "";
+            if(actual.manager.address_id){
+                email = actual.user_id.address_id.email;
+            }
             let task = {};
             task = {
                 "id": actual.id,
@@ -136,7 +144,7 @@ export class Task extends Model {
                 "project_id.id": project_id,
                 "project_id.name": project_name,
                 "user_id.name": user,
-                "avatar": getGravatarLink(actual.user_id.address_id.email),
+                "avatar": getGravatarLink(email),
                 "planned_hours": actual.planned_hours,
                 "effective_hours": actual.effective_hours,
                 "total_hours": actual.total_hours,
@@ -204,11 +212,15 @@ export class User extends Model {
         let users = [];
         for(let i = 0; i < response.items.length; i++){
             let actual = response.items[i];
+            let email = "";
+            if(actual.address_id){
+                email = actual.address_id.email;
+            }
             let user = {
                 "id": actual.id,
                 "login": actual.login,
                 "name": actual.name,
-                "avatar": getGravatarLink(actual.address_id.email),
+                "avatar": getGravatarLink(email),
                 "tasks_ids": tasks_ids
             };
             users.push(user);
