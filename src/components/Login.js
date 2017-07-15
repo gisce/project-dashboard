@@ -35,11 +35,20 @@ export default class Login extends Component {
     constructor(props){
         super(props);
         this.login = this.login.bind(this);
+        this._onKeyPress = this._onKeyPress.bind(this);
     }
 
     login(){
         if("user" in fields && "password" in fields) {
             this.props.basicAuth(fields["user"], fields["password"]);
+        }
+    }
+
+    _onKeyPress(event) {
+        if (event.charCode === 13) {
+            event.preventDefault();
+            console.log("ENTER");
+            this.login();
         }
     }
 
@@ -65,6 +74,7 @@ export default class Login extends Component {
                         floatingLabelText="Usuari"
                         onChange={e => fields["user"] = e.target.value}
                         disabled={this.props.isAuthenticating}
+                        onKeyPress={this._onKeyPress}
                     />
                     <br/>
                     <TextField
@@ -73,6 +83,7 @@ export default class Login extends Component {
                         type="password"
                         onChange={e => fields["password"] = e.target.value}
                         disabled={this.props.isAuthenticating}
+                        onKeyPress={this._onKeyPress}
                         errorText={this.props.error}
                     />
                     <br/>
