@@ -1,4 +1,4 @@
-import {FETCH_TASKS_REQUEST, RECEIVE_TASKS, SET_ACTIVE_TASK, CREATE_TASK_REQUEST, CREATE_TASK_RESPONSE} from '../constants';
+import {FETCH_TASKS_REQUEST, RECEIVE_TASKS, SET_ACTIVE_TASK, CREATE_TASK_REQUEST, CREATE_TASK_RESPONSE, EDIT_TASK, PATCH_TASK_REQUEST, PATCH_TASK_RESPONSE} from '../constants';
 import {define_token} from '../utils/http_functions';
 import {setActiveProject, receiveProjects} from './projects';
 import axios  from 'axios';
@@ -42,6 +42,51 @@ export function createTaskRequest(initial) {
         payload: {
             message
         }
+    }
+}
+
+export function editTask(isEditing){
+    return {
+        type: EDIT_TASK,
+        payload: {
+            editing: isEditing
+        }
+    }
+}
+
+export function patchTaskRequest(initial = false){
+    const message = (initial)?null:"Patching task";
+
+    return {
+        type: PATCH_TASK_REQUEST,
+        payload: {
+            message
+        }
+    }
+}
+
+export function patchTaskResponse(initial = false){
+    const message = (initial)?null:"Task patched.";
+
+    return {
+        type: PATCH_TASK_RESPONSE,
+        payload: {
+            message
+        }
+    }
+}
+
+export function patchTask(token, id, body, reload_function, initial = false){
+    return(dispatch) => {
+        dispatch(patchTaskRequest(initial));
+        define_token(token);
+        let model = new Task();
+        model.patch(id, body, {
+            transformResponse: [function (){
+                dispatch(patchTaskResponse(initial));
+                reload_function();
+            }]
+        });
     }
 }
 
