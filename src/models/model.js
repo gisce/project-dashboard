@@ -57,7 +57,7 @@ export class Project extends Model {
             for(let j=0; j<actual.tasks.length; j++){
                 tasks.push(actual.tasks[j].id);
             }
-            let email = "null@null.com";
+            let email = false;
             if(actual.manager.address_id){
                 email = actual.manager.address_id.email;
             }
@@ -133,7 +133,7 @@ export class Task extends Model {
                project_id = actual.project_id.id;
                project_name = actual.project_id.name;
             }
-            let email = "null@null.com";
+            let email = false;
             if(actual.manager.address_id){
                 email = actual.user_id.address_id.email;
             }
@@ -212,7 +212,7 @@ export class User extends Model {
         let users = [];
         for(let i = 0; i < response.items.length; i++){
             let actual = response.items[i];
-            let email = "null@null.com";
+            let email = false;
             if(actual.address_id){
                 email = actual.address_id.email;
             }
