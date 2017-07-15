@@ -1,5 +1,5 @@
 import axios  from 'axios';
-import {parseJSON} from '../utils/misc';
+import {parseJSON, getGravatarLink} from '../utils/misc';
 
 
 export default class Model {
@@ -45,7 +45,7 @@ export class Project extends Model {
     constructor() {
         super();
         this.model = 'project.project';
-        this.schema = ['name', 'tasks', 'manager.name', 'state'];
+        this.schema = ['name', 'tasks', 'manager.name', 'state', "manager.address_id.email"];
     }
 
     parse(response, unused) {
@@ -61,7 +61,7 @@ export class Project extends Model {
                 "id": actual.id,
                 "name": actual.name,
                 "manager.name": actual.manager.name,
-                "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
+                "avatar": getGravatarLink(actual.manager.address_id.email),
                 "state": actual.state,
                 "tasks": tasks
             };
@@ -103,7 +103,7 @@ export class Task extends Model {
     constructor() {
         super();
         this.model = 'project.task';
-        this.schema = ["name", "project_id.name", "user_id.name", "total_hours", "remaining_hours", "planned_hours", "effective_hours", "priority", "state", "work_ids", "delay_hours"];
+        this.schema = ["name", "project_id.name", "user_id.name", "user_id.address_id.email", "total_hours", "remaining_hours", "planned_hours", "effective_hours", "priority", "state", "work_ids", "delay_hours"];
     }
 
     parse(response, unused) {
@@ -136,7 +136,7 @@ export class Task extends Model {
                 "project_id.id": project_id,
                 "project_id.name": project_name,
                 "user_id.name": user,
-                "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
+                "avatar": getGravatarLink(actual.user_id.address_id.email),
                 "planned_hours": actual.planned_hours,
                 "effective_hours": actual.effective_hours,
                 "total_hours": actual.total_hours,
@@ -197,7 +197,7 @@ export class User extends Model {
     constructor() {
         super();
         this.model = "res.users";
-        this.schema = ["login", "name"];
+        this.schema = ["login", "name", 'address_id.email'];
     }
 
     parse(response, tasks_ids) {
@@ -208,7 +208,7 @@ export class User extends Model {
                 "id": actual.id,
                 "login": actual.login,
                 "name": actual.name,
-                "avatar": "https://avatars2.githubusercontent.com/u/13195695?v=3&u=fd11774329fd38d77b64b84d8c8ad559f087d958&s=400",
+                "avatar": getGravatarLink(actual.address_id.email),
                 "tasks_ids": tasks_ids
             };
             users.push(user);
