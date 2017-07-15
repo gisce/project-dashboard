@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MainPaper from './MainPaper';
+import {browserHistory} from 'react-router';
 import TextField from 'material-ui/TextField';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -7,12 +8,15 @@ import * as taskWorkCreators from '../actions/task_work';
 import * as tasksCreators from '../actions/tasks';
 import * as uiCreators from '../actions/ui';
 import * as searchCreators from '../actions/search';
+import * as breadcrumbCreators from '../actions/breadcrumb';
 import LoadingIndicator from './LoadingIndicator';
 import LinkButton from './LinkButton';
 import RefreshButton from './RefreshButton';
 import SmartTable from './SmartTable';
 import Breadcrumb from './Breadcrumb';
 import Many2One from './Many2One';
+import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
 
 function mapStateToProps(state) {
     let taskWorks = null;
@@ -29,12 +33,16 @@ function mapStateToProps(state) {
         loaded: state.taskWorks.loaded,
         isFetching: state.taskWorks.isFetching,
         message_text: state.taskWorks.message_text,
-        breadcrumb: state.breadcrumb.breadcrumb_data
+        breadcrumb: state.breadcrumb.breadcrumb_data,
+        editing: state.tasks.editing
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, tasksCreators, taskWorkCreators, uiCreators, searchCreators), dispatch);
+    return bindActionCreators(
+        Object.assign(
+            {}, tasksCreators, taskWorkCreators, uiCreators, searchCreators, breadcrumbCreators
+        ), dispatch);
 }
 
 let fields = {};
@@ -51,6 +59,8 @@ export default class TasksView extends Component {
         this.handleDelete = this.handleDelete.bind(this);
         this.handlePatch = this.handlePatch.bind(this);
         this.fetchData = this.fetchData.bind(this);
+        this.editTaskName = this.editTaskName.bind(this);
+        this.updateData = this.updateData.bind(this);
         fields = {};
     }
 
@@ -59,13 +69,8 @@ export default class TasksView extends Component {
     }
 
     fetchData(initial = true) {
-        // if(!this.props.active_task){
-            let task_id = this.props.params.taskId;
-            this.props.fetchTaskWorks(this.props.token, task_id, true, false);
-        // }
-        // else{
-        //     this.props.fetchTaskWorks(this.props.token, this.props.active_task.id, false, false);
-        // }
+        let task_id = this.props.params.taskId;
+        this.props.fetchTaskWorks(this.props.token, task_id, true, initial);
     }
 
     handleClick(element){
@@ -94,6 +99,24 @@ export default class TasksView extends Component {
     handleDelete(id){
         this.props.deleteTaskWork(this.props.token, id, this.fetchData);
         this.props.openToastRequest("Workdone eliminat");
+    }
+
+    updateData(){
+        this.props.breadcrumbClear();
+        this.fetchData(false);
+    }
+
+    editTaskName(){
+        if(!this.props.editing){
+             this.props.editTask(true);
+        }
+        else{
+            this.props.editTask(false);
+            const body = {
+                "name": fields["name"]
+            };
+            this.props.patchTask(this.props.token, this.props.active_task.id, body, this.updateData);
+        }
     }
 
     updateFields(field, value){
@@ -173,7 +196,32 @@ export default class TasksView extends Component {
                             !this.props.isFetching && (
                                 <div>
                                     <div className="title">
-                                        {title}
+                                        {this.props.editing ?
+                                            <TextField
+                                                id={this.props.params.taskId}
+                                                defaultValue={title}
+                                                onChange={e => fields["name"] = e.target.value}
+                                            />
+                                            :
+                                            title}
+                                        {
+                                            this.props.active_task && (
+                                                <IconButton
+                                                    style={{top: 3, left: 3}}
+                                                    onTouchTap={this.editTaskName}
+                                                >
+                                                    <FontIcon
+                                                      className="material-icons">
+                                                        {
+                                                            !this.props.editing ?
+                                                                "mode_edit"
+                                                                :
+                                                                "save"
+                                                        }
+                                                    </FontIcon>
+                                                </IconButton>
+                                            )
+                                        }
                                     </div>
                                     <div className="breadcrumb">
                                         <Breadcrumb

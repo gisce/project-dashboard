@@ -140,6 +140,7 @@ export default class TasksView extends Component {
                                     <div className="title">
                                         {this.props.editing ?
                                             <TextField
+                                                id={this.props.params.projectId}
                                                 defaultValue={taskName}
                                                 onChange={e => fields["name"] = e.target.value}
                                             />

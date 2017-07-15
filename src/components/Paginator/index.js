@@ -27,7 +27,7 @@ export default class Paginator extends Component {
 
     render(){
         const separator = [
-            <span>
+            <span key={0}>
                 &nbsp;&nbsp;&nbsp;...&nbsp;&nbsp;&nbsp;
             </span>
         ];
@@ -88,27 +88,38 @@ export default class Paginator extends Component {
                         <div className="rightPaginatorContainer">
                             {
                                 actual_page > 1 &&
-                                <PreviousButton/>
+                                <PreviousButton key={-1}/>
                             }
                             {
                                 (actual_page >= 4 && totalPagines != 4) &&
-                                    <span>
-                                        <PageButton number={1}/>
+                                    <span key={-2}>
+                                        <PageButton
+                                            key={1}
+                                            number={1}
+                                        />
                                         {separator}
                                     </span>
                             }
                             {buttons}
                             {
                                 actual_page < totalPagines - 2 &&
-                                    <span>
+                                    <span key={-3}>
                                         {separator}
-                                        <PageButton number={totalPagines}/>
-                                        <NextButton/>
+                                        <PageButton
+                                            key={totalPagines+1}
+                                            number={totalPagines}
+                                        />
+                                        <NextButton
+                                            key={actual_page + 3}
+                                        />
                                     </span>
                             }
                             {
                                 actual_page == totalPagines -2 &&
-                                <PageButton number={totalPagines}/>
+                                <PageButton
+                                    key={totalPagines}
+                                    number={totalPagines}
+                                />
                             }
                         </div>
                     )
