@@ -58,13 +58,17 @@ export class Project extends Model {
                 tasks.push(actual.tasks[j].id);
             }
             let email = false;
-            if(actual.manager.address_id){
-                email = actual.manager.address_id.email;
+            let name = "";
+            if(actual.manager){
+                name = actual.manager.name;
+                if(actual.manager.address_id){
+                    email = actual.manager.address_id.email;
+                }
             }
             let project = {
                 "id": actual.id,
                 "name": actual.name,
-                "manager.name": actual.manager.name,
+                "manager.name": name,
                 "avatar": getGravatarLink(email),
                 "state": actual.state,
                 "tasks": tasks
@@ -118,8 +122,12 @@ export class Task extends Model {
             let project_name = "No project";
             let delay_hours = actual.delay_hours;
             let user = actual.user_id;
+            let email = false;
             if(user){
                 user = user.name;
+                if(actual.user_id.address_id){
+                    email = actual.user_id.address_id.email;
+                }
             }
             if(!delay_hours){
                 delay_hours = 0;
@@ -132,10 +140,6 @@ export class Task extends Model {
             if(actual.project_id){
                project_id = actual.project_id.id;
                project_name = actual.project_id.name;
-            }
-            let email = false;
-            if(actual.manager.address_id){
-                email = actual.user_id.address_id.email;
             }
             let task = {};
             task = {
