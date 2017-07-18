@@ -25,6 +25,16 @@ export function createReducer(initialState, reducerMap) {
     };
 }
 
+export function stateParse(data){
+    const values = data["res"]["state"]["selection"];
+    let res = {};
+    for(let i = 0; i < values.length; i++){
+        const actual = values[i];
+        res[actual[0]] = actual[1];
+    }
+    return res;
+}
+
 export function addFilter(key, value, items, setter, adder, activeFilters){
     let filters = JSON.parse(JSON.stringify(items.filters));
     const remove = function(){
