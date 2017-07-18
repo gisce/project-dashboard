@@ -38,6 +38,11 @@ export default class Model {
         const uri = this.uri + "/" + this.model + "/" + id;
         return axios.delete(uri, configuration);
     }
+
+    functionCall(functionName, body, configuration = {}){
+        const uri = this.uri + "/" + this.model + "/" + functionName;
+        return axios.post(uri, body, configuration);
+    }
 }
 
 export class Project extends Model {
