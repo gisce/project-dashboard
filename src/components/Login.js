@@ -47,7 +47,6 @@ export default class Login extends Component {
     _onKeyPress(event) {
         if (event.charCode === 13) {
             event.preventDefault();
-            console.log("ENTER");
             this.login();
         }
     }
