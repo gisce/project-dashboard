@@ -7,6 +7,7 @@ import * as projectCreators from '../actions/projects';
 import * as searchCreators from '../actions/search';
 import * as breadcrumbCreators from '../actions/breadcrumb';
 import * as filterCreators from '../actions/filter';
+import * as pagingCreators from '../actions/paginator';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import LinkButton from './LinkButton';
@@ -35,7 +36,8 @@ function mapDispatchToProps(dispatch) {
         projectCreators,
         searchCreators,
         breadcrumbCreators,
-        filterCreators
+        filterCreators,
+        pagingCreators
     ), dispatch);
 }
 
@@ -70,6 +72,7 @@ export default class ProjectsView extends Component {
             companyId = this.props.params.companyId;
             filter.push(["partner_id", "=", parseInt(this.props.params.companyId, 10)]);
         }
+        this.props.setActualPage(1);
         this.props.fetchProjects(this.props.token, filter, companyId, initial);
         this.props.setFilters(initializeFilters(cols), [this.props.searchProjects, companyId]);
     }
