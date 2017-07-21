@@ -18,7 +18,8 @@ function mapStateToProps(state) {
     return {
         token: state.auth.token,
         projects: state.projects,
-        users: state.users
+        users: state.users,
+        fields_errors: state.ui.fields_errors
     };
 }
 
@@ -45,12 +46,14 @@ export default class NewProject extends Component {
     }
 
     createProjectCall(){
+        let errors_dict = {};
         if(fields.hasOwnProperty("name")) {
-            this.props.createProject(this.props.token, this.reload, fields);
+            this.props.createProject(this.props.token, fields, this.reload);
             this.props.openToastRequest("Projecte creat");
         }
         else{
-            this.props.openDialogRequest("Atenció", "És necessari escriure el nom del projecte.");
+            errors_dict['nom_projecte'] = 'Camp obligatori';
+            this.props.setFieldsErrors(errors_dict);
         }
     }
 
@@ -71,6 +74,13 @@ export default class NewProject extends Component {
                             <TextField
                                 floatingLabelText="Nom del projecte"
                                 onChange={e => fields["name"] = e.target.value}
+                                errorText={
+                                    (this.props.fields_errors && "nom_projecte" in this.props.fields_errors) ? (
+                                        this.props.fields_errors['nom_projecte']
+                                    )
+                                        :
+                                    ''
+                                }
                             />
                             <DatePicker
                                 hintText="Data d'inici"

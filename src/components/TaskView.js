@@ -9,6 +9,7 @@ import * as tasksCreators from '../actions/tasks';
 import * as uiCreators from '../actions/ui';
 import * as searchCreators from '../actions/search';
 import * as breadcrumbCreators from '../actions/breadcrumb';
+import * as pagingCreators from '../actions/paginator';
 import LoadingIndicator from './LoadingIndicator';
 import LinkButton from './LinkButton';
 import RefreshButton from './RefreshButton';
@@ -34,14 +35,15 @@ function mapStateToProps(state) {
         isFetching: state.taskWorks.isFetching,
         message_text: state.taskWorks.message_text,
         breadcrumb: state.breadcrumb.breadcrumb_data,
-        editing: state.tasks.editing
+        editing: state.tasks.editing,
+        translated_states: state.tasks.translated_states
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(
         Object.assign(
-            {}, tasksCreators, taskWorkCreators, uiCreators, searchCreators, breadcrumbCreators
+            {}, tasksCreators, taskWorkCreators, uiCreators, searchCreators, breadcrumbCreators, pagingCreators
         ), dispatch);
 }
 
@@ -61,6 +63,7 @@ export default class TasksView extends Component {
         this.fetchData = this.fetchData.bind(this);
         this.editTaskName = this.editTaskName.bind(this);
         this.updateData = this.updateData.bind(this);
+        this.handleOpenTask = this.handleOpenTask.bind(this);
         fields = {};
     }
 
@@ -70,6 +73,10 @@ export default class TasksView extends Component {
 
     fetchData(initial = true) {
         let task_id = this.props.params.taskId;
+        this.props.setActualPage(1);
+        if(Object.keys(this.props.translated_states).length === 0){
+            this.props.getTaskState(this.props.token);
+        }
         this.props.fetchTaskWorks(this.props.token, task_id, true, initial);
     }
 
@@ -104,6 +111,11 @@ export default class TasksView extends Component {
     updateData(){
         this.props.breadcrumbClear();
         this.fetchData(false);
+    }
+
+    handleOpenTask(){
+        this.props.openTask(this.props.token, this.props.params.taskId, this.fetchData);
+        this.props.openToastRequest("La tasca s'ha obert correctament");
     }
 
     editTaskName(){
@@ -236,11 +248,20 @@ export default class TasksView extends Component {
                         {
                             !this.props.isFetching && (
                                 <div className="upperButtons">
-                                    <LinkButton
-                                        icon="note_add"
-                                        label="Nou"
-                                        route={uri}
-                                    />
+                                    {
+                                        this.props.active_task && this.props.active_task.state === 'open' ?
+                                            <LinkButton
+                                                icon="note_add"
+                                                label="Nou"
+                                                route={uri}
+                                            />
+                                        :
+                                           <LinkButton
+                                                icon="lock_open"
+                                                label="Obrir tasca"
+                                                clickFunction={this.handleOpenTask}
+                                            />
+                                    }
                                     <RefreshButton
                                         refresh={() => this.fetchData(false)}
                                     />
@@ -250,8 +271,17 @@ export default class TasksView extends Component {
                     </div>
                     <div className="contents">
                         {
-                            !this.props.isFetching &&
-                            continguts
+                            (!this.props.isFetching && this.props.translated_states) &&(
+                                <div>
+                                    <span>Estat de la tasca: </span>
+                                    {
+                                        this.props.active_task && (
+                                            this.props.translated_states[this.props.active_task.state]
+                                        )
+                                    }
+                                    {continguts}
+                                </div>
+                            )
                         }
                     </div>
                     <div className="tableContainer" style={{paddingTop: 20 }}>

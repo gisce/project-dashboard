@@ -67,6 +67,7 @@ export default class Many2One extends Component {
                 dataSource={this.dataSource}
                 filter={this.filter}
                 openOnFocus={true}
+                errorText={this.props.errorText}
             />
         )
     }

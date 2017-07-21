@@ -8,6 +8,7 @@ import * as projectCreators from '../actions/projects';
 import * as searchCreators from '../actions/search';
 import * as breadcrumbCreators from '../actions/breadcrumb';
 import * as filterCreators from '../actions/filter';
+import * as pagingCreators from '../actions/paginator';
 import SearchBox from './SearchBox';
 import LoadingIndicator from './LoadingIndicator';
 import LinkButton from './LinkButton';
@@ -42,7 +43,8 @@ function mapDispatchToProps(dispatch) {
         searchCreators,
         breadcrumbCreators,
         filterCreators,
-        projectCreators
+        projectCreators,
+        pagingCreators
     ), dispatch);
 }
 
@@ -80,6 +82,7 @@ export default class TasksView extends Component {
             projectId = this.props.params.projectId;
             filter.push(["project_id", "=", parseInt(projectId, 10)]);
         }
+        this.props.setActualPage(1);
         this.props.fetchTasks(this.props.token, filter, projectId, initial);
         this.props.setFilters(initializeFilters(cols), [this.props.searchTasks, projectId]);
     }

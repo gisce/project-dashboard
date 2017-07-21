@@ -1,5 +1,19 @@
-import {FETCH_TASKS_REQUEST, RECEIVE_TASKS, SET_ACTIVE_TASK, CREATE_TASK_REQUEST, CREATE_TASK_RESPONSE, EDIT_TASK, PATCH_TASK_REQUEST, PATCH_TASK_RESPONSE} from '../constants';
+import {
+    FETCH_TASKS_REQUEST,
+    RECEIVE_TASKS,
+    SET_ACTIVE_TASK,
+    CREATE_TASK_REQUEST,
+    CREATE_TASK_RESPONSE,
+    EDIT_TASK,
+    PATCH_TASK_REQUEST,
+    PATCH_TASK_RESPONSE,
+    OPEN_TASK_REQUEST,
+    OPEN_TASK_RESPONSE,
+    GET_TASK_STATE_REQUEST,
+    GET_TASK_STATE_RESPONSE
+} from '../constants';
 import {define_token} from '../utils/http_functions';
+import {stateParse} from '../utils/misc';
 import {setActiveProject, receiveProjects} from './projects';
 import axios  from 'axios';
 import { Project, Task } from '../models/model';
@@ -143,6 +157,81 @@ export function fetchTasks(token, filter, project_id, initial = false) {
                         }]
                     });
                 }
+            }]
+        });
+    }
+}
+
+
+export function openTaskRequest(initial = false){
+    const message = (initial)?null:"Opening task...";
+
+    return {
+        type: OPEN_TASK_REQUEST,
+        payload: {
+            message
+        }
+    }
+}
+
+export function openTaskResponse(initial = false){
+    const message = (initial)?null:"Task is open.";
+
+    return {
+        type: OPEN_TASK_RESPONSE,
+        payload: {
+            message
+        }
+    }
+}
+
+export function openTask(token, task_id, reload_function, initial = false) {
+    return (dispatch) => {
+        dispatch(openTaskRequest(initial));
+        define_token(token);
+        let model = new Task();
+        model.functionCall("do_open", {"args": [[parseInt(task_id)]]}, {
+            transformResponse: [function (){
+                dispatch(openTaskResponse(initial));
+                reload_function(false);
+            }]
+        });
+    }
+}
+
+export function getTaskStateRequest(initial = false){
+    const message = (initial)?null:"Getting task state...";
+
+    return {
+        type: GET_TASK_STATE_REQUEST,
+        payload: {
+            message
+        }
+    }
+}
+
+export function getTaskStateResponse(results, initial = false){
+    const message = (initial)?null:"Task state retrieved";
+
+    return {
+        type: GET_TASK_STATE_RESPONSE,
+        payload: {
+            message,
+            results
+        }
+    }
+}
+
+export function getTaskState(token){
+    return (dispatch) => {
+        dispatch(getTaskStateRequest());
+        define_token(token);
+        let model = new Task();
+        model.functionCall("fields_get", {"args": [["state"], {"lang": "ca_ES"}]}, {
+            transformResponse: [function (data) {
+                let newData = JSON.parse(data);
+                let results = stateParse(newData);
+                dispatch(getTaskStateResponse(results));
             }]
         });
     }
