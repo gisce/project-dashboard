@@ -47,32 +47,43 @@ export default class NewTask extends Component {
 
     createWorkdoneCall(){
         let errors_dict = {};
-        if(error.length > 0){
-            errors_dict['time'] =  error[0];
+        if(!fields.hasOwnProperty("hours")){
+            errors_dict['time_error'] = 'Camp obligatori';
         }
         if(!fields.hasOwnProperty("name")){
             errors_dict['treball'] = 'Camp obligatori';
         }
-        else{
+        if(fields.hasOwnProperty("hours") && fields.hasOwnProperty("name") && !fields.hasOwnProperty("time_error")){
+            delete fields["time_error"];
             this.props.setFieldsErrors({});
             this.props.createTaskWork(this.props.token, fields, this.reload);
             this.props.openToastRequest("Workdone creat");
+        }
+        if(error.length > 0){
+            errors_dict['time_error'] =  error[0];
         }
         this.props.setFieldsErrors(errors_dict);
     }
 
     updateFields(field, value){
-        fields[field] = value;
+        if(String(value).length > 0 && String(value) !== "0"){
+            fields[field] = value;
+        }
+        else{
+            delete fields[field];
+        }
     }
 
     handleTimeFormat(time){
         const res = timeFormat(time, 'float');
         error = [];
         if(res[0] === 'ok'){
+            delete fields["time_error"];
             this.updateFields("hours", res[1]);
         }
         else{
-            this.updateFields("hours", 0);
+            delete fields["hours"];
+            this.updateFields("time_error", res[1]);
             error.push(res[1]);
         }
     }
@@ -112,8 +123,8 @@ export default class NewTask extends Component {
                                 floatingLabelText="Temps dedicat"
                                 onChange={e => this.handleTimeFormat(e.target.value)}
                                 errorText={
-                                    (this.props.fields_errors && "time" in this.props.fields_errors) ? (
-                                        this.props.fields_errors['time']
+                                    (this.props.fields_errors && "time_error" in this.props.fields_errors) ? (
+                                        this.props.fields_errors['time_error']
                                     )
                                         :
                                     ''
