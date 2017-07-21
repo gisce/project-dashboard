@@ -185,12 +185,12 @@ export function openTaskResponse(initial = false){
     }
 }
 
-export function openTask(token, body, reload_function, initial = false) {
+export function openTask(token, task_id, reload_function, initial = false) {
     return (dispatch) => {
         dispatch(openTaskRequest(initial));
         define_token(token);
         let model = new Task();
-        model.functionCall(body, {
+        model.functionCall("do_open", {"args": [[parseInt(task_id)]]}, {
             transformResponse: [function (){
                 dispatch(openTaskResponse(initial));
                 reload_function(false);
