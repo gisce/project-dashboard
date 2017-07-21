@@ -114,7 +114,7 @@ export default class TasksView extends Component {
     }
 
     handleOpenTask(){
-        this.props.openTask(this.props.token, {}, this.fetchData);
+        this.props.openTask(this.props.token, this.props.params.taskId, this.fetchData);
         this.props.openToastRequest("La tasca s'ha obert correctament");
     }
 
