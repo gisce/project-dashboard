@@ -7,7 +7,7 @@ export default class NotFound extends Component {
             <div className="mainPaperContainer">
                 <MainPaper>
                     <div className="contents">
-                        <h2 style={{textAlign: "center"}}>Error 404: no s'han trobat els continguts sol·licitats.</h2>
+                        <h2 style={{textAlign: "center", paddingTop: '80px', paddingBottom: '80px'}}>Error 404: no s'han trobat els continguts sol·licitats.</h2>
                         <br/>
                     </div>
                 </MainPaper>
