@@ -22,6 +22,8 @@ function mapStateToProps(state) {
         isFetchingTasks: state.tasks.isFetching,
         isFetchingUsers: state.users.isFetching,
         message_text: state.users.message_text,
+        allTasks: state.users.allTasks,
+        translated_states: state.tasks.translated_states
     };
 }
 
@@ -55,6 +57,7 @@ export default class UserView extends Component {
             message_text: null
         };
         this.handleClick = this.handleClick.bind(this);
+        this.handleAllTasksClick = this.handleAllTasksClick.bind(this);
     }
 
     componentDidMount() {
@@ -63,11 +66,10 @@ export default class UserView extends Component {
 
 
     fetchData(initial = true) {
-        let taskFilter = [
-            ["user_id", "=", parseInt(this.props.params.userId, 10)],
-            ["state", "in", ["open", "pending"]]
-        ];
-        this.props.fetchTasks(this.props.token, taskFilter, false, false);
+        this.props.setShowAllUserTasksFlag(false);
+        if(Object.keys(this.props.translated_states).length === 0){
+            this.props.getTaskState(this.props.token);
+        }
         this.props.fetchUsers(this.props.token, this.props.params.userId, true, initial);
     }
 
@@ -76,18 +78,32 @@ export default class UserView extends Component {
         browserHistory.push("/tasks/" + element.id);
     }
 
+    handleAllTasksClick(flag){
+        this.props.setShowAllUserTasksFlag(flag);
+        if(flag) {
+            let taskFilter = [
+                ["user_id", "=", parseInt(this.props.params.userId, 10)]
+            ];
+            this.props.fetchTasks(this.props.token, taskFilter, false, false);
+        }
+        else{
+            this.fetchData(false);
+        }
+    }
+
     render() {
-        let isFetching = this.props.isFetchingTasks || this.props.isFetchingUsers;
-        let cols = {
+        const allTasks = this.props.allTasks;
+        const isFetching = this.props.isFetchingTasks || this.props.isFetchingUsers;
+        const cols = {
             "Tasca": ["name", {width: "250px"}],
             "Projecte": ["project_id.name", {width: "250px"}],
-            "Estat": ["state", {width: "50px"}],
-            "Data inici": ["name", {width: "130px"}]
+            "Estat": ["state", {width: "80px"}],
+            "Data inici": ["state", {width: "130px"}]
         };
         let userdata = [];
         let buttons = [];
         let tasks = {};
-        let user_id = this.props.params.userId;
+        const user_id = this.props.params.userId;
         let user = null;
         if(this.props.tasksLoaded && this.props.userLoaded && !isFetching){
             tasks = this.props.tasks.tasks;
@@ -111,15 +127,33 @@ export default class UserView extends Component {
                     </div>
                 </div>
             );
-            buttons.push(
-                <FlatButton
-                    key="-2"
-                    label="Totes les tasques"
-                    primary={true}
-                    icon={<FontIcon className="material-icons">view_list</FontIcon>}
-                    onTouchTap={console.log("")}
-                />
-            );
+            if(!this.props.allTasks) {
+                buttons.push(
+                    <FlatButton
+                        key="-2"
+                        label="Totes les tasques"
+                        primary={true}
+                        icon={<FontIcon className="material-icons">view_list</FontIcon>}
+                        onTouchTap={() => this.handleAllTasksClick(true)}
+                    />
+                );
+            }
+            else{
+                buttons.push(
+                    <FlatButton
+                        key="-2"
+                        label="Tasques actives o pendents"
+                        primary={true}
+                        icon={<FontIcon className="material-icons">view_list</FontIcon>}
+                        onTouchTap={() => this.handleAllTasksClick(false)}
+                    />
+                );
+            }
+            if(Object.keys(this.props.translated_states).length > 0){
+                for(let i = 0; i < tasks.length; i++){
+                    tasks[i]["state"] = this.props.translated_states[tasks[i]["state"]];
+                }
+            }
         }
         return(
             <div className="mainPaperContainer">
@@ -149,8 +183,16 @@ export default class UserView extends Component {
                     </div>
                     <div className="contents">
                         {
-                            !isFetching &&
-                            <div>Tasques actives o pendents on l'usuari treballa actualment:</div>
+                            !isFetching && (
+
+                                (
+                                    allTasks ?
+                                        <div>Tasques de l'usuari:</div>
+                                    :
+                                        <div>Tasques actives o pendents on l'usuari treballa actualment:</div>
+                                )
+
+                            )
                         }
                     </div>
                     <div className="tableContainer" style={{paddingTop: 20 }}>

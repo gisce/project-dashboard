@@ -1,5 +1,6 @@
-import {FETCH_USERS_REQUEST, RECEIVE_USERS} from '../constants';
+import {FETCH_USERS_REQUEST, RECEIVE_USERS, SHOW_ALL_USER_TASKS_FLAG} from '../constants';
 import {define_token} from '../utils/http_functions';
+import {receiveTasks} from './tasks';
 import axios  from 'axios';
 import {User, Task} from '../models/model';
 
@@ -25,6 +26,16 @@ export function receiveUsers(users, initial) {
     };
 }
 
+export function setShowAllUserTasksFlag(flag, initial){
+    const message = (initial)?null:("Show all user tasks flag set to: " + String(flag));
+    return {
+        type: SHOW_ALL_USER_TASKS_FLAG,
+        payload: {
+            flag,
+            message,
+        },
+    };
+}
 
 export function fetchUsers(token, userId, loadTasks, initial = false) {
     return (dispatch) => {
@@ -51,8 +62,7 @@ export function fetchUsers(token, userId, loadTasks, initial = false) {
                       ], {
                           transformResponse: [function (data) {
                               let newTaskData = JSON.parse(data);
-                              tasks_ids = task.parseTaskIds(newTaskData);
-                              dispatch(receiveUsers(model.parse(newData, tasks_ids), initial));
+                              dispatch(receiveTasks(task.parse(newTaskData, null), initial));
                           }]
                       });
                   }

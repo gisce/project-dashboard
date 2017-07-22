@@ -1,6 +1,18 @@
-import {FETCH_PROJECTS_REQUEST, RECEIVE_PROJECTS, SET_ACTIVE_PROJECT, CREATE_PROJECT_REQUEST, CREATE_PROJECT_RESPONSE, EDIT_PROJECT, PATCH_PROJECT_REQUEST, PATCH_PROJECT_RESPONSE} from '../constants';
+import {
+    FETCH_PROJECTS_REQUEST,
+    RECEIVE_PROJECTS,
+    SET_ACTIVE_PROJECT,
+    CREATE_PROJECT_REQUEST,
+    CREATE_PROJECT_RESPONSE,
+    EDIT_PROJECT,
+    PATCH_PROJECT_REQUEST,
+    PATCH_PROJECT_RESPONSE,
+    GET_PROJECT_STATE_REQUEST,
+    GET_PROJECT_STATE_RESPONSE
+} from '../constants';
 import { receiveCompanies, setActiveCompany } from './companies';
 import {define_token} from '../utils/http_functions';
+import {stateParse} from '../utils/misc';
 import {Project, Company} from '../models/model'
 
 export function fetchProjectsRequest(initial) {
@@ -143,5 +155,43 @@ export function fetchProjects(token, filter, companyId, initial = false) {
             }]
         });
         dispatch(setActiveProject(null));
+    }
+}
+
+export function getProjectStateRequest(initial = false){
+    const message = (initial)?null:"Getting project state...";
+
+    return {
+        type: GET_PROJECT_STATE_REQUEST,
+        payload: {
+            message
+        }
+    }
+}
+
+export function getProjectStateResponse(results, initial = false){
+    const message = (initial)?null:"Project state retrieved";
+
+    return {
+        type: GET_PROJECT_STATE_RESPONSE,
+        payload: {
+            message,
+            results
+        }
+    }
+}
+
+export function getProjectState(token){
+    return (dispatch) => {
+        dispatch(getProjectStateRequest());
+        define_token(token);
+        let model = new Project();
+        model.functionCall("fields_get", {"args": [["state"], {"lang": "ca_ES"}]}, {
+            transformResponse: [function (data) {
+                let newData = JSON.parse(data);
+                let results = stateParse(newData);
+                dispatch(getProjectStateResponse(results));
+            }]
+        });
     }
 }
