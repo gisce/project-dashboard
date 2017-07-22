@@ -26,7 +26,8 @@ function mapStateToProps(state) {
         message_text: state.projects.message_text,
         breadcrumb: state.breadcrumb.breadcrumb_data,
         active_company: state.companies.active_company,
-        filters: state.filter
+        filters: state.filter,
+        translated_states: state.projects.translated_states
     };
 }
 
@@ -72,6 +73,9 @@ export default class ProjectsView extends Component {
             companyId = this.props.params.companyId;
             filter.push(["partner_id", "=", parseInt(this.props.params.companyId, 10)]);
         }
+        if(Object.keys(this.props.translated_states).length === 0){
+            this.props.getProjectState(this.props.token);
+        }
         this.props.setActualPage(1);
         this.props.fetchProjects(this.props.token, filter, companyId, initial);
         this.props.setFilters(initializeFilters(cols), [this.props.searchProjects, companyId]);
@@ -91,10 +95,15 @@ export default class ProjectsView extends Component {
         const companyId = this.props.params.companyId;
         let projects = this.props.data.data;
         let newBreadcrumb = this.props.breadcrumb;
-        if(this.props.loaded && this.props.active_company && newBreadcrumb.length == 0){
-            const route = "/companies/" + this.props.active_company.id + "/projects";
-            newBreadcrumb.push(['Empreses', '/companies']);
-            newBreadcrumb.push([this.props.active_company.name, route]);
+        if(this.props.loaded){
+            for(let i = 0; i < projects.length; i++){
+                projects[i]["state"] = this.props.translated_states[projects[i]["state"]];
+            }
+            if(this.props.active_company && newBreadcrumb.length == 0){
+                const route = "/companies/" + this.props.active_company.id + "/projects";
+                newBreadcrumb.push(['Empreses', '/companies']);
+                newBreadcrumb.push([this.props.active_company.name, route]);
+            }
         }
         return(
             <div className="mainPaperContainer">
