@@ -7,13 +7,10 @@ import {
     EDIT_TASK,
     PATCH_TASK_REQUEST,
     PATCH_TASK_RESPONSE,
-    OPEN_TASK_REQUEST,
-    OPEN_TASK_RESPONSE,
-    GET_TASK_STATE_REQUEST,
-    GET_TASK_STATE_RESPONSE
+    OPEN_TASK_REQUEST
 } from '../constants';
 import {define_token} from '../utils/http_functions';
-import {stateParse} from '../utils/misc';
+import {translationParse} from '../utils/misc';
 import {setActiveProject, receiveProjects} from './projects';
 import axios  from 'axios';
 import { Project, Task } from '../models/model';
@@ -138,25 +135,43 @@ export function fetchTasks(token, filter, project_id, initial = false) {
         model.search(filter, {
             transformResponse: [function (data) {
                 let newData = JSON.parse(data);
-                let results = [];
+                let tasks = [];
                 if (newData.n_items > 0) {
-                    results = model.parse(newData, false);
+                    tasks = model.parse(newData, false);
                 }
-                dispatch(receiveTasks(results, initial));
-                if(project_id){
-                    let project = new Project();
-                    project.search([["id", "=", parseInt(project_id, 10)]], {
-                        transformResponse: [function (data) {
-                            let newData = JSON.parse(data);
-                            let results = [];
-                            if (newData.n_items > 0){
-                                results = project.parse(newData, false);
-                            }
-                            dispatch(receiveProjects(results, initial));
-                            dispatch(setActiveProject(results[0]));
-                        }]
-                    });
-                }
+                /*
+                Now, we need to translate the following fields:
+                    - State
+                    - Priority
+                */
+                model.functionCall("fields_get", {"args": [["state", "priority"], {"lang": "ca_ES"}]}, {
+                    transformResponse: [function (data) {
+                        let newData = JSON.parse(data);
+                        let p_trans = translationParse(newData, "priority");
+                        let s_trans = translationParse(newData, "state");
+                        for (let i = 0; i < tasks.length; i++) {
+                            const state_key = tasks[i]["state"];
+                            const priority_key = tasks[i]["priority"];
+                            tasks[i]["priority"] = p_trans[priority_key];
+                            tasks[i]["state"] = s_trans[state_key];
+                        }
+                        dispatch(receiveTasks(tasks, initial));
+                        if(project_id){
+                            let project = new Project();
+                            project.search([["id", "=", parseInt(project_id, 10)]], {
+                                transformResponse: [function (data) {
+                                    let newData = JSON.parse(data);
+                                    let results = [];
+                                    if (newData.n_items > 0){
+                                        results = project.parse(newData, false);
+                                    }
+                                    dispatch(receiveProjects(results, initial));
+                                    dispatch(setActiveProject(results[0]));
+                                }]
+                            });
+                        }
+                    }]
+                });
             }]
         });
     }
@@ -194,44 +209,6 @@ export function openTask(token, task_id, reload_function, initial = false) {
             transformResponse: [function (){
                 dispatch(openTaskResponse(initial));
                 reload_function(false);
-            }]
-        });
-    }
-}
-
-export function getTaskStateRequest(initial = false){
-    const message = (initial)?null:"Getting task state...";
-
-    return {
-        type: GET_TASK_STATE_REQUEST,
-        payload: {
-            message
-        }
-    }
-}
-
-export function getTaskStateResponse(results, initial = false){
-    const message = (initial)?null:"Task state retrieved";
-
-    return {
-        type: GET_TASK_STATE_RESPONSE,
-        payload: {
-            message,
-            results
-        }
-    }
-}
-
-export function getTaskState(token){
-    return (dispatch) => {
-        dispatch(getTaskStateRequest());
-        define_token(token);
-        let model = new Task();
-        model.functionCall("fields_get", {"args": [["state"], {"lang": "ca_ES"}]}, {
-            transformResponse: [function (data) {
-                let newData = JSON.parse(data);
-                let results = stateParse(newData);
-                dispatch(getTaskStateResponse(results));
             }]
         });
     }
