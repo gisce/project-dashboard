@@ -6,13 +6,11 @@ import {
     CREATE_PROJECT_RESPONSE,
     EDIT_PROJECT,
     PATCH_PROJECT_REQUEST,
-    PATCH_PROJECT_RESPONSE,
-    GET_PROJECT_STATE_REQUEST,
-    GET_PROJECT_STATE_RESPONSE
+    PATCH_PROJECT_RESPONSE
 } from '../constants';
-import { receiveCompanies, setActiveCompany } from './companies';
+import { receiveCompanies, setActiveCompany, fetchCompaniesRequest } from './companies';
 import {define_token} from '../utils/http_functions';
-import {stateParse} from '../utils/misc';
+import {translationParse} from '../utils/misc';
 import {Project, Company} from '../models/model'
 
 export function fetchProjectsRequest(initial) {
@@ -133,65 +131,42 @@ export function fetchProjects(token, filter, companyId, initial = false) {
         model.search(filter, {
             transformResponse: [function(data) {
                 let newData = JSON.parse(data);
-                let results = [];
+                let projects = [];
                 if (newData.n_items > 0) {
-                    results = model.parse(newData);
+                    projects = model.parse(newData);
                 }
-                dispatch(receiveProjects(results, initial));
-                if (companyId) {
-                    let company = new Company();
-                    company.search([["id", "=", companyId]], {
-                        transformResponse: [function (data) {
-                            let newData = JSON.parse(data);
-                            let results = [];
-                            if (newData.n_items > 0) {
-                                results = company.parse(newData, []);
-                            }
-                            dispatch(receiveCompanies(results, initial));
-                            dispatch(setActiveCompany(results[0]))
-                        }]
-                    });
-                }
+                /*
+                Now, we need to translate the following fields:
+                    - State
+                */
+                model.functionCall("fields_get", {"args": [["state"], {"lang": "ca_ES"}]}, {
+                    transformResponse: [function (data) {
+                        let newData = JSON.parse(data);
+                        let translations = translationParse(newData, "state");
+                        for (let i = 0; i < projects.length; i++) {
+                            const key = projects[i]["state"];
+                            projects[i]["state"] = translations[key];
+                        }
+                        dispatch(receiveProjects(projects, initial));
+                        if (companyId) {
+                            dispatch(fetchCompaniesRequest(false));
+                            let company = new Company();
+                            company.search([["id", "=", companyId]], {
+                                transformResponse: [function (data) {
+                                    let newData = JSON.parse(data);
+                                    let results = [];
+                                    if (newData.n_items > 0) {
+                                        results = company.parse(newData, []);
+                                    }
+                                    dispatch(receiveCompanies(results, initial));
+                                    dispatch(setActiveCompany(results[0]))
+                                }]
+                            });
+                        }
+                    }]
+                });
             }]
         });
         dispatch(setActiveProject(null));
-    }
-}
-
-export function getProjectStateRequest(initial = false){
-    const message = (initial)?null:"Getting project state...";
-
-    return {
-        type: GET_PROJECT_STATE_REQUEST,
-        payload: {
-            message
-        }
-    }
-}
-
-export function getProjectStateResponse(results, initial = false){
-    const message = (initial)?null:"Project state retrieved";
-
-    return {
-        type: GET_PROJECT_STATE_RESPONSE,
-        payload: {
-            message,
-            results
-        }
-    }
-}
-
-export function getProjectState(token){
-    return (dispatch) => {
-        dispatch(getProjectStateRequest());
-        define_token(token);
-        let model = new Project();
-        model.functionCall("fields_get", {"args": [["state"], {"lang": "ca_ES"}]}, {
-            transformResponse: [function (data) {
-                let newData = JSON.parse(data);
-                let results = stateParse(newData);
-                dispatch(getProjectStateResponse(results));
-            }]
-        });
     }
 }
