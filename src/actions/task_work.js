@@ -1,5 +1,6 @@
 import {FETCH_TASK_WORK_REQUEST, RECEIVE_TASK_WORK, CREATE_TASK_WORK_REQUEST, CREATE_TASK_WORK_RESPONSE, PATCH_TASK_WORK_REQUEST, PATCH_TASK_WORK_RESPONSE, DELETE_TASK_WORK_REQUEST, DELETE_TASK_WORK_RESPONSE} from "../constants";
 import {define_token} from "../utils/http_functions";
+import {translationParse} from "../utils/misc";
 import {fetchTasksRequest, receiveTasks, setActiveTask} from "./tasks";
 import axios from "axios";
 import {Task, TaskWork} from "../models/model";
@@ -157,8 +158,21 @@ export function fetchTaskWorks(token, task_id, active_task, initial = false) {
                         transformResponse: [function (data) {
                             let newData = JSON.parse(data);
                             let tasks = task.parse(newData, false);
-                            dispatch(receiveTasks(tasks, initial));
-                            dispatch(setActiveTask(tasks[0]));
+                            task.functionCall("fields_get", {"args": [["state", "priority"], {"lang": "ca_ES"}]}, {
+                                transformResponse: [function (data) {
+                                    let newData = JSON.parse(data);
+                                    let p_trans = translationParse(newData, "priority");
+                                    let s_trans = translationParse(newData, "state");
+                                    for (let i = 0; i < tasks.length; i++) {
+                                        const state_key = tasks[i]["state"];
+                                        const priority_key = tasks[i]["priority"];
+                                        tasks[i]["priority"] = p_trans[priority_key];
+                                        tasks[i]["state"] = s_trans[state_key];
+                                    }
+                                    dispatch(receiveTasks(tasks, initial));
+                                    dispatch(setActiveTask(tasks[0]));
+                                }]
+                            })
                         }]
                     });
                 }
