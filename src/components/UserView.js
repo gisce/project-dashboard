@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as tasksCreators from '../actions/tasks';
 import * as userCreators from '../actions/users'
+import * as paginatorCreators from '../actions/paginator';
 import Avatar from 'material-ui/Avatar'
 import FlatButton from 'material-ui/FlatButton'
 import FontIcon from 'material-ui/FontIcon'
@@ -23,12 +24,11 @@ function mapStateToProps(state) {
         isFetchingUsers: state.users.isFetching,
         message_text: state.users.message_text,
         allTasks: state.users.allTasks,
-        translated_states: state.tasks.translated_states
     };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Object.assign({}, tasksCreators, userCreators), dispatch);
+    return bindActionCreators(Object.assign({}, tasksCreators, userCreators, paginatorCreators), dispatch);
 }
 
 const style = {
@@ -64,12 +64,9 @@ export default class UserView extends Component {
         this.fetchData();
     }
 
-
     fetchData(initial = true) {
+        this.props.setActualPage(1);
         this.props.setShowAllUserTasksFlag(false);
-        if(Object.keys(this.props.translated_states).length === 0){
-            this.props.getTaskState(this.props.token);
-        }
         this.props.fetchUsers(this.props.token, this.props.params.userId, true, initial);
     }
 
@@ -95,9 +92,9 @@ export default class UserView extends Component {
         const allTasks = this.props.allTasks;
         const isFetching = this.props.isFetchingTasks || this.props.isFetchingUsers;
         const cols = {
-            "Tasca": ["name", {width: "250px"}],
-            "Projecte": ["project_id.name", {width: "250px"}],
-            "Estat": ["state", {width: "80px"}],
+            "Tasca": ["name", {width: "220px"}],
+            "Projecte": ["project_id.name", {width: "220px"}],
+            "Estat": ["state", {width: "90px"}],
             "Data inici": ["state", {width: "130px"}]
         };
         let userdata = [];
@@ -148,11 +145,6 @@ export default class UserView extends Component {
                         onTouchTap={() => this.handleAllTasksClick(false)}
                     />
                 );
-            }
-            if(Object.keys(this.props.translated_states).length > 0){
-                for(let i = 0; i < tasks.length; i++){
-                    tasks[i]["state"] = this.props.translated_states[tasks[i]["state"]];
-                }
             }
         }
         return(
