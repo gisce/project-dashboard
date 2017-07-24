@@ -35,8 +35,7 @@ function mapStateToProps(state) {
         isFetching: state.taskWorks.isFetching,
         message_text: state.taskWorks.message_text,
         breadcrumb: state.breadcrumb.breadcrumb_data,
-        editing: state.tasks.editing,
-        translated_states: state.tasks.translated_states
+        editing: state.tasks.editing
     };
 }
 
@@ -74,9 +73,6 @@ export default class TasksView extends Component {
     fetchData(initial = true) {
         let task_id = this.props.params.taskId;
         this.props.setActualPage(1);
-        if(Object.keys(this.props.translated_states).length === 0){
-            this.props.getTaskState(this.props.token);
-        }
         this.props.fetchTaskWorks(this.props.token, task_id, true, initial);
     }
 
@@ -271,12 +267,12 @@ export default class TasksView extends Component {
                     </div>
                     <div className="contents">
                         {
-                            (!this.props.isFetching && this.props.translated_states) &&(
+                            (!this.props.isFetching) &&(
                                 <div>
                                     <span>Estat de la tasca: </span>
                                     {
                                         this.props.active_task && (
-                                            this.props.translated_states[this.props.active_task.state]
+                                            this.props.active_task.state
                                         )
                                     }
                                     {continguts}
