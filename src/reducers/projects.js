@@ -17,8 +17,7 @@ const initialState = {
     loaded: false,
     active_project: null,
     message_text: null,
-    editing: false,
-    translated_states: {}
+    editing: false
 };
 
 export default createReducer(initialState, {
@@ -32,6 +31,7 @@ export default createReducer(initialState, {
     [FETCH_PROJECTS_REQUEST]: (state, payload) =>
         Object.assign({}, state, {
             isFetching: true,
+            loaded: false,
             message_text: payload.message,
         }),
     [SET_ACTIVE_PROJECT]: (state, payload) =>
@@ -57,14 +57,5 @@ export default createReducer(initialState, {
     [PATCH_PROJECT_RESPONSE]: (state, payload) =>
         Object.assign({}, state, {
             message_text: payload.message
-        }),
-    [GET_PROJECT_STATE_REQUEST]: (state, payload) =>
-        Object.assign({}, state, {
-            message_text: payload.message
-        }),
-    [GET_PROJECT_STATE_RESPONSE]: (state, payload) =>
-        Object.assign({}, state, {
-            message_text: payload.message,
-            translated_states: payload.results
-        }),
+        })
 });
