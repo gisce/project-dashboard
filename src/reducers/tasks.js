@@ -1,4 +1,5 @@
-import { RECEIVE_TASKS,
+import {
+    RECEIVE_TASKS,
     FETCH_TASKS_REQUEST,
     SET_ACTIVE_TASK,
     CREATE_TASK_WORK_REQUEST,
@@ -7,9 +8,7 @@ import { RECEIVE_TASKS,
     PATCH_TASK_REQUEST,
     PATCH_TASK_RESPONSE,
     OPEN_TASK_REQUEST,
-    OPEN_TASK_RESPONSE,
-    GET_TASK_STATE_REQUEST,
-    GET_TASK_STATE_RESPONSE
+    OPEN_TASK_RESPONSE
 } from '../constants';
 import { createReducer } from '../utils/misc';
 
@@ -19,8 +18,7 @@ const initialState = {
     loaded: false,
     active_task: null,
     message_text: null,
-    editing: false,
-    translated_states: {}
+    editing: false
 };
 
 export default createReducer(initialState, {
@@ -67,14 +65,5 @@ export default createReducer(initialState, {
     [OPEN_TASK_RESPONSE]: (state, payload) =>
         Object.assign({}, state, {
             message_text: payload.message
-        }),
-    [GET_TASK_STATE_REQUEST]: (state, payload) =>
-        Object.assign({}, state, {
-            message_text: payload.message
-        }),
-    [GET_TASK_STATE_RESPONSE]: (state, payload) =>
-        Object.assign({}, state, {
-            message_text: payload.message,
-            translated_states: payload.results
-        }),
+        })
 });
