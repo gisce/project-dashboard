@@ -25,12 +25,42 @@ export function createReducer(initialState, reducerMap) {
     };
 }
 
-export function stateParse(data){
-    const values = data["res"]["state"]["selection"];
+export function translationParse(data, field){
+    const values = data["res"][field]["selection"];
     let res = {};
     for(let i = 0; i < values.length; i++){
         const actual = values[i];
         res[actual[0]] = actual[1];
+    }
+    return res;
+}
+
+export function reverseObject(obj){
+    /**
+     * This method switches key by value of the obj parameter
+     * @type {Array}
+     */
+    const keys = Object.keys(obj);
+    let res = {};
+    for(let i = 0; i < keys.length; i++){
+        const actualKey = keys[i];
+        const actualValue = String(obj[actualKey]);
+        res[actualValue] = actualKey;
+    }
+    return res;
+}
+
+export function checkKeys(obj, toCheck){
+    let keys = Object.keys(obj);
+    toCheck = String(String(toCheck)).toLocaleLowerCase();
+    let res = "none";
+    let i = 0;
+    while(i < keys.length && res === "none"){
+        const lowerKey = String(String(keys[i])).toLocaleLowerCase();
+        if(lowerKey.indexOf(toCheck) > -1){
+            res = keys[i];
+        }
+        i++;
     }
     return res;
 }
