@@ -245,7 +245,7 @@ export default class TasksView extends Component {
                             !this.props.isFetching && (
                                 <div className="upperButtons">
                                     {
-                                        this.props.active_task && this.props.active_task.state === 'open' ?
+                                        this.props.active_task && String(this.props.active_task.state).localeCompare("En progrés") === 0 ?
                                             <LinkButton
                                                 icon="note_add"
                                                 label="Nou"
