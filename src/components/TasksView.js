@@ -32,8 +32,7 @@ function mapStateToProps(state) {
         message_text: state.tasks.message_text,
         breadcrumb: state.breadcrumb.breadcrumb_data,
         filters: state.filter,
-        editing: state.projects.editing,
-        translated_states: state.tasks.translated_states
+        editing: state.projects.editing
     };
 }
 
@@ -54,7 +53,7 @@ const cols = {
     "Descripció": ["name", {width: "300px"}],
     "Responsable": ["user_id.name", {width: "80px"}],
     "Prioritat": ["priority", {width: "50px"}],
-    "Estat": ["state", {width: "50px"}]
+    "Estat": ["state", {width: "80px"}]
 };
 
 let activeFilters = [];
@@ -82,9 +81,6 @@ export default class TasksView extends Component {
         if(this.props.params.projectId) {
             projectId = this.props.params.projectId;
             filter.push(["project_id", "=", parseInt(projectId, 10)]);
-        }
-        if(Object.keys(this.props.translated_states).length === 0){
-            this.props.getTaskState(this.props.token);
         }
         this.props.setActualPage(1);
         this.props.fetchTasks(this.props.token, filter, projectId, initial);
@@ -127,9 +123,6 @@ export default class TasksView extends Component {
         let newBreadcrumb = this.props.breadcrumb;
         if(this.props.loaded){
             tasks = this.props.data.data.tasks;
-            for(let i = 0; i < tasks.length; i++){
-                tasks[i]["state"] = this.props.translated_states[tasks[i]["state"]];
-            }
             if(this.props.active_project && newBreadcrumb.length == 0){
                 newBreadcrumb = this.updateBreadcrumb()
             }
