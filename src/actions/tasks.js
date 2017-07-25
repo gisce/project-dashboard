@@ -7,7 +7,8 @@ import {
     EDIT_TASK,
     PATCH_TASK_REQUEST,
     PATCH_TASK_RESPONSE,
-    OPEN_TASK_REQUEST
+    OPEN_TASK_REQUEST,
+    OPEN_TASK_RESPONSE
 } from '../constants';
 import {define_token} from '../utils/http_functions';
 import {translationParse} from '../utils/misc';
