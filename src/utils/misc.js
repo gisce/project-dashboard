@@ -35,21 +35,6 @@ export function translationParse(data, field){
     return res;
 }
 
-export function reverseObject(obj){
-    /**
-     * This method switches key by value of the obj parameter
-     * @type {Array}
-     */
-    const keys = Object.keys(obj);
-    let res = {};
-    for(let i = 0; i < keys.length; i++){
-        const actualKey = keys[i];
-        const actualValue = String(obj[actualKey]);
-        res[actualValue] = actualKey;
-    }
-    return res;
-}
-
 export function checkKeys(obj, toCheck){
     let keys = Object.keys(obj);
     toCheck = String(String(toCheck)).toLocaleLowerCase();
@@ -61,6 +46,21 @@ export function checkKeys(obj, toCheck){
             res = keys[i];
         }
         i++;
+    }
+    return res;
+}
+
+export function reverseObject(obj){
+    /**
+     * This method switches key by value of the obj parameter
+     * @type {Array}
+     */
+    const keys = Object.keys(obj);
+    let res = {};
+    for(let i = 0; i < keys.length; i++){
+        const actualKey = keys[i];
+        const actualValue = String(obj[actualKey]);
+        res[actualValue] = actualKey;
     }
     return res;
 }
