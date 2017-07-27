@@ -22,6 +22,11 @@ module.exports = {
                 test: /\.css$/,
                 loader: 'css-loader'
             },
+            {
+                test: /\.jsx?$/,
+                exclude: /(node_modules)/,
+                loader: 'babel-loader'
+            }
         ],
     },
     devtool: "source-map",
