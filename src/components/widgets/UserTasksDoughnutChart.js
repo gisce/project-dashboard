@@ -1,49 +1,56 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs';
-import { getRandomInt } from '../../utils/misc';
 
-class DoughnutChart extends React.Component {
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as dashboardCreators from '../../actions/dashboard';
+
+function mapStateToProps(state) {
+    return {
+        token: state.auth.token,
+        user_tasks_count: state.dashboard.user_tasks_count
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(Object.assign({}, dashboardCreators), dispatch);
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
+class UserTasksDoughnutChart extends React.Component {
     constructor() {
         super();
-        this.state = {
-            data: [
-                {
-                    value: 50,
-                    color: '#F7464A',
-                    highlight: '#FF5A5E',
-                    label: 'Red',
-                },
-                {
-                    value: 50,
-                    color: '#00A840',
-                    highlight: '#00A840',
-                    label: 'Green',
-                },
-            ],
-        };
+        this.getUserTasksData = this.getUserTasksData.bind(this);
     }
 
-    // componentDidMount() {
-    //     const refreshIntervalId  = setInterval(() => {
-    //         this.state.data[0].value = getRandomInt(0, 40);
-    //         this.setState({
-    //             data: this.state.data,
-    //             refreshIntervalId,
-    //         });
-    //     }, 2000);
-    // }
-    //
-    // componentWillUnmount() {
-    //     clearInterval(this.state.refreshIntervalId);
-    // }
+    getUserTasksData(){
+        let data = [];
+        let keys = Object.keys(this.props.user_tasks_count);
+        for(let i = 0; i < keys.length; i++){
+            const key = keys[i];
+            data.push({
+                value: this.props.user_tasks_count[key],
+                label: key
+            });
+        }
+        return data;
+    }
 
     render() {
+        if(Object.keys(this.props.user_tasks_count).length > 0) {
+            const data = this.getUserTasksData();
+            this.state = {
+                data: data
+            };
+        }
         return (
-            <div>
-                <Doughnut data={this.state.data} options={{ animationEasing: 'easeInSine', showTooltips: true }} height="200" width="350"/>
-            </div>
+            Object.keys(this.props.user_tasks_count).length > 0 && (
+                <div>
+                    <Doughnut data={this.state.data} options={{ animationEasing: 'easeInSine', showTooltips: true }} height="200" width="350"/>
+                </div>
+            )
         );
     }
 }
 
-export default DoughnutChart;
+export default UserTasksDoughnutChart;
