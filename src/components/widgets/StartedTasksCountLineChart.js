@@ -1,47 +1,54 @@
 import React, { Component } from 'react';
 import { Line } from 'react-chartjs';
-import { getRandomInt } from '../../utils/misc';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as dashboardCreators from '../../actions/dashboard';
 
-class LineChart extends Component {
+function mapStateToProps(state) {
+    return {
+        token: state.auth.token,
+        started_tasks_count: state.dashboard.started_tasks_count
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(Object.assign({}, dashboardCreators), dispatch);
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
+class StartedTasksCountLineChart extends Component {
     constructor() {
         super();
-
-        this.state = {
-            data: {
-                labels: ['10s', '20', '30', '40', '50', '60', '70'],
-                datasets: [
-                    {
-                        label: 'Singal',
-                        fillColor: '#F1E7E5',
-                        strokeColor: '#E8575A',
-                        pointColor: '#E8575A',
-                        pointStrokeColor: '#fff',
-                        pointHighlightFill: '#ff',
-                        pointHighlightStroke: 'rgba(220,220,220,1)',
-                        data: [10, 55, 69, 45, 87, 68, 74],
-                    },
-                    {
-                        label: 'Disturbance',
-                        fillColor: 'rgba(151,187,205,0.2)',
-                        strokeColor: 'rgba(151,187,205,1)',
-                        pointColor: 'rgba(151,187,205,1)',
-                        pointStrokeColor: '#fff',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(151,187,205,1)',
-                        data: [10, 55, 69, 45, 87, 68, 74],
-                    },
-                ],
-            },
-        };
     }
 
     render() {
+        if(Object.keys(this.props.started_tasks_count).length > 0){
+            this.state = {
+                data: {
+                    labels: this.props.started_tasks_count.labels,
+                    datasets: [
+                        {
+                            label: 'Tasques',
+                            fillColor: '#80CBC4',
+                            strokeColor: '#00897B',
+                            pointColor: '#004D40',
+                            pointStrokeColor: '#fff',
+                            pointHighlightFill: '#ff',
+                            pointHighlightStroke: 'rgba(220,220,220,1)',
+                            data: this.props.started_tasks_count.values,
+                        },
+                    ],
+                },
+            };
+        }
         return (
-            <div >
-              <Line data={this.state.data} options={{responsive: true, animationSteps: 300 }} height="210" width="800"/>
-            </div>
+            Object.keys(this.props.started_tasks_count).length > 0 && (
+                <div>
+                    <Line data={this.state.data} options={{responsive: true, animationSteps: 300}} height="210" width="800"/>
+                </div>
+            )
         );
     }
 }
 
-export default LineChart;
+export default StartedTasksCountLineChart;
