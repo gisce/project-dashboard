@@ -8,7 +8,7 @@ class LineChart extends Component {
 
         this.state = {
             data: {
-                labels: ['10', '20', '30', '40', '50', '60', '70'],
+                labels: ['10s', '20', '30', '40', '50', '60', '70'],
                 datasets: [
                     {
                         label: 'Singal',
@@ -33,24 +33,6 @@ class LineChart extends Component {
                 ],
             },
         };
-    }
-
-    componentDidMount() {
-        const refreshIntervalId = setInterval(() => {
-            this.state.data.datasets[0].data.shift();
-            this.state.data.datasets[0].data.push(getRandomInt(0, 90));
-
-            this.state.data.datasets[1].data.shift();
-            this.state.data.datasets[1].data.push(getRandomInt(0, 90));
-            this.setState({
-                data: this.state.data,
-                refreshIntervalId,
-            });
-        }, 2000);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.state.refreshIntervalId);
     }
 
     render() {
