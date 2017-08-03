@@ -46,7 +46,7 @@ class UserTasksDoughnutChart extends React.Component {
         return (
             Object.keys(this.props.user_tasks_count).length > 0 && (
                 <div>
-                    <Doughnut data={this.state.data} options={{ animationEasing: 'easeInSine', showTooltips: true }} height="200" width="350"/>
+                    <Doughnut data={this.state.data} options={{ animationEasing: 'easeInSine', showTooltips: true }} height="300" width="350"/>
                 </div>
             )
         );
