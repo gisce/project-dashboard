@@ -17,7 +17,11 @@ function mapStateToProps(state) {
     return {
         token: state.auth.token,
         dazzle_state: state.dashboard.dazzle_state,
-        isFetching: state.dashboard.isFetching
+        isFetching: (
+            state.dashboard.tasksStatusFetching &&
+            state.dashboard.userTasksFetching &&
+            state.dashboard.startedTasksCountFetching
+        )
     };
 }
 
@@ -35,15 +39,15 @@ export default class DashboardView extends Component {
         const dazzleState = {
             // Widgets that are available in the dashboard
             widgets: {
-                prova1: {
+                StartedTasksCountLineChart: {
                     type: StartedTasksCountLineChart,
                     title: 'Tasques iniciades el darrer any',
                 },
-                prova2: {
+                UserTasksDoughnutChart: {
                     type: UserTasksDoughnutChart,
                     title: "Tasques per usuari"
                 },
-                prova3: {
+                TaskStatusRadarChart: {
                     type: TaskStatusRadarChart,
                     title: "Estat de les tasques"
                 },
@@ -52,15 +56,15 @@ export default class DashboardView extends Component {
             layout: {
                 rows: [{
                     columns: [{
-                        className: 'wdwdd',
-                        widgets: [{key: 'prova1'}],
+                        className: 'startedTasksLineChartStyle',
+                        widgets: [{key: 'StartedTasksCountLineChart'}],
                     },{
-                        className: 'widgets',
-                        widgets: [{key: 'prova2'}],
+                        className: 'tasksStatusRadarChartStyle',
+                        widgets: [{key: 'UserTasksDoughnutChart'}],
                     },
                         {
-                            className: 'widgets',
-                            widgets: [{key: 'prova3'}],
+                            className: 'userTasksDoughnutChartStyle',
+                            widgets: [{key: 'TaskStatusRadarChart'}],
                         }],
                 }],
             },
@@ -78,7 +82,7 @@ export default class DashboardView extends Component {
 
     render() {
         return(
-            <div className="mainPaperContainer">
+            <div className="mainPaperDashboardContainer">
                 <MainPaper>
                     <div className="contents">
                         {
