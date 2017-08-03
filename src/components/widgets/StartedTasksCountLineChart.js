@@ -44,7 +44,7 @@ class StartedTasksCountLineChart extends Component {
         return (
             Object.keys(this.props.started_tasks_count).length > 0 && (
                 <div>
-                    <Line data={this.state.data} options={{responsive: true, animationSteps: 300}} height="210" width="800"/>
+                    <Line data={this.state.data} options={{responsive: true, animationSteps: 300}} height="250" width="800"/>
                 </div>
             )
         );
