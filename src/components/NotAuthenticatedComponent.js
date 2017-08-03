@@ -37,7 +37,7 @@ export function requireNoAuthentication(Component) {
 
         checkAuth(props = this.props) {
             if (props.isAuthenticated) {
-                browserHistory.push('/projects');
+                browserHistory.push('/dashboard');
             } else {
                 const token = localStorage.getItem('token');
                 const stateToken = this.props.token;
@@ -47,7 +47,7 @@ export function requireNoAuthentication(Component) {
                 if (token) {
                     const valid = validate_token(token);
                     if (valid) {
-                        browserHistory.push('/projects');
+                        browserHistory.push('/dashboard');
                     } else {
                         this.setState({
                             loaded: true,

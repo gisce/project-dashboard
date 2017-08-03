@@ -11,6 +11,7 @@ import breadcrumb from './breadcrumb';
 import filter from './filter';
 import config from './config';
 import paginator from './paginator';
+import dashboard from './dashboard';
 
 const appReducer = combineReducers({
     auth,
@@ -24,7 +25,8 @@ const appReducer = combineReducers({
     breadcrumb,
     filter,
     config,
-    paginator
+    paginator,
+    dashboard
 });
 
 const rootReducer = (state, action) => {

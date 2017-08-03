@@ -9,8 +9,9 @@
   "author": "https://github.com/asimon91, https://github.com/gisce",
   "license": "MIT",
   "dependencies": {
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "chart.js": "^1.1.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
     "webpack": "2.2.1",
     "webpack-dev-server": "2.4.1"
   },
@@ -37,6 +38,8 @@
     "redux": "^3.6.0",
     "redux-form": "^6.4.3",
     "redux-logger": "^2.7.4",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "react-dazzle": "^1.2.5",
+    "react-chartjs": "^0.8.0"
   }
 }

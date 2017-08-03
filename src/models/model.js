@@ -8,6 +8,7 @@ export default class Model {
         this.model = null;
         this.uri = "http://erp-ti.gisce.lan:5000";
         this.schema = [];
+        this.limit = 80;
     }
 
     parse () {
@@ -16,7 +17,7 @@ export default class Model {
 
     search(search_filters, configuration = {}) {
         const search_uri = this.uri + "/" + this.model + "?filter=" + JSON.stringify(search_filters)
-            + "&schema=" + this.schema.join(",");
+            + "&schema=" + this.schema.join(",") + "&limit=" + this.limit;
         return axios.get(search_uri, configuration)
             .then(parseJSON)
             .catch(error => {
@@ -42,6 +43,15 @@ export default class Model {
     functionCall(functionName, body, configuration = {}){
         const uri = this.uri + "/" + this.model + "/" + functionName;
         return axios.post(uri, body, configuration);
+    }
+
+    setSchema(newSchema){
+        this.schema = newSchema;
+    }
+
+    setLimit(newLimit){
+        //Smile :)
+        this.limit = newLimit;
     }
 }
 

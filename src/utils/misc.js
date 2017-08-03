@@ -191,6 +191,17 @@ export function timeFormat(time, mode){
     return res;
 }
 
+export function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+export function monthToString(month){
+    if(month < 10){
+        return "0"+String(month)
+    }
+    else return String(month);
+}
+
 export function getGravatarLink(email){
     if(email) {
         try {

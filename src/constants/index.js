@@ -2,6 +2,21 @@ import React from 'react';
 
 export const VERSION = "1.0.0";
 
+export const MONTHS = {
+    1: 'Gener',
+    2: 'Febrer',
+    3: 'Març',
+    4: 'Abril',
+    5: 'Maig',
+    6: 'Juny',
+    7: 'Juliol',
+    8: 'Agost',
+    9: 'Setembre',
+    10: 'Octubre',
+    11: 'Novembre',
+    12: 'Desembre'
+};
+
 export const BASIC_AUTH_REQUEST = 'BASIC_AUTH_REQUEST';
 export const BASIC_AUTH_RESPONSE = 'BASIC_AUTH_RESPONSE';
 export const BASIC_AUTH_ERROR = 'BASIC_AUTH_ERROR';
@@ -50,6 +65,12 @@ export const PATCH_TASK_WORK_REQUEST = 'PATCH_TASK_WORK_REQUEST';
 export const PATCH_TASK_WORK_RESPONSE = 'PATCH_TASK_WORK_RESPONSE';
 export const DELETE_TASK_WORK_REQUEST = 'DELETE_TASK_WORK_REQUEST';
 export const DELETE_TASK_WORK_RESPONSE = 'DELETE_TASK_WORK_RESPONSE';
+export const GET_TASKS_STATUS_REQUEST = 'GET_TASKS_STATUS_REQUEST';
+export const GET_TASKS_STATUS_RESPONSE = 'GET_TASKS_STATUS_RESPONSE';
+export const GET_USER_TASKS_COUNT_REQUEST = 'GET_USER_TASKS_COUNT_REQUEST';
+export const GET_USER_TASKS_COUNT_RESPONSE = 'GET_USER_TASKS_COUNT_RESPONSE';
+export const GET_STARTED_TASKS_COUNT_REQUEST = 'GET_STARTED_TASKS_COUNT_REQUEST';
+export const GET_STARTED_TASKS_COUNT_RESPONSE = 'GET_STARTED_TASKS_COUNT_RESPONSE';
 
 export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const FETCH_USERS_REQUEST = 'FETCH_USERS_REQUEST';
@@ -77,3 +98,5 @@ export const UI_CLOSE_TOAST = 'UI_CLOSE_TOAST';
 export const UI_NEW_EDIT_ITEM = 'UI_NEW_EDIT_ITEM';
 
 export const UI_SET_FIELDS_ERROR = 'UI_SET_FIELDS_ERROR';
+
+export const SET_DAZZLE_STATE = 'SET_DAZZLE_STATE';
