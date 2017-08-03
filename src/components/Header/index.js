@@ -91,7 +91,7 @@ export class Header extends Component {
                         onClick={this.handleSwipe}
                         iconElementLeft={<IconButton><LogoutIcon /></IconButton>}
                     />
-                    <MenuItem primaryText="Timer" leftIcon={<FontIcon className="material-icons">watch_later</FontIcon>} />
+                    {/*<MenuItem primaryText="Timer" leftIcon={<FontIcon className="material-icons">watch_later</FontIcon>} />*/}
                     <MenuItem primaryText="Dashboard" onTouchTap={this.redirect("/dashboard")} leftIcon={<FontIcon className="material-icons">dashboard</FontIcon>} />
                     <MenuItem primaryText="Projectes" onTouchTap={this.redirect("/projects")} leftIcon={<FontIcon className="material-icons">folder</FontIcon>} />
                     <MenuItem primaryText="Tasques" onTouchTap={this.redirect("/tasks")} leftIcon={<FontIcon className="material-icons">view_list</FontIcon>} />
