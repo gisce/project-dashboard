@@ -160,7 +160,7 @@ export function getUserTasksCount(token){
         let user = new User();
         let task = new Task();
         let count = {};
-        user.setSchema(['name']);
+        user.setSchema(['id']);
         user.setLimit(0);
         task.setSchema(['id']);
         task.setLimit(0);
@@ -171,9 +171,9 @@ export function getUserTasksCount(token){
                     const items = user.parse(newData, []);
                     let users = [];
                     for(let i = 0; i < items.length; i++){
-                        users.push(items[i].name);
+                        users.push(items[i].id);
                     }
-                    recursiveGet(task, "user_id.name", users, count, dispatch, getUserTasksCountResponse);
+                    recursiveGet(task, "user_id.id", users, count, dispatch, getUserTasksCountResponse);
                 }
             }]
         });
