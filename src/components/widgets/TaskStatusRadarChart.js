@@ -56,7 +56,7 @@ class TaskStatusRadarChart extends Component {
         return (
             Object.keys(this.props.tasks_status).length > 0 && (
                 <div>
-                    <Radar data={this.state.data} options={{responsive: true, animationSteps: 300}} height="200" width="300"/>
+                    <Radar data={this.state.data} options={{responsive: true, animationSteps: 300}} height="300" width="300"/>
                 </div>
             )
         );
