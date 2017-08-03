@@ -14,7 +14,9 @@ const initialState = {
     tasks_status: {},
     user_tasks_count: {},
     started_tasks_count: {},
-    isFetching: false,
+    tasksStatusFetching: false,
+    userTasksFetching: false,
+    startedTasksCountFetching: false,
     message_text: ""
 };
 
@@ -26,34 +28,34 @@ export default createReducer(initialState, {
     [GET_TASKS_STATUS_REQUEST]: (state, payload) =>
         Object.assign({}, state, {
             message_text: payload.message,
-            isFetching: true
+            tasksStatusFetching: true
         }),
     [GET_TASKS_STATUS_RESPONSE]: (state, payload) =>
         Object.assign({}, state, {
             message_text: payload.message,
             tasks_status: payload.tasks_status,
-            isFetching: false
+            tasksStatusFetching: false
         }),
     [GET_USER_TASKS_COUNT_REQUEST]: (state, payload) =>
         Object.assign({}, state, {
             message_text: payload.message,
-            isFetching: true
+            userTasksFetching: true
         }),
     [GET_USER_TASKS_COUNT_RESPONSE]: (state, payload) =>
         Object.assign({}, state, {
             message_text: payload.message,
             user_tasks_count: payload.user_tasks_count,
-            isFetching: false
+            userTasksFetching: false
         }),
     [GET_STARTED_TASKS_COUNT_REQUEST]: (state, payload) =>
         Object.assign({}, state, {
             message_text: payload.message,
-            isFetching: true
+            startedTasksCountFetching: true
         }),
     [GET_STARTED_TASKS_COUNT_RESPONSE]: (state, payload) =>
         Object.assign({}, state, {
             message_text: payload.message,
             started_tasks_count: payload.started_tasks_count,
-            isFetching: false
+            startedTasksCountFetching: false
         }),
 });
