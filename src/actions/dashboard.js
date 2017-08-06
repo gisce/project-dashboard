@@ -89,7 +89,11 @@ export function recursiveGet(model, field_to_search, states, status, dispatch, d
     let months = [];
     if(!customFilter) {
         filter = [[field_to_search, '=', String(states[0])]];
-    }else{
+    }
+    else if(customFilter === "userTasksCount"){
+        filter = [[field_to_search, '=', String(states[0][0])]];
+    }
+    else if(customFilter === "startedTasksCount"){
         months = states[1];
         states = states[0];
         let mesActual = states[0][0];
@@ -102,28 +106,31 @@ export function recursiveGet(model, field_to_search, states, status, dispatch, d
         }
         mesActual = monthToString(mesActual);
         mesSeguent = monthToString(mesSeguent);
-        filter = [["date_start",">=", year + "-" + mesActual + "-01"], ["date_start","<", nextYear + "-" + mesSeguent + "-01"]]
+        filter = [["date_start",">=", year + "-" + mesActual + "-01"], ["date_start","<", nextYear + "-" + mesSeguent + "-01"]];
     }
     model.search(filter, {
         transformResponse: [function (data) {
             const newData = JSON.parse(data);
-            if(customFilter){
+            if(customFilter === "startedTasksCount"){
                 status.push([states[0], newData.n_items]);
+            }
+            else if(customFilter === "userTasksCount"){
+                status[states[0][1]] = newData.n_items;
             }
             else {
                 status[states[0]] = newData.n_items;
             }
             states.splice(0, 1);
             if(states.length > 0) {
-                if(customFilter){
+                if(customFilter === "startedTasksCount"){
                     states = [states, months]
                 }
                 recursiveGet(model, field_to_search, states, status, dispatch, dispatchFunction, customFilter);
             }
             else{
-                let values = [];
-                let months = [];
-                if(customFilter){
+                if(customFilter === "startedTasksCount"){
+                    let values = [];
+                    let months = [];
                     for(let i = 0; i < status.length; i++){
                         const month = MONTHS[status[i][0][0]];
                         const value = status[i][1];
@@ -160,7 +167,7 @@ export function getUserTasksCount(token){
         let user = new User();
         let task = new Task();
         let count = {};
-        user.setSchema(['id']);
+        user.setSchema(['id', 'name']);
         user.setLimit(0);
         task.setSchema(['id']);
         task.setLimit(0);
@@ -171,9 +178,9 @@ export function getUserTasksCount(token){
                     const items = user.parse(newData, []);
                     let users = [];
                     for(let i = 0; i < items.length; i++){
-                        users.push(items[i].id);
+                        users.push([items[i].id, items[i].name]);
                     }
-                    recursiveGet(task, "user_id.id", users, count, dispatch, getUserTasksCountResponse);
+                    recursiveGet(task, "user_id.id", users, count, dispatch, getUserTasksCountResponse, "userTasksCount");
                 }
             }]
         });
@@ -203,7 +210,7 @@ export function getStartedTasksCount(token){
                 actualYear += 1;
             }
         }
-        recursiveGet(task, null, [sortedMonths, months], count, dispatch, getStartedTasksCountResponse, true);
+        recursiveGet(task, null, [sortedMonths, months], count, dispatch, getStartedTasksCountResponse, "startedTasksCount");
     }
 }
 
