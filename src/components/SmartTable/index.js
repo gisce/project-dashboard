@@ -95,6 +95,11 @@ export default class SmartTable extends Component {
         return this.merge(this.mergeSort(left, value), this.mergeSort(right, value), value);
     }
 
+    setDefaultTimeValue(value){
+        floatTime = value;
+        return timeFormat(value, 'string');
+    }
+
     updateValues(id){
         if(error.length > 0){
             this.props.openDialogRequest("Error", error[0]);
@@ -112,6 +117,7 @@ export default class SmartTable extends Component {
             });
             /*values handling*/
             this.props.handlePatch(id, values);
+            floatTime = null;
         }
     }
 
@@ -203,7 +209,7 @@ export default class SmartTable extends Component {
                     <TextField
                         ref={field+"_"+element["id"]}
                         hintText="Temps dedicat"
-                        defaultValue={timeFormat(element[field], 'string')}
+                        defaultValue={this.setDefaultTimeValue(element[field])}
                         onChange={e => this.handleTimeFormat(e.target.value)}
                         errorText={
                             (this.props.fields_errors && "time" in this.props.fields_errors) ? (
