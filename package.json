@@ -40,6 +40,7 @@
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.1.0",
     "react-dazzle": "^1.2.5",
-    "react-chartjs": "^0.8.0"
+    "react-chartjs": "^0.8.0",
+    "universal-cookie": "^2.0.8"
   }
 }

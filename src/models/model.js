@@ -126,7 +126,7 @@ export class Task extends Model {
     constructor() {
         super();
         this.model = 'project.task';
-        this.schema = ["name", "project_id.name", "user_id.name", "user_id.address_id.email", "total_hours", "remaining_hours", "planned_hours", "effective_hours", "priority", "state", "work_ids", "delay_hours"];
+        this.schema = ["name", "date_start", "project_id.name", "user_id.name", "user_id.address_id.email", "total_hours", "remaining_hours", "planned_hours", "effective_hours", "priority", "state", "work_ids", "delay_hours"];
     }
 
     parse(response, unused) {
@@ -160,6 +160,7 @@ export class Task extends Model {
             task = {
                 "id": actual.id,
                 "name": actual.name,
+                "date_start": actual.date_start,
                 "project_id.id": project_id,
                 "project_id.name": project_name,
                 "user_id.name": user,

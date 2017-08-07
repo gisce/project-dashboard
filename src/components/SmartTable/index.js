@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Cookies from 'universal-cookie';
 import {Table, TableBody, TableHeader, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -61,12 +62,17 @@ export default class SmartTable extends Component {
 
     constructor(props) {
         super(props);
+        const cookies = new Cookies();
         this.onClick = this.onClick.bind(this);
         this.sort = this.sort.bind(this);
         this.trimByPage = this.trimByPage.bind(this);
         this.updateValues = this.updateValues.bind(this);
         this.getField = this.getField.bind(this);
         this.handleTimeFormat = this.handleTimeFormat.bind(this);
+        const new_items_per_page = cookies.get('items_per_page');
+        if(new_items_per_page) {
+            this.props.setItemsPerPage(new_items_per_page);
+        }
         data = [];
         attributes = [];
         asc = true;
@@ -95,6 +101,11 @@ export default class SmartTable extends Component {
         return this.merge(this.mergeSort(left, value), this.mergeSort(right, value), value);
     }
 
+    setDefaultTimeValue(value){
+        floatTime = value;
+        return timeFormat(value, 'string');
+    }
+
     updateValues(id){
         if(error.length > 0){
             this.props.openDialogRequest("Error", error[0]);
@@ -112,6 +123,7 @@ export default class SmartTable extends Component {
             });
             /*values handling*/
             this.props.handlePatch(id, values);
+            floatTime = null;
         }
     }
 
@@ -203,7 +215,7 @@ export default class SmartTable extends Component {
                     <TextField
                         ref={field+"_"+element["id"]}
                         hintText="Temps dedicat"
-                        defaultValue={timeFormat(element[field], 'string')}
+                        defaultValue={this.setDefaultTimeValue(element[field])}
                         onChange={e => this.handleTimeFormat(e.target.value)}
                         errorText={
                             (this.props.fields_errors && "time" in this.props.fields_errors) ? (

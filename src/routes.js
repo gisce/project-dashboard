@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 
 import { App } from './containers/App';
 import Login from './components/Login';
+import Config from './components/ConfigView';
 import Dashboard from './components/DashboardView';
 import Projects from './components/ProjectsView';
 import Tasks from './components/TasksView';
@@ -21,6 +22,7 @@ import { requireAuthentication } from './components/AuthenticatedComponent';
 export default (
     <Route path="/" component={App}>
         <Route path="/login" component={requireNoAuthentication(Login)} />
+        <Route path="/conf" component={requireAuthentication(Config)} />
         <Route path="/dashboard" component={requireAuthentication(Dashboard)} />
         <Route path="/projects" component={requireAuthentication(Projects)} />
         <Route path="/projects/:projectId/tasks" component={requireAuthentication(Tasks)} />
