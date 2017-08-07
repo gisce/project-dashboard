@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Cookies from 'universal-cookie';
 import {Table, TableBody, TableHeader, TableRow, TableRowColumn, TableHeaderColumn, TableFooter } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
@@ -61,12 +62,17 @@ export default class SmartTable extends Component {
 
     constructor(props) {
         super(props);
+        const cookies = new Cookies();
         this.onClick = this.onClick.bind(this);
         this.sort = this.sort.bind(this);
         this.trimByPage = this.trimByPage.bind(this);
         this.updateValues = this.updateValues.bind(this);
         this.getField = this.getField.bind(this);
         this.handleTimeFormat = this.handleTimeFormat.bind(this);
+        const new_items_per_page = cookies.get('items_per_page');
+        if(new_items_per_page) {
+            this.props.setItemsPerPage(new_items_per_page);
+        }
         data = [];
         attributes = [];
         asc = true;
