@@ -95,7 +95,7 @@ export default class UserView extends Component {
             "Tasca": ["name", {width: "220px"}],
             "Projecte": ["project_id.name", {width: "220px"}],
             "Estat": ["state", {width: "90px"}],
-            "Data inici": ["state", {width: "130px"}]
+            "Data inici": ["date_start", {width: "130px"}]
         };
         let userdata = [];
         let buttons = [];
