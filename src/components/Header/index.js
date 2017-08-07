@@ -97,7 +97,7 @@ export class Header extends Component {
                     <MenuItem primaryText="Tasques" onTouchTap={this.redirect("/tasks")} leftIcon={<FontIcon className="material-icons">view_list</FontIcon>} />
                     <MenuItem primaryText="Usuaris" onTouchTap={this.redirect("/users")} leftIcon={<FontIcon className="material-icons">account_circle</FontIcon>} />
                     <MenuItem primaryText="Empreses" onTouchTap={this.redirect("/companies")} leftIcon={<FontIcon className="material-icons">business_center</FontIcon>} />
-                    <MenuItem primaryText="Configuració" leftIcon={<FontIcon className="material-icons">settings</FontIcon>}/>
+                    <MenuItem primaryText="Configuració" onTouchTap={this.redirect("/conf")} leftIcon={<FontIcon className="material-icons">settings</FontIcon>}/>
                     <MenuItem primaryText="Sortir" onTouchTap={this.logout} leftIcon={<FontIcon className="material-icons">exit_to_app</FontIcon>}/>
                 </Drawer>
                 <AppBar onLeftIconButtonTouchTap={this.handleSwipe} style={style.appBar}
